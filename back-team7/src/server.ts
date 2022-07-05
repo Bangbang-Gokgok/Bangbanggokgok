@@ -1,42 +1,41 @@
-import express from "express"
+import express from 'express';
 // import cors from 'cors';
 // import passport from 'passport';
 // import cookieParser from 'cookie-parser';
-import "dotenv/config"
+import 'dotenv/config';
 // import { apiRouter, authRouter } from './routes';
 // import { errorHandler, getUserFromJWT } from './middlewares';
 // import { usePassport } from './passport';
 // import webSocket from './socket';
 // import path from 'path';
 
-const mongoose = require("mongoose")
+const mongoose = require('mongoose');
 
 const DB_URL =
   process.env.MONGODB_URL ||
-  "MongoDB 서버 주소가 설정되지 않았습니다.\n./db/index.ts 파일을 확인해 주세요. \n.env 파일도 필요합니다.\n"
+  'MongoDB 서버 주소가 설정되지 않았습니다.\n./db/index.ts 파일을 확인해 주세요. \n.env 파일도 필요합니다.\n';
 
-mongoose.connect(DB_URL)
-const db = mongoose.connection
+mongoose.connect(DB_URL);
+const db = mongoose.connection;
 
-db.on("connected", () =>
-  console.log("정상적으로 MongoDB 서버에 연결되었습니다.  " + DB_URL)
-)
-db.on("error", (error: Error) =>
-  console.error("\nMongoDB 연결에 실패하였습니다...\n" + DB_URL + "\n" + error)
-)
+db.on('connected', () => console.log('정상적으로 MongoDB 서버에 연결되었습니다.  ' + DB_URL));
+db.on('error', (error: Error) =>
+  console.error('\nMongoDB 연결에 실패하였습니다...\n' + DB_URL + '\n' + error)
+);
+
 // usePassport();
-const app = express()
+const app = express();
 // app.use(cors());
 
 // Content-Type: application/json 형태의 데이터를 인식하고 핸들링할 수 있게 함.
-app.use(express.json())
+app.use(express.json());
 
 // Content-Type: application/x-www-form-urlencoded 형태의 데이터를 인식하고 핸들링할 수 있게 함.
-app.use(express.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: false }));
 
 // app.use(cookieParser());
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT;
 
 // app.use(passport.initialize());
 
@@ -47,7 +46,7 @@ const PORT = process.env.PORT
 
 // app.use(errorHandler);
 
-const server = app.listen(PORT, () => console.log(`server is running ${PORT}`))
+const server = app.listen(PORT, () => console.log(`server is running ${PORT}`));
 
 // // socket
 // webSocket(server);
