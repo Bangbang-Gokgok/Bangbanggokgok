@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 // import cors from 'cors';
-const passport = require('passport');
+// import passport from 'passport';
 // import cookieParser from 'cookie-parser';
-require('dotenv').config();
+import 'dotenv/config';
 // import { apiRouter, authRouter } from './routes';
 // import { errorHandler, getUserFromJWT } from './middlewares';
 // import { usePassport } from './passport';

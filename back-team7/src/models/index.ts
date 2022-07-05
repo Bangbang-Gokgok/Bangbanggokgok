@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import { UserSchema } from './schemas';
 
 const DB_URL =
   process.env.MONGODB_URL ||
@@ -11,3 +12,5 @@ db.on('connected', () => console.log('정상적으로 MongoDB 서버에 연결�
 db.on('error', (error: Error) =>
   console.error('\nMongoDB 연결에 실패하였습니다...\n' + DB_URL + '\n' + error)
 );
+
+export const User = mongoose.model('User', UserSchema);
