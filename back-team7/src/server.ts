@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 // import cors from 'cors';
 // import passport from 'passport';
 // import cookieParser from 'cookie-parser';
@@ -42,3 +43,14 @@ const server = app.listen(PORT, () => console.log(`server is running ${PORT}`));
 // app.get('*', (req, res) => {
 //   res.sendFile(path.join(__dirname + '/../frontend/build/index.html'));
 // }); // 라우트 설정
+const DB_URL =
+  process.env.MONGODB_URL ||
+  'MongoDB 서버 주소가 설정되지 않았습니다.\n./models/index.ts나 .env 파일을 확인해 주세요. \n';
+
+mongoose.connect(DB_URL);
+const db = mongoose.connection;
+
+db.on('connected', () => console.log('정상적으로 MongoDB 서버에 연결되었습니다.  ' + DB_URL));
+db.on('error', (error: Error) =>
+  console.error('\nMongoDB 연결에 실패하였습니다...\n' + DB_URL + '\n' + error)
+);
