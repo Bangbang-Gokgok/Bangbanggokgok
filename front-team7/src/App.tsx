@@ -1,14 +1,44 @@
 import { GlobalStyle } from '@/commons/design-system/global-style';
+import { useEffect, useState } from 'react';
+
 import Hi from '@/commons/Hi';
-import { useState } from 'react';
 
 const App = () => {
-  const [hi, setHi] = useState('wow!');
-  // console.log('process.env.SERVER_PORT :', process.env.SERVER_PORT);
+  const [hi, setHi] = useState('how!');
+
+  const apiFetchData = async () => {
+    const res = await fetch('/api/data', {
+      method: 'GET',
+    });
+
+    const data = (await res.json()) as { message: string };
+    console.log(data);
+
+    return data;
+  };
+
+  const authFetchData = async () => {
+    const res = await fetch('/auth/data', {
+      method: 'GET',
+    });
+
+    const data = (await res.json()) as { message: string };
+    console.log(data);
+
+    return data;
+  };
+
+  useEffect(() => {
+    apiFetchData().catch((e) => console.log(e));
+    authFetchData().catch((e) => console.log(e));
+  }, []);
+
   return (
     <>
       <GlobalStyle />
       <Hi hi={hi} />
+      <Hi hi={hi} />
+      <Hi hi={'asdasdas'} />
     </>
   );
 };
