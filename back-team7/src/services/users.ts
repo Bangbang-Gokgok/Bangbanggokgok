@@ -2,11 +2,12 @@ import { User } from '../models';
 import { Types } from 'mongoose';
 
 interface UserInfo {
+  authority: string;
   email: string;
   name: string;
 }
 
-interface UserData extends UserInfo {
+export interface UserData extends UserInfo {
   _id: Types.ObjectId;
 }
 
