@@ -17,13 +17,12 @@ export const UserInfo = ({ name, image }: IUserInfoProps) => {
 };
 
 const StyledUserInfo = styled.div`
-  min-width: 33%;
   display: flex;
   align-items: center;
   gap: 5px;
 
   .userinfo-username {
-    font-size: 1.55rem;
+    font-size: 1.4rem;
     font-weight: bold;
   }
 `;
