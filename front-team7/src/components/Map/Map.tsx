@@ -4,20 +4,36 @@ import styled from "styled-components";
 
 declare global {
   interface Window {
-    kakao?: any;
+    kakao?: any,
   }
+}
+
+interface IMapSize {
+  width: string,
+  height: string,
+}
+
+interface ICenterLatLng {
+  lat: Number,
+  lng: Number,
+}
+
+interface IMarkingPostion {
+  content: any,
+  latlng: any,
 }
 
 const { kakao } = window;
 
-const Map = () => {
+const Map = ({ mapSize, mapLevel, centerLatLng }: { mapSize: IMapSize, mapLevel: number, centerLatLng: ICenterLatLng, }) => {
+
 
   const mapContainer = useRef<HTMLDivElement>(null);
 
   const drawMap = (): void => {
     const options: Object = {
-      center: new kakao.maps.LatLng(33.450701, 126.570667),
-      level: 3
+      center: new kakao.maps.LatLng(centerLatLng.lat, centerLatLng.lng),
+      level: mapLevel
     };
     const map = new kakao.maps.Map(mapContainer.current, options);
 
@@ -152,13 +168,13 @@ const Map = () => {
   }, []);
 
   return (
-    <MapContainer ref={mapContainer}></MapContainer>
+    <MapContainer width={mapSize.width} height={mapSize.height} ref={mapContainer}></MapContainer>
   );
 };
 
-const MapContainer = styled.div`
-  width: 340px;
-  height: 500px;
+const MapContainer = styled.div<{ width: string; height: string; }>`
+  width: ${props => props.width};
+  height: ${props => props.height};
   border-radius: 10px;
 `;
 
