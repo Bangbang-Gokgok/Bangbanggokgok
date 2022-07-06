@@ -7,7 +7,7 @@ export const Footer = () => {
   return (
     <StyledFooter>
       <FooterIcon icon={<FaHome />} to="/" />
-      <FooterIcon icon={<FaMapMarkedAlt />} to="/map" />
+      <FooterIcon icon={<FaMapMarkedAlt />} to="/mymap" />
       <FooterIcon icon={<FaSearch />} to="/search" />
       <FooterIcon icon={<FaUserAlt />} to="/profile" />
     </StyledFooter>
