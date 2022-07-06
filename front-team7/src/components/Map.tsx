@@ -45,7 +45,7 @@ const Map = () => {
       },
       {
         content: `
-        <div style="">
+        <div style="display: flex; flex-direction: column; background-color:white; border: 1px solid white; border-radius:10px; padding:5px; box-shadow: 3px 3px 3px grey;">
           <span style="font-size: 18px; font-weight: bold;">🌾 텃밭 방문해봤습니다.</span>
           <span style="font-size: 12px; color:blue">제주 제주시 첨단로 242-2</span>
         </div>
@@ -157,9 +157,6 @@ const Map = () => {
 };
 
 const MapContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 340px;
   height: 500px;
   border-radius: 10px;
