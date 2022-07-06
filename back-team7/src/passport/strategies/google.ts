@@ -28,7 +28,12 @@ async function findOrCreateUser(name: string, email: string) {
 
 export const google = new Strategy(
   config,
-  async (accessToken: string, refreshToken: string, profile: typeof Profile, done: typeof VerifyCallback) => {
+  async (
+    accessToken: string,
+    refreshToken: string,
+    profile: typeof Profile,
+    done: typeof VerifyCallback
+  ) => {
     const { email, name } = profile._json;
     try {
       const user = await findOrCreateUser(name!, email!);
@@ -40,5 +45,5 @@ export const google = new Strategy(
     } catch (e: any) {
       done(e, undefined);
     }
-  },
+  }
 );
