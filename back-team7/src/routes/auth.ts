@@ -22,15 +22,6 @@ authRouter.get(
   }
 );
 
-authRouter.get('/logout', (req: Request, res: Response, next: NextFunction) => {
-  res.clearCookie('token').redirect(DOMAIN);
-});
-
-authRouter.get('/:token', (req: Request, res: Response, next: NextFunction) => {
-  const user = getUserDataFromToken(req.params.token);
-  res.json(user);
-});
-
 authRouter.get('/kakao', passport.authenticate('kakao'));
 
 authRouter.get(
@@ -45,5 +36,14 @@ authRouter.get(
     }
   }
 );
+
+authRouter.get('/logout', (req: Request, res: Response, next: NextFunction) => {
+  res.clearCookie('token').redirect(DOMAIN);
+});
+
+authRouter.get('/:token', (req: Request, res: Response, next: NextFunction) => {
+  const user = getUserDataFromToken(req.params.token);
+  res.json(user);
+});
 
 export { authRouter };
