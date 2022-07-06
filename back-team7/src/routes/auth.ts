@@ -33,7 +33,6 @@ authRouter.get(
   '/kakao/callback',
   passport.authenticate('kakao', { session: false }),
   (req, res, next) => {
-    console.log(req.user);
     if (req.user) {
       const token = setUserToken(req.user);
       res.cookie('token', token).redirect(DOMAIN);

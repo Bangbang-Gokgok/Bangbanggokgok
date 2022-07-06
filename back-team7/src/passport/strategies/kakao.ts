@@ -24,7 +24,7 @@ async function findOrCreateUser(email: string, name: string) {
   return created;
 }
 
-module.exports = new KakaoStrategy(
+export const kakao = new KakaoStrategy(
   config,
   async (accessToken: string, refreshToken: string, profile: any, done: any) => {
     const name = profile._json.properties.nickname;
