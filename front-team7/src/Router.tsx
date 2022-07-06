@@ -5,6 +5,7 @@ import MyMap from './pages/MyMap';
 import Search from './pages/Search';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
+import NotFound from './pages/NotFound';
 
 
 const AppRouter = ({ isLoggedIn }) => {
@@ -18,7 +19,7 @@ const AppRouter = ({ isLoggedIn }) => {
               element={<Home />}
             />
             <Route
-              path="/:userId"
+              path="/usermap/:userId"
               element={<UserMap />}
             />
             <Route
@@ -33,6 +34,10 @@ const AppRouter = ({ isLoggedIn }) => {
               path="/profile"
               element={<Profile />}
             />
+            <Route
+              path="*"
+              element={<NotFound />}
+            />
           </>
           :
           <Route
@@ -40,7 +45,6 @@ const AppRouter = ({ isLoggedIn }) => {
             element={<Login />}
           />
         }
-
       </Routes>
     </Router>
   );
