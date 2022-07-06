@@ -1,8 +1,6 @@
 import styled, { css } from 'styled-components';
 import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
 
-//px 단위 전부 rem 으로 바꾸기
-
 const FeedDetailContainer = styled.div`
   width: 330px;
   height: 280px;
@@ -38,7 +36,7 @@ const Title = styled.div`
   width: 100%;
   height: 20px;
   margin-bottom: 8px;
-  font-size: 20px;
+  font-size: 2rem;
   line-height: 20px;
   display: flex;
   align-items: center;
@@ -47,7 +45,7 @@ const Title = styled.div`
 const Description = styled.div`
   width: 100%;
   margin: 8px 0;
-  font-size: 12px;
+  font-size: 1.2rem;
   font-weight: 400;
   line-height: 20px;
 
@@ -95,7 +93,7 @@ const Btn = styled.span<{ PrevOrNext: string }>`
   line-height: 30px;
   font-weight: 500;
   color: white;
-  font-size: 15px;
+  font-size: 1.5rem;
   border-radius: 50%;
   background-color: gray;
   opacity: 0.6;
