@@ -4,8 +4,8 @@ import { useState } from "react";
 
 const MyMap = () => {
   const [mapSize, setMapSize] = useState({
-    width: '340px',
-    height: '340px'
+    width: '100%',
+    height: '500px'
   });
 
   const [mapLevel, setMapLevel] = useState(3);
@@ -17,7 +17,7 @@ const MyMap = () => {
 
   return (
     <Main header={true} footer={true}>
-      <Map mapSize={mapSize} mapLevel={mapLevel} centerLatLng={centerLatLng}></Map>
+      <Map mapSize={mapSize} mapLevel={mapLevel} centerLatLng={centerLatLng} ></Map>
     </Main >
   );
 };

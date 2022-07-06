@@ -4,13 +4,13 @@ import styled from "styled-components";
 
 declare global {
   interface Window {
-    kakao?: any;
+    kakao?: any,
   }
 }
 
 interface IMapSize {
-  width: String,
-  height: String,
+  width: string,
+  height: string,
 }
 
 interface ICenterLatLng {
@@ -18,9 +18,14 @@ interface ICenterLatLng {
   lng: Number,
 }
 
+interface IMarkingPostion {
+  content: any,
+  latlng: any,
+}
+
 const { kakao } = window;
 
-const Map = ({ mapSize, mapLevel, centerLatLng }: { mapSize: IMapSize, mapLevel: number, centerLatLng: ICenterLatLng; }) => {
+const Map = ({ mapSize, mapLevel, centerLatLng }: { mapSize: IMapSize, mapLevel: number, centerLatLng: ICenterLatLng, }) => {
 
 
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -163,13 +168,13 @@ const Map = ({ mapSize, mapLevel, centerLatLng }: { mapSize: IMapSize, mapLevel:
   }, []);
 
   return (
-    <MapContainer ref={mapContainer}></MapContainer>
+    <MapContainer width={mapSize.width} height={mapSize.height} ref={mapContainer}></MapContainer>
   );
 };
 
-const MapContainer = styled.div`
-  width: 100%;
-  height: 500px;
+const MapContainer = styled.div<{ width: string; height: string; }>`
+  width: ${props => props.width};
+  height: ${props => props.height};
   border-radius: 10px;
 `;
 
