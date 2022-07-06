@@ -6,41 +6,21 @@ import Search from './pages/Search';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 
-
 const AppRouter = ({ isLoggedIn }) => {
   return (
     <Router>
       <Routes>
-        {isLoggedIn ?
+        {isLoggedIn ? (
           <>
-            <Route
-              path="/"
-              element={<Home />}
-            />
-            <Route
-              path="/:userId"
-              element={<UserMap />}
-            />
-            <Route
-              path="/mymap"
-              element={<MyMap />}
-            />
-            <Route
-              path="/search"
-              element={<Search />}
-            />
-            <Route
-              path="/profile"
-              element={<Profile />}
-            />
+            <Route path="/" element={<Home />} />
+            <Route path="/:userId" element={<UserMap />} />
+            <Route path="/mymap" element={<MyMap />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/profile" element={<Profile />} />
           </>
-          :
-          <Route
-            path="/"
-            element={<Login />}
-          />
-        }
-
+        ) : (
+          <Route path="/" element={<Login />} />
+        )}
       </Routes>
     </Router>
   );
