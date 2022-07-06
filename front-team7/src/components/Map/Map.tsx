@@ -8,16 +8,27 @@ declare global {
   }
 }
 
+interface IMapSize {
+  width: String,
+  height: String,
+}
+
+interface ICenterLatLng {
+  lat: Number,
+  lng: Number,
+}
+
 const { kakao } = window;
 
-const Map = () => {
+const Map = ({ mapSize, mapLevel, centerLatLng }: { mapSize: IMapSize, mapLevel: number, centerLatLng: ICenterLatLng; }) => {
+
 
   const mapContainer = useRef<HTMLDivElement>(null);
 
   const drawMap = (): void => {
     const options: Object = {
-      center: new kakao.maps.LatLng(33.450701, 126.570667),
-      level: 3
+      center: new kakao.maps.LatLng(centerLatLng.lat, centerLatLng.lng),
+      level: mapLevel
     };
     const map = new kakao.maps.Map(mapContainer.current, options);
 
@@ -157,7 +168,7 @@ const Map = () => {
 };
 
 const MapContainer = styled.div`
-  width: 340px;
+  width: 100%;
   height: 500px;
   border-radius: 10px;
 `;
