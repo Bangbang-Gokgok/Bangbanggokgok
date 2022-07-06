@@ -19,12 +19,27 @@ authRouter.get(
     } else {
       res.status(404).json();
     }
-  },
+  }
 );
 
 authRouter.get('/:token', (req: Request, res: Response, next: NextFunction) => {
   const user = getUserDataFromToken(req.params.token);
   res.json(user);
 });
+
+authRouter.get('/kakao', passport.authenticate('kakao'));
+
+authRouter.get(
+  '/kakao/callback',
+  passport.authenticate('kakao', { session: false }),
+  (req, res, next) => {
+    if (req.user) {
+      const token = setUserToken(req.user);
+      res.cookie('token', token).redirect(DOMAIN);
+    } else {
+      res.status(404).json();
+    }
+  }
+);
 
 export { authRouter };
