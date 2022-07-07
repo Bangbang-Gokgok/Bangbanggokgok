@@ -10,7 +10,7 @@ userRouter.use('/admin', isAdmin, adminRouter);
 
 // userRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
 //   try {
-//     const userInfo = req.body;
+//     const userInfo: UserInfo = req.body;
 //     // 위 데이터를 사용자 db에 추가하기
 //     const newUser = await userService.addUser(userInfo);
 //     res.status(201).json(newUser);
@@ -22,9 +22,10 @@ userRouter.use('/admin', isAdmin, adminRouter);
 userRouter.get('/', async (req: any, res: Response, next: NextFunction) => {
   try {
     if (req.user) {
-      const _id: Types.ObjectId = req.user._id;
-      const userData = await userService.getUserDataById(_id);
-      res.status(200).json(userData);
+      // const _id: Types.ObjectId = req.user._id;
+      // const userData = await userService.getUserDataById(_id);
+      // res.status(200).json(userData);
+      res.json(req.user);
     } else {
       const error = new Error('user 정보가 없습니다.');
       error.name = 'NotFound';

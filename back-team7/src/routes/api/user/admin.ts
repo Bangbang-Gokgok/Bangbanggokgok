@@ -3,17 +3,6 @@ import { userService, UserInfo } from '../../../services';
 
 const adminRouter = Router();
 
-adminRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const userInfo: UserInfo = req.body;
-    // 위 데이터를 사용자 db에 추가하기
-    const newUser = await userService.addUser(userInfo);
-    res.status(201).json(newUser);
-  } catch (error) {
-    next(error);
-  }
-});
-
 adminRouter.get('/list', async (req: Request, res: Response, next: NextFunction) => {
   try {
     // 전체 사용자 목록을 얻음

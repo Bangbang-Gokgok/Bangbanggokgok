@@ -41,14 +41,4 @@ authRouter.get('/logout', (req: Request, res: Response, next: NextFunction) => {
   res.clearCookie('token').redirect(DOMAIN);
 });
 
-authRouter.get('/user', (req: Request, res: Response, next: NextFunction) => {
-  // const user = getUserDataFromToken(req.params.token);
-  // res.json(user);
-  if (req.user) {
-    res.json(req.user);
-  } else {
-    res.status(404).json();
-  }
-});
-
 export { authRouter };
