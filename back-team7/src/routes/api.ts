@@ -4,7 +4,6 @@ import { loginRequired } from '../middlewares';
 
 const apiRouter = Router();
 
-apiRouter.use('/users', userRouter);
-// apiRouter.use('/users', loginRequired, userRouter);
+apiRouter.use('/users', loginRequired, userRouter);
 
 export { apiRouter };
