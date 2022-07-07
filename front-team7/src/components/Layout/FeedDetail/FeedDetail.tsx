@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
+import { FeedFolded } from '@/components/FeedFolded/FeedFolded';
 
 const FeedDetailContainer = styled.div`
   width: 330px;
@@ -118,11 +119,11 @@ const Btn = styled.span<{ PrevOrNext: string }>`
 // 참고 : https://eunhee-programming.tistory.com/106
 const handleSlider = () => {};
 
-const FeedDetail = () => {
+const FeedDetail = ({ name, image, title }) => {
   let colorlist: Array<string> = ['lightgray', '#f5e6bf', '#bfccf5', '#bff5cc'];
   return (
     <FeedDetailContainer>
-      <FeedDetailHeader></FeedDetailHeader>
+      <FeedFolded name={name} image={image as string} title={title}></FeedFolded>
       <FeedDetailBody>
         <Title>👍🏽 홀로 여행기</Title>
         <Description>
