@@ -2,7 +2,10 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { FeedFolded } from "../FeedFolded";
-import { HiOutlinePlusCircle } from 'react-icons/hi';
+import { BsPlus } from 'react-icons/bs';
+import pinImg from '@/assets/images/blue-pin.png';
+import centerPinImg from '@/assets/images/red-pin.png';
+
 declare global {
   interface Window {
     kakao?: any,
@@ -27,8 +30,11 @@ interface ICenterLatLng {
 interface IFeed {
   username: string,
   title: string,
+  description: string,
+  address: string,
   lat: number,
   lng: number;
+  createAt: string;
 }
 
 interface IFeedList extends Array<IFeed> { }
@@ -39,9 +45,11 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: IMapSize,
 
   const [centerLat, setCenterLat] = useState(centerLatLng.lat);
   const [centerLng, setCenterLng] = useState(centerLatLng.lng);
+  const [positions, setPositions] = useState([]);
   const [level, setLevel] = useState(mapLevel);
 
   const mapContainer = useRef<HTMLDivElement>(null);
+
 
   const drawMap = (): void => {
     const options: Object = {
@@ -69,50 +77,33 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: IMapSize,
     // | 마커 생성    |
     // --------------
     // 마커를 표시할 위치와 title 객체 배열입니다 
-    const positions = [
-      {
-        content: `
-        <div style="display: flex; flex-direction: column; background-color:white; border: 1px solid white; border-radius:10px; padding:5px; box-shadow: 3px 3px 3px grey;">
-          <span style="font-size: 18px; font-weight: bold;">👍🏽 카카오에 방문해봤습니다.</span>
-          <span style="font-size: 12px; color:blue">제주 제주시 첨단로 242</span>
-        </div>
-        `,
-        latlng: new kakao.maps.LatLng(33.450705, 126.570677),
-      },
-      {
-        content: `
-        <div style="display: flex; flex-direction: column; background-color:white; border: 1px solid white; border-radius:10px; padding:5px; box-shadow: 3px 3px 3px grey;">
-          <span style="font-size: 18px; font-weight: bold;">🌾 텃밭 방문해봤습니다.</span>
-          <span style="font-size: 12px; color:blue">제주 제주시 첨단로 242-2</span>
-        </div>
-        `,
-        latlng: new kakao.maps.LatLng(33.450936, 126.569477)
-      },
-      {
-        content: `
-        <div style="display: flex; flex-direction: column; background-color:white; border: 1px solid white; border-radius:10px; padding:5px; box-shadow: 3px 3px 3px grey;">
-          <span style="font-size: 18px; font-weight: bold;">연못 낚시터</span>
-          <span style="font-size: 12px; color:blue">제주 제주시 첨단로 242-3</span>
-        </div>
-        `,
-        latlng: new kakao.maps.LatLng(33.450879, 126.569940)
-      },
-      {
-        content: `
-        <div style="display: flex; flex-direction: column; background-color:white; border: 1px solid white; border-radius:10px; padding:5px; box-shadow: 3px 3px 3px grey;">
-          <span style="font-size: 18px; font-weight: bold;">근린공원이네요</span>
-          <span style="font-size: 12px; color:blue">제주 제주시 첨단로 242</span>
-        </div>
-        `,
-        latlng: new kakao.maps.LatLng(33.451393, 126.570738)
-      }
-    ];
 
-    const markers = positions.map(position => {
+
+    const positions = feedList.map(feed => ({
+      content: `
+      <div style="display: flex; flex-direction: column; background-color:white; border: 1px solid white; border-radius:10px; padding:5px; box-shadow: 3px 3px 3px grey;">
+        <span style="font-size: 18px; font-weight: bold;">${feed.title}</span>
+        <span style="font-size: 12px; color:blue">${feed.address}</span>
+      </div>
+      `,
+      latlng: new kakao.maps.LatLng(feed.lat, feed.lng),
+    }));
+
+    // 마커 이미지 크기
+    const imageSize = new kakao.maps.Size(24, 35);
+
+    // 센터 마커 이미지를 생성합니다
+    const centerMarkerImage = new kakao.maps.MarkerImage(centerPinImg, imageSize);
+    // 일반 마커 이미지를 생성합니다 
+    const markerImage = new kakao.maps.MarkerImage(pinImg, imageSize);
+
+    const markers = positions.map((position, idx) => {
+
       // 마커를 생성합니다
       const marker = new kakao.maps.Marker({
         map: map, // 마커를 표시할 지도
-        position: position.latlng // 마커의 위치
+        position: position.latlng, // 마커의 위치
+        image: (centerLat === position.latlng.Ma && centerLng === position.latlng.La) ? centerMarkerImage : markerImage
       });
 
       // 마커에 표시할 커스텀 오버레이를 생성합니다 
@@ -150,6 +141,7 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: IMapSize,
         customOverlay.setMap(null);
       };
     }
+
     clusterer.addMarkers(markers);
     // --------------
     // | 주소 기반 탐색 |
@@ -188,18 +180,20 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: IMapSize,
     drawMap();
     console.log('side Effect');
 
-  }, [centerLat, centerLng, mapLevel]);
+  }, [centerLat, centerLng, level]);
 
-  const onClickModal = () => {
+  const onClickModal = (event: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(event);
     console.log('click');
   };
 
-  const onClickMapFeed = (lat: number, lng: number) => {
-    changeCenterLatLng(lat, lng);
+  const onClickMapFeed = (event: React.MouseEvent<HTMLButtonElement>, lat: number, lng: number) => {
+    changeCenterLatLng(event, lat, lng);
     unfoldFeed();
   };
 
-  const changeCenterLatLng = (lat: number, lng: number) => {
+  const changeCenterLatLng = (event: React.MouseEvent<HTMLButtonElement>, lat: number, lng: number) => {
+    console.log(event);
     setCenterLat(lat);
     setCenterLng(lng);
     setLevel(1);
@@ -213,10 +207,10 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: IMapSize,
   return (
     <Wrapper>
       <MapContainer width={mapSize.width} height={mapSize.height} ref={mapContainer}></MapContainer>
-      <Button onClick={onClickModal}><HiOutlinePlusCircle /></Button>
+      <Button onClick={onClickModal}><BsPlus /></Button>
       <Feeds >
         {feedList.map((item, idx) => (
-          <FeedFolded handler={() => onClickMapFeed(item.lat, item.lng)} key={idx} name={item.username} title={item.title}></FeedFolded>
+          <FeedFolded onClickHandler={(event: React.MouseEvent<HTMLButtonElement>) => onClickMapFeed(event, item.lat, item.lng)} key={idx} name={item.username} title={item.title}></FeedFolded>
         ))}
       </Feeds>
     </Wrapper >
@@ -266,6 +260,11 @@ const Feeds = styled.div`
   display: flex;
   flex-direction: column;
   overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
 `;
 
 
