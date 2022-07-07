@@ -1,6 +1,7 @@
 import { type ReactNode, HTMLAttributes } from 'react';
 import styled from 'styled-components';
 import {
+  system,
   space,
   layout,
   color,
@@ -19,6 +20,7 @@ import { Footer } from '@/components/Layout/Footer';
 interface IMainProps extends SpaceProps, LayoutProps, ColorProps, BackgroundProps, FlexboxProps {
   header?: boolean;
   footer?: boolean;
+  gap?: number | string;
   children?: ReactNode;
 }
 
@@ -43,9 +45,15 @@ const StlyedMain = styled.main<IMainProps>`
   width: 100vw;
   height: 100vh;
 
-  ${space}
-  ${layout}
+  ${system({ gap: true })}
+  ${space} 
+  ${layout} 
   ${color}
   ${background}
   ${flexbox}
 `;
+
+Main.defaultProps = {
+  header: true,
+  footer: true,
+};
