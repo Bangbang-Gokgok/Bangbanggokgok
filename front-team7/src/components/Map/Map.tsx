@@ -1,6 +1,7 @@
 /*global kakao*/
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
+import { FeedFolded } from "../FeedFolded";
 
 declare global {
   interface Window {
@@ -9,6 +10,11 @@ declare global {
 }
 
 interface IMapSize {
+  width: string,
+  height: string,
+}
+
+interface IMapContainer {
   width: string,
   height: string,
 }
@@ -167,15 +173,50 @@ const Map = ({ mapSize, mapLevel, centerLatLng }: { mapSize: IMapSize, mapLevel:
     drawMap();
   }, []);
 
+  const feedList = [
+    {
+      username: '김정현',
+      title: '👍🏽 카카오에 방문해봤습니다.'
+    },
+    {
+      username: '김정',
+      title: '근린공원이네요'
+    },
+    {
+      username: '제주도사람',
+      title: '🌾 텃밭 방문해봤습니다.'
+    },
+  ];
+
   return (
-    <MapContainer width={mapSize.width} height={mapSize.height} ref={mapContainer}></MapContainer>
+    <Wrapper>
+      <MapContainer width={mapSize.width} height={mapSize.height} ref={mapContainer}></MapContainer>
+      <Feeds>
+        {feedList.map(item => (
+          <FeedFolded name={item.username} title={item.title}></FeedFolded>
+        ))}
+      </Feeds>
+    </Wrapper>
   );
 };
 
-const MapContainer = styled.div<{ width: string; height: string; }>`
+const MapContainer = styled.div<IMapContainer>`
   width: ${props => props.width};
   height: ${props => props.height};
   border-radius: 10px;
+`;
+
+const Wrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: calc(100% - 150px);
+`;
+
+const Feeds = styled.div`
+  position: absolute;
+  width: 100%;
+  z-index: 1000;
+  bottom: 0;
 `;
 
 export default Map;

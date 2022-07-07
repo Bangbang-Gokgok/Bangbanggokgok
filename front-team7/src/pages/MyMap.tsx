@@ -5,7 +5,7 @@ import { useState } from "react";
 const MyMap = () => {
   const [mapSize, setMapSize] = useState({
     width: '100%',
-    height: '500px'
+    height: '100%'
   });
 
   const [mapLevel, setMapLevel] = useState(3);
@@ -14,6 +14,13 @@ const MyMap = () => {
     lat: 33.450701,
     lng: 126.570667
   });
+
+  const username = '김정현';
+  const title = '👍🏽 카카오에 방문해봤습니다.';
+
+  const feedListData = [{
+
+  }];
 
   return (
     <Main header={true} footer={true}>
