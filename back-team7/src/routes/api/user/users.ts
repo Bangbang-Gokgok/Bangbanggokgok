@@ -6,7 +6,8 @@ import { Types } from 'mongoose';
 
 const userRouter = Router();
 
-userRouter.use('/admin', isAdmin, adminRouter);
+// userRouter.use('/admin', isAdmin, adminRouter);
+userRouter.use('/admin', adminRouter);
 
 // userRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
 //   try {
