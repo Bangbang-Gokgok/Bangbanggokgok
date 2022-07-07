@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import { variant } from 'styled-system';
+import { variant, border, type BorderProps } from 'styled-system';
 
 import { getKindVariant, getSizeVariant } from './Avartar.variant';
 import unknown from '@/assets/images/unknown-user.png';
 
-export interface IAvartarProps {
+export interface IAvartarProps extends BorderProps {
   kind?: 'circle' | 'square';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xxl';
   src?: string;
   alt?: string;
 }
@@ -49,6 +49,8 @@ const StyledAvartar = styled.div<IAvartarProps & IAvartarVariants>`
 
   ${({ kindVariant }) => variant(kindVariant)}
   ${({ sizeVariant }) => variant(sizeVariant)}
+
+  ${border}
 `;
 
 Avartar.defaultProps = {
