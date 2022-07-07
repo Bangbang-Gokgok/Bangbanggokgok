@@ -2,12 +2,12 @@ import styled from 'styled-components';
 
 import { Avartar } from '@/components/Avatar';
 
-export interface IUserInfoProps {
+export interface UserInfoProps {
   name: string;
   image?: string;
 }
 
-export const UserInfo = ({ name, image }: IUserInfoProps) => {
+export const UserInfo = ({ name, image }: UserInfoProps) => {
   return (
     <StyledUserInfo>
       <Avartar kind="circle" size="md" src={image} alt="img1" />

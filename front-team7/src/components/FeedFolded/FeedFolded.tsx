@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 
-import { UserInfo, IUserInfoProps } from '@/components/UserInfo';
+import { UserInfo, UserInfoProps } from '@/components/UserInfo';
 
-export const FeedFolded = ({ onClickHandler, name, image, title }: IUserInfoProps & { title: string; } & { onClickHandler: any; }) => {
+export const FeedFolded = ({ onClickHandler, name, image, title }: UserInfoProps & { title: string; } & { onClickHandler: any; }) => {
 
   return (
     <StyledFeedFolded onClick={onClickHandler}>

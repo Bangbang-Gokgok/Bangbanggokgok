@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import passport from 'passport';
-import { setUserToken, getUserDataFromToken } from '../utils/jwt';
+import { setUserToken } from '../utils/jwt';
 import 'dotenv/config';
 
 const authRouter = Router();
@@ -39,11 +39,6 @@ authRouter.get(
 
 authRouter.get('/logout', (req: Request, res: Response, next: NextFunction) => {
   res.clearCookie('token').redirect(DOMAIN);
-});
-
-authRouter.get('/:token', (req: Request, res: Response, next: NextFunction) => {
-  const user = getUserDataFromToken(req.params.token);
-  res.json(user);
 });
 
 export { authRouter };

@@ -9,13 +9,13 @@ export function setUserToken(user: Express.User): string {
   return token;
 }
 
-export function getUserDataFromToken(token: string): typeof JwtPayload | Error {
-  const user = jwt.verify(token, secret);
-  if (typeof user !== 'string') {
-    return user;
-  } else {
-    const error = new Error('토큰이 정상적으로 변환되지 않았습니다.');
-    error.name = 'InternalServerError';
-    throw error;
-  }
-}
+// export function getUserDataFromToken(token: string): typeof JwtPayload | Error {
+//   const user = jwt.verify(token, secret);
+//   if (typeof user !== 'string') {
+//     return user;
+//   } else {
+//     const error = new Error('토큰이 정상적으로 변환되지 않았습니다.');
+//     error.name = 'InternalServerError';
+//     throw error;
+//   }
+// }
