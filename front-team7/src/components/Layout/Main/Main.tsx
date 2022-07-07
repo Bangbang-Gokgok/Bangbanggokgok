@@ -1,6 +1,7 @@
 import { type ReactNode, HTMLAttributes } from 'react';
 import styled from 'styled-components';
 import {
+  system,
   space,
   layout,
   color,
@@ -19,29 +20,32 @@ import { Footer } from '@/components/Layout/Footer';
 interface IMainProps extends SpaceProps, LayoutProps, ColorProps, BackgroundProps, FlexboxProps {
   header?: boolean;
   footer?: boolean;
+  gap?: number | string;
   children?: ReactNode;
 }
 
-export const Main = ({
-  header,
-  footer,
-  children,
-  ...props
-}: IMainProps & HTMLAttributes<HTMLDivElement>) => {
+export const Main = (props: IMainProps & HTMLAttributes<HTMLDivElement>) => {
   return (
     <>
-      {header && <Header />}
-      <StlyedMain role="main" {...props}>
-        {children}
-      </StlyedMain>
-      {footer && <Footer />}
+      {props.header && <Header />}
+      <StyledMain role="main" {...props}>
+        {props.children}
+      </StyledMain>
+      {props.footer && <Footer />}
     </>
   );
 };
 
-const StlyedMain = styled.main<IMainProps>`
+const StyledMain = styled.main<IMainProps>`
   width: 100vw;
   height: 100vh;
+  overflow-y: auto;
+  padding-top: ${({ header }) => (header ? '80px' : '0')};
+  padding-bottom: ${({ footer }) => (footer ? '70px' : '0')};
+
+  ${system({
+    gap: true,
+  })}
 
   ${space}
   ${layout}

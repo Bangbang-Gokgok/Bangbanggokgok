@@ -9,7 +9,7 @@ const App = () => {
     <>
       <ThemeProvider theme={defaultTheme}>
         <GlobalStyle />
-        <AppRouter isLoggedIn={false} />
+        <AppRouter isLoggedIn={true} />
       </ThemeProvider>
     </>
   );
