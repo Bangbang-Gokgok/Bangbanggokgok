@@ -15,13 +15,13 @@ const Input = styled.input`
   border-radius: 15px;
   outline: none;
   padding-left: 10px;
-  margin: 0 10px;
+  // margin: 0 10px;
 
-  background-color: rgb(233, 233, 233);
+  background-color: rgb(235, 235, 235);
 `;
 const SearchIconContainer = styled.div`
   position: absolute;
-  right: 20px;
+  right: 12px;
   top: 7px;
 `;
 
@@ -31,7 +31,7 @@ const InputComponent = () => {
       <Input></Input>
 
       <SearchIconContainer>
-        <IconContext.Provider value={{ size: '25px' }}>
+        <IconContext.Provider value={{ size: '20px' }}>
           <BsSearch></BsSearch>
         </IconContext.Provider>
       </SearchIconContainer>
