@@ -51,7 +51,7 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: IMapSize,
   const mapContainer = useRef<HTMLDivElement>(null);
 
 
-  const drawMap = (): void => {
+  const drawMap = () => {
     const options: Object = {
       center: new kakao.maps.LatLng(centerLat, centerLng),
       level: level
@@ -226,7 +226,7 @@ const MapContainer = styled.div<IMapContainer>`
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
-  height: calc(100% - 70px);
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
