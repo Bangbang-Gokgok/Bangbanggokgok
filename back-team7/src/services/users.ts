@@ -1,7 +1,7 @@
 import { User } from '../models';
 import { Types } from 'mongoose';
 
-interface UserInfo {
+export interface UserInfo {
   authority: string;
   email: string;
   name: string;
@@ -35,7 +35,7 @@ class UserService {
     return users;
   }
 
-  async getUserDataById(_id: string): Promise<UserData> {
+  async getUserDataById(_id: Types.ObjectId | string): Promise<UserData> {
     const user = await User.findOne({ _id });
 
     // db에서 찾지 못한 경우, 에러 메시지 반환
@@ -48,7 +48,7 @@ class UserService {
     return user;
   }
 
-  async setUser(_id: string, update: Partial<UserInfo>): Promise<UserData> {
+  async setUser(_id: Types.ObjectId | string, update: Partial<UserInfo>): Promise<UserData> {
     // 업데이트 진행
     const updatedUser = await User.findOneAndUpdate({ _id }, update, { returnOriginal: false });
     if (!updatedUser) {
@@ -59,7 +59,7 @@ class UserService {
     return updatedUser;
   }
 
-  async deleteUserData(_id: string): Promise<{ result: string }> {
+  async deleteUserData(_id: Types.ObjectId | string): Promise<{ result: string }> {
     const { deletedCount } = await User.deleteOne({ _id });
     // 삭제에 실패한 경우, 에러 메시지 반환
     if (deletedCount === 0) {

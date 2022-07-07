@@ -1,11 +1,11 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { userService } from '../../services';
+import { userService, UserInfo } from '../../../services';
 
-const userRouter = Router();
+const adminRouter = Router();
 
-userRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
+adminRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userInfo = req.body;
+    const userInfo: UserInfo = req.body;
     // 위 데이터를 사용자 db에 추가하기
     const newUser = await userService.addUser(userInfo);
     res.status(201).json(newUser);
@@ -14,7 +14,7 @@ userRouter.post('/', async (req: Request, res: Response, next: NextFunction) => 
   }
 });
 
-userRouter.get('/list', async (req: Request, res: Response, next: NextFunction) => {
+adminRouter.get('/list', async (req: Request, res: Response, next: NextFunction) => {
   try {
     // 전체 사용자 목록을 얻음
     const users = await userService.getUsers();
@@ -25,7 +25,7 @@ userRouter.get('/list', async (req: Request, res: Response, next: NextFunction) 
   }
 });
 
-userRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction) => {
+adminRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const _id = req.params._id;
     const userData = await userService.getUserDataById(_id);
@@ -36,10 +36,10 @@ userRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction) 
   }
 });
 
-userRouter.put('/:_id', async (req: Request, res: Response, next: NextFunction) => {
+adminRouter.put('/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const _id = req.params._id;
-    const update = req.body;
+    const update: Partial<UserInfo> = req.body;
 
     // 사용자 정보를 업데이트함.
     const updatedUser = await userService.setUser(_id, update);
@@ -50,7 +50,7 @@ userRouter.put('/:_id', async (req: Request, res: Response, next: NextFunction) 
   }
 });
 
-userRouter.delete('/:_id', async (req: Request, res: Response, next: NextFunction) => {
+adminRouter.delete('/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const _id = req.params._id;
     const deleteResult = await userService.deleteUserData(_id);
@@ -61,4 +61,4 @@ userRouter.delete('/:_id', async (req: Request, res: Response, next: NextFunctio
   }
 });
 
-export { userRouter };
+export { adminRouter };
