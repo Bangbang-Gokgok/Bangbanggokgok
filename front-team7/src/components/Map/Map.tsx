@@ -1,8 +1,8 @@
 /*global kakao*/
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { FeedFolded } from "../FeedFolded";
-
+import { HiOutlinePlusCircle } from 'react-icons/hi';
 declare global {
   interface Window {
     kakao?: any,
@@ -20,26 +20,33 @@ interface IMapContainer {
 }
 
 interface ICenterLatLng {
-  lat: Number,
-  lng: Number,
+  lat: number,
+  lng: number,
 }
 
-interface IMarkingPostion {
-  content: any,
-  latlng: any,
+interface IFeed {
+  username: string,
+  title: string,
+  lat: number,
+  lng: number;
 }
+
+interface IFeedList extends Array<IFeed> { }
 
 const { kakao } = window;
 
-const Map = ({ mapSize, mapLevel, centerLatLng }: { mapSize: IMapSize, mapLevel: number, centerLatLng: ICenterLatLng, }) => {
+const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: IMapSize, mapLevel: number, centerLatLng: ICenterLatLng, feedList: IFeedList; }) => {
 
+  const [centerLat, setCenterLat] = useState(centerLatLng.lat);
+  const [centerLng, setCenterLng] = useState(centerLatLng.lng);
+  const [level, setLevel] = useState(mapLevel);
 
   const mapContainer = useRef<HTMLDivElement>(null);
 
   const drawMap = (): void => {
     const options: Object = {
-      center: new kakao.maps.LatLng(centerLatLng.lat, centerLatLng.lng),
-      level: mapLevel
+      center: new kakao.maps.LatLng(centerLat, centerLng),
+      level: level
     };
     const map = new kakao.maps.Map(mapContainer.current, options);
 
@@ -49,6 +56,13 @@ const Map = ({ mapSize, mapLevel, centerLatLng }: { mapSize: IMapSize, mapLevel:
     // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
     const zoomControl = new kakao.maps.ZoomControl();
     map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+    // 마커 클러스터러를 생성합니다 
+    const clusterer = new kakao.maps.MarkerClusterer({
+      map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
+      averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
+      minLevel: 8 // 클러스터 할 최소 지도 레벨 
+    });
 
 
     // --------------
@@ -94,7 +108,7 @@ const Map = ({ mapSize, mapLevel, centerLatLng }: { mapSize: IMapSize, mapLevel:
       }
     ];
 
-    positions.forEach(position => {
+    const markers = positions.map(position => {
       // 마커를 생성합니다
       const marker = new kakao.maps.Marker({
         map: map, // 마커를 표시할 지도
@@ -113,6 +127,7 @@ const Map = ({ mapSize, mapLevel, centerLatLng }: { mapSize: IMapSize, mapLevel:
       kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(customOverlay));
       kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
       kakao.maps.event.addListener(marker, 'click', makeClickListener(customOverlay));
+      return marker;
     });
 
     function makeClickListener(customOverlay) {
@@ -135,7 +150,7 @@ const Map = ({ mapSize, mapLevel, centerLatLng }: { mapSize: IMapSize, mapLevel:
         customOverlay.setMap(null);
       };
     }
-
+    clusterer.addMarkers(markers);
     // --------------
     // | 주소 기반 탐색 |
     // --------------
@@ -171,32 +186,40 @@ const Map = ({ mapSize, mapLevel, centerLatLng }: { mapSize: IMapSize, mapLevel:
 
   useEffect(() => {
     drawMap();
-  }, []);
+    console.log('side Effect');
 
-  const feedList = [
-    {
-      username: '김정현',
-      title: '👍🏽 카카오에 방문해봤습니다.'
-    },
-    {
-      username: '김정',
-      title: '근린공원이네요'
-    },
-    {
-      username: '제주도사람',
-      title: '🌾 텃밭 방문해봤습니다.'
-    },
-  ];
+  }, [centerLat, centerLng, mapLevel]);
+
+  const onClickModal = () => {
+    console.log('click');
+  };
+
+  const onClickMapFeed = (lat: number, lng: number) => {
+    changeCenterLatLng(lat, lng);
+    unfoldFeed();
+  };
+
+  const changeCenterLatLng = (lat: number, lng: number) => {
+    setCenterLat(lat);
+    setCenterLng(lng);
+    setLevel(1);
+  };
+
+  const unfoldFeed = () => {
+    console.log('피드 펼치기');
+
+  };
 
   return (
     <Wrapper>
       <MapContainer width={mapSize.width} height={mapSize.height} ref={mapContainer}></MapContainer>
-      <Feeds>
-        {feedList.map(item => (
-          <FeedFolded name={item.username} title={item.title}></FeedFolded>
+      <Button onClick={onClickModal}><HiOutlinePlusCircle /></Button>
+      <Feeds >
+        {feedList.map((item, idx) => (
+          <FeedFolded handler={() => onClickMapFeed(item.lat, item.lng)} key={idx} name={item.username} title={item.title}></FeedFolded>
         ))}
       </Feeds>
-    </Wrapper>
+    </Wrapper >
   );
 };
 
@@ -209,14 +232,41 @@ const MapContainer = styled.div<IMapContainer>`
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
-  height: calc(100% - 150px);
+  height: calc(100% - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Button = styled.button`
+  position: absolute;
+  z-index: 4;
+  bottom: 20%;
+  right: 5%;
+  margin-bottom: 5px;
+  font-size: 4.5rem;
+  width: 56px;
+  height: 56px;
+  border: none;
+  background-color: #00cec9;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
 `;
 
 const Feeds = styled.div`
   position: absolute;
-  width: 100%;
-  z-index: 1000;
+  max-height: 20%;
+  width: 90%;
+  z-index: 3;
   bottom: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
 `;
+
 
 export default Map;
