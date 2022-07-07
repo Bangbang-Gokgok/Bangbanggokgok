@@ -20,7 +20,6 @@ async function findOrCreateUser(name: string, email: string) {
   const created = await User.create({
     name,
     email,
-    password: 'GOOGLE_OAUTH',
   });
 
   return created;
@@ -39,6 +38,7 @@ export const google = new Strategy(
       const user = await findOrCreateUser(name!, email!);
       done(null, {
         _id: user._id,
+        authority: user.authority,
         email: user.email,
         name: user.name,
       });
