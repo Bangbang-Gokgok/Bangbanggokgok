@@ -1,6 +1,8 @@
+import { Main } from "@/components/Layout";
+
 const Search = () => {
   return (
-    <div>Search</div>
+    <Main>Search</Main>
   );
 };
 

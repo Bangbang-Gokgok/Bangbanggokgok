@@ -1,6 +1,8 @@
+import { Main } from "@/components/Layout";
+
 const Profile = () => {
   return (
-    <div>Profile</div>
+    <Main>Profile</Main>
   );
 };
 
