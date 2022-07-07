@@ -49,3 +49,8 @@ const StlyedMain = styled.main<IMainProps>`
   ${background}
   ${flexbox}
 `;
+
+Main.defaultProps = {
+  header: true,
+  footer: true,
+};
