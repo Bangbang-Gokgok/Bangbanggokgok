@@ -64,7 +64,7 @@ const MyMap = () => {
   ];
 
   return (
-    <Main header={true} footer={true}>
+    <Main>
       <Map mapSize={mapSize} mapLevel={mapLevel} centerLatLng={centerLatLng} feedList={feedList} ></Map>
     </Main >
   );

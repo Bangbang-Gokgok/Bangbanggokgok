@@ -12,22 +12,22 @@ declare global {
   }
 }
 
-interface IMapSize {
+interface MapSize {
   width: string,
   height: string,
 }
 
-interface IMapContainer {
+interface MapContainer {
   width: string,
   height: string,
 }
 
-interface ICenterLatLng {
+interface CenterLatLng {
   lat: number,
   lng: number,
 }
 
-interface IFeed {
+interface FeedProps {
   username: string,
   title: string,
   description: string,
@@ -37,11 +37,11 @@ interface IFeed {
   createAt: string;
 }
 
-interface IFeedList extends Array<IFeed> { }
+interface FeedListProps extends Array<FeedProps> { }
 
 const { kakao } = window;
 
-const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: IMapSize, mapLevel: number, centerLatLng: ICenterLatLng, feedList: IFeedList; }) => {
+const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, mapLevel: number, centerLatLng: CenterLatLng, feedList: FeedListProps; }) => {
 
   const [centerLat, setCenterLat] = useState(centerLatLng.lat);
   const [centerLng, setCenterLng] = useState(centerLatLng.lng);
@@ -187,13 +187,12 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: IMapSize,
     console.log('click');
   };
 
-  const onClickMapFeed = (event: React.MouseEvent<HTMLButtonElement>, lat: number, lng: number) => {
-    changeCenterLatLng(event, lat, lng);
+  const onClickMapFeed = (lat: number, lng: number) => {
+    changeCenterLatLng(lat, lng);
     unfoldFeed();
   };
 
-  const changeCenterLatLng = (event: React.MouseEvent<HTMLButtonElement>, lat: number, lng: number) => {
-    console.log(event);
+  const changeCenterLatLng = (lat: number, lng: number) => {
     setCenterLat(lat);
     setCenterLng(lng);
     setLevel(1);
@@ -210,14 +209,14 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: IMapSize,
       <Button onClick={onClickModal}><BsPlus /></Button>
       <Feeds >
         {feedList.map((item, idx) => (
-          <FeedFolded onClickHandler={(event: React.MouseEvent<HTMLButtonElement>) => onClickMapFeed(event, item.lat, item.lng)} key={idx} name={item.username} title={item.title}></FeedFolded>
+          <FeedFolded onClickHandler={() => onClickMapFeed(item.lat, item.lng)} key={idx} name={item.username} title={item.title}></FeedFolded>
         ))}
       </Feeds>
     </Wrapper >
   );
 };
 
-const MapContainer = styled.div<IMapContainer>`
+const MapContainer = styled.div<MapContainer>`
   width: ${props => props.width};
   height: ${props => props.height};
   border-radius: 10px;
