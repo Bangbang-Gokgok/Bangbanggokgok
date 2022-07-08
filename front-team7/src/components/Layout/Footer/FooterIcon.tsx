@@ -2,12 +2,12 @@ import { type ReactNode } from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
-interface IFooterIconProps {
+interface FooterIconProps {
   icon: ReactNode;
   to: string;
 }
 
-export const FooterIcon = ({ icon, to }: IFooterIconProps) => {
+export const FooterIcon = ({ icon, to }: FooterIconProps) => {
   return <StyledFooterIcon to={to}>{icon}</StyledFooterIcon>;
 };
 
