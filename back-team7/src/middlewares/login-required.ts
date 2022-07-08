@@ -14,7 +14,7 @@ export const loginRequired = (req: Request, res: Response, next: NextFunction) =
   next();
 };
 
-export const isAdmin = (req: any, res: Response, next: NextFunction) => {
+export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   loginRequired(req, res, next);
   if (req.user!.authority !== 'admin') {
     const error = new Error('관리자가 아닙니다.');

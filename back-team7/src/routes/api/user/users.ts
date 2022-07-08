@@ -6,6 +6,19 @@ import { Types } from 'mongoose';
 
 const userRouter = Router();
 
+declare global {
+  namespace Express {
+    interface User {
+      _id: Types.ObjectId | string;
+      authority: string;
+      email: string;
+      name: string;
+      iat: Number;
+      exp: Number;
+    }
+  }
+}
+
 // userRouter.use('/admin', isAdmin, adminRouter);
 userRouter.use('/admin', adminRouter);
 
@@ -20,7 +33,7 @@ userRouter.use('/admin', adminRouter);
 //   }
 // });
 
-userRouter.get('/', async (req: any, res: Response, next: NextFunction) => {
+userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.user) {
       // const _id: Types.ObjectId = req.user._id;
@@ -37,10 +50,10 @@ userRouter.get('/', async (req: any, res: Response, next: NextFunction) => {
   }
 });
 
-userRouter.put('/', async (req: any, res: Response, next: NextFunction) => {
+userRouter.put('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.user) {
-      const _id: Types.ObjectId = req.user._id;
+      const _id: Types.ObjectId | string = req.user._id;
       const update: Partial<UserInfo> = req.body;
 
       // 사용자 정보를 업데이트함.
@@ -57,10 +70,10 @@ userRouter.put('/', async (req: any, res: Response, next: NextFunction) => {
   }
 });
 
-userRouter.delete('/', async (req: any, res: Response, next: NextFunction) => {
+userRouter.delete('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.user) {
-      const _id: Types.ObjectId = req.user._id;
+      const _id: Types.ObjectId | string = req.user._id;
       const deleteResult = await userService.deleteUserData(_id);
 
       res.status(200).json(deleteResult);
