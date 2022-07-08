@@ -10,8 +10,8 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "dotenv": "^16.0.1",
-    "esbuild-darwin-arm64": "^0.14.48",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-icons": "^4.4.0",

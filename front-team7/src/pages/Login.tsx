@@ -1,3 +1,4 @@
+import { MouseEvent } from 'react';
 import styled from 'styled-components';
 import { FcGoogle } from 'react-icons/fc';
 import { RiKakaoTalkFill } from 'react-icons/ri';
@@ -8,6 +9,11 @@ import { Main } from '@/components/Layout';
 import { Avartar } from '@/components/Avatar';
 
 const Login = () => {
+  function loginHandler(e: MouseEvent<HTMLButtonElement>, to: string) {
+    e.preventDefault();
+    window.location.href = to;
+  }
+
   return (
     <Main
       header={false}
@@ -33,18 +39,18 @@ const Login = () => {
         <LoginTitleWrapper>
           <LoginTitle>여러 발자취들의 만남,</LoginTitle>
           <LoginTitle>
-            <span>맵자취(가명) </span>와 함께하세요 🎉
+            <span>맵자취(가명)</span> 와 함께하세요 🎉
           </LoginTitle>
         </LoginTitleWrapper>
 
         <LoginButtonWrapper>
-          <LoginButton>
+          <LoginButton onClick={(e) => loginHandler(e, '/auth/google')}>
             <span>
               <FcGoogle />
             </span>
             <span>구글 로그인</span>
           </LoginButton>
-          <LoginButton>
+          <LoginButton onClick={(e) => loginHandler(e, '/auth/kakao')}>
             <span>
               <RiKakaoTalkFill />
             </span>
@@ -108,6 +114,7 @@ const LoginButton = styled.button`
   padding: 0 20px;
   border-radius: 4px;
   border: none;
+  cursor: pointer;
 
   span {
     font-size: 1.4rem;
