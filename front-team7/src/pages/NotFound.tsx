@@ -1,12 +1,18 @@
 import { Main } from '@/components/Layout';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { AiOutlineHome, AiFillFrown } from 'react-icons/ai';
-import { TbArrowBackUp } from 'react-icons/tb';
+import { AiFillFrown } from 'react-icons/ai';
 
 const NotFound = () => {
   return (
-    <Main>
+    <Main
+      header={false}
+      footer={false}
+      bg="#485461"
+      backgroundImage="linear-gradient(315deg, #485461 0%, #28313b 74%)"
+      display="flex"
+      justifyContent="center"
+      alignItems="center">
       <Title>
         <CommentIcon>
           <AiFillFrown />
@@ -30,7 +36,7 @@ const Title = styled.p`
   align-items: center;
   font-weight: 300;
   font-size: 7rem;
-  color: black;
+  color: white;
   p {
     text-align: center;
   }
@@ -99,7 +105,6 @@ const GoHome = styled.button`
   background-color: #f39c12;
   padding: 10px;
   font-size: 2.5rem;
-  color: black;
 `;
 
 const LinkTag = styled(Link)`
