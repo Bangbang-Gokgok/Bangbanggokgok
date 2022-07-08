@@ -13,6 +13,10 @@ declare global {
       authority: string;
       email: string;
       name: string;
+      // profileImage?: string | undefined;
+      // contactNumber?: number | undefined;
+      // location?: object | undefined;
+      // friends?: Array<string> | undefined;
       iat: Number;
       exp: Number;
     }

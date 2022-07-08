@@ -7,7 +7,6 @@ adminRouter.get('/list', async (req: Request, res: Response, next: NextFunction)
   try {
     // 전체 사용자 목록을 얻음
     const users = await userService.getUsers();
-
     res.status(200).json(users);
   } catch (error) {
     next(error);
