@@ -11,7 +11,6 @@ const SearchContainer = styled.div`
   flex-direction: column;
   justify-contents: center;
   align-itmes: center;
-
   padding: 40px 10px;
   gap: 35px;
 `;
@@ -19,6 +18,7 @@ const SearchContainer = styled.div`
 const Search = () => {
   let name = '김지환';
   return (
+
     <Main
       display={'flex'}
       flexDirection={'column'}

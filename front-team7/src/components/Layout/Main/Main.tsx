@@ -44,8 +44,8 @@ const StyledMain = styled.main<MainProps>`
   padding-bottom: ${({ footer }) => (footer ? '70px' : '0')};
 
   ${system({
-    gap: true,
-  })}
+  gap: true,
+})}
 
   ${space}
   ${layout}
