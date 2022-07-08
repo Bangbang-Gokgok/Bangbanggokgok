@@ -54,6 +54,26 @@ userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
+userRouter.get('/list', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const users = await userService.getUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    next(error);
+  }
+});
+
+userRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const _id = req.params._id;
+    const userData = await userService.getUserDataById(_id);
+
+    res.status(200).json(userData);
+  } catch (error) {
+    next(error);
+  }
+});
+
 userRouter.put('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.user) {
