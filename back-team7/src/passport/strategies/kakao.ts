@@ -33,6 +33,7 @@ export const kakao = new KakaoStrategy(
       const user = await findOrCreateUser(name!, email!);
       done(null, {
         _id: user._id,
+        authority: user.authority,
         email: user.email,
         name: user.name,
       });
