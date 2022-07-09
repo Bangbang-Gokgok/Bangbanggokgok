@@ -1,21 +1,50 @@
+import { useState } from 'react';
 import { Main } from '@/components/Layout';
 import styled from 'styled-components';
 import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
 import unknownUser from '@/assets/images/unknown-user.png';
+import InfiniteScroll from 'react-infinite-scroll-component';
+// import { useEffect } from '@storybook/addons';
+
 const FeedListContainer = styled.div`
-  width: 330px;
+  width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-contents: center;
-  align-itmes: center;
+  justify-content: center;
+  align-items: center;
 
-  padding: 30px 0;
-  gap: 30px;
+  // padding: 30px 0;
+  // gap: 30px;
 `;
 
+interface MOCK {
+  name: string;
+  title: string;
+}
+const MOCK_ITEMS: MOCK[] = [
+  { name: '김지환', title: '👍🏽 홀로 여행기1' },
+  { name: '김지환', title: '👍🏽 홀로 여행기2' },
+  { name: '김지환', title: '👍🏽 홀로 여행기3' },
+];
+
 const Home = () => {
-  let name = '김지환';
-  let title = '👍🏽 홀로 여행기';
+  // let name = '김지환';
+  // let title = '👍🏽 홀로 여행기';
+
+  const [items, setItems] = useState<MOCK[]>(MOCK_ITEMS);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+
+  const fetchMoreData = () => {
+    if (items.length >= 30) {
+      setHasMore(false);
+      return;
+    }
+    setTimeout(() => {
+      const newItems = items.concat(MOCK_ITEMS);
+      setItems(newItems);
+    }, 1000);
+  };
 
   return (
     <Main
@@ -25,10 +54,26 @@ const Home = () => {
       alignItems={'center'}
     >
       <FeedListContainer>
-        <FeedDetail name={name} image={unknownUser as string} title={title}></FeedDetail>
-        <FeedDetail name={name} image={unknownUser as string} title={title}></FeedDetail>
-        <FeedDetail name={name} image={unknownUser as string} title={title}></FeedDetail>
-        <FeedDetail name={name} image={unknownUser as string} title={title}></FeedDetail>
+        <div style={{ width: '90%' }}>
+          <InfiniteScroll
+            dataLength={items.length}
+            next={fetchMoreData}
+            hasMore={hasMore}
+            endMessage={<h4>모든 데이터 로드 완료!</h4>}
+            loader={<h4>Loading...</h4>}
+            height={800}
+          >
+            <span>총 데이터 개수 : {items.length}</span>
+            {items.map((item, index) => (
+              <FeedDetail
+                key={index}
+                name={item.name}
+                image={unknownUser as string}
+                title={item.title}
+              ></FeedDetail>
+            ))}
+          </InfiniteScroll>
+        </div>
       </FeedListContainer>
     </Main>
   );
