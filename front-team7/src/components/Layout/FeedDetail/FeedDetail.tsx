@@ -5,13 +5,14 @@ import { FeedFolded } from '@/components/FeedFolded/FeedFolded';
 import { UserInfoProps } from '@/components/UserInfo';
 
 const FeedDetailContainer = styled.div`
-  width: 330px;
+  width: 100%;
   height: 280px;
   background-color: white;
   display: flex;
   flex-direction: column;
   border-radius: 10px;
   box-shadow: 5px 10px 5px #c2c2c2;
+  margin-top: 30px;
 `;
 const FeedDetailHeader = styled.div`
   width: 100%;
