@@ -36,7 +36,7 @@ const Home = () => {
   const [hasMore, setHasMore] = useState<boolean>(true);
 
   const fetchMoreData = () => {
-    if (items.length >= 30) {
+    if (items.length >= 9) {
       setHasMore(false);
       return;
     }
@@ -48,6 +48,7 @@ const Home = () => {
 
   return (
     <Main
+      id="main-styled"
       display={'flex'}
       flexDirection={'column'}
       justifyContent={'flex-start'}
@@ -61,9 +62,8 @@ const Home = () => {
             hasMore={hasMore}
             endMessage={<h4>모든 데이터 로드 완료!</h4>}
             loader={<h4>Loading...</h4>}
-            height={800}
+            scrollableTarget="main-styled"
           >
-            <span>총 데이터 개수 : {items.length}</span>
             {items.map((item, index) => (
               <FeedDetail
                 key={index}
