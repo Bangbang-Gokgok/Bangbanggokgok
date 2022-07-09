@@ -46,7 +46,7 @@ const server = app.listen(PORT, () => console.log(`server is running ${PORT}`));
 // }); // 라우트 설정
 const DB_URL =
   process.env.MONGODB_URL ||
-  'MongoDB 서버 주소가 설정되지 않았습니다.\n./models/index.ts나 .env 파일을 확인해 주세요. \n';
+  'mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.5.0';
 
 mongoose.connect(DB_URL);
 const db = mongoose.connection;
