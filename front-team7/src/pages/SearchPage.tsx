@@ -4,7 +4,7 @@ import { UserInfo } from '@/components/UserInfo';
 import InputComponent from '@/components/InputComponent/InputComponent';
 import unknownUser from '@/assets/images/unknown-user.png';
 
-const SearchContainer = styled.div`
+const StyledSearchContainer = styled.div`
   width: 330px;
   // background: lightgray;
   display: flex;
@@ -18,14 +18,13 @@ const SearchContainer = styled.div`
 const Search = () => {
   let name = '김지환';
   return (
-
     <Main
       display={'flex'}
       flexDirection={'column'}
       justifyContent={'flex-start'}
       alignItems={'center'}
     >
-      <SearchContainer>
+      <StyledSearchContainer>
         <InputComponent></InputComponent>
         <UserInfo name={name} image={unknownUser as string}></UserInfo>
         <UserInfo name={name} image={unknownUser as string}></UserInfo>
@@ -40,7 +39,7 @@ const Search = () => {
         <UserInfo name={name} image={unknownUser as string}></UserInfo>
         <UserInfo name={name} image={unknownUser as string}></UserInfo>
         <UserInfo name={name} image={unknownUser as string}></UserInfo>
-      </SearchContainer>
+      </StyledSearchContainer>
     </Main>
   );
 };

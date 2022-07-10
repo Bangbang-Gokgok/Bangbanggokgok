@@ -25,8 +25,8 @@ const Login = () => {
       alignItems="center"
       padding={20}
     >
-      <LoginForm>
-        <LoginLogoWrapper>
+      <StyledLoginForm>
+        <StyledLoginLogoWrapper>
           <Avartar
             kind="circle"
             size="xxl"
@@ -34,35 +34,35 @@ const Login = () => {
             alt="login-logo"
             border="4px solid #ccc"
           />
-        </LoginLogoWrapper>
+        </StyledLoginLogoWrapper>
 
-        <LoginTitleWrapper>
-          <LoginTitle>여러 발자취들의 만남,</LoginTitle>
-          <LoginTitle>
+        <StyledLoginTitleWrapper>
+          <StyledLoginTitle>여러 발자취들의 만남,</StyledLoginTitle>
+          <StyledLoginTitle>
             <span>맵자취(가명)</span> 와 함께하세요 🎉
-          </LoginTitle>
-        </LoginTitleWrapper>
+          </StyledLoginTitle>
+        </StyledLoginTitleWrapper>
 
-        <LoginButtonWrapper>
-          <LoginButton onClick={(e) => loginHandler(e, '/auth/google')}>
+        <StyledLoginButtonWrapper>
+          <StyledLoginButton onClick={(e) => loginHandler(e, '/auth/google')}>
             <span>
               <FcGoogle />
             </span>
             <span>구글 로그인</span>
-          </LoginButton>
-          <LoginButton onClick={(e) => loginHandler(e, '/auth/kakao')}>
+          </StyledLoginButton>
+          <StyledLoginButton onClick={(e) => loginHandler(e, '/auth/kakao')}>
             <span>
               <RiKakaoTalkFill />
             </span>
             <span>카카오 로그인</span>
-          </LoginButton>
-        </LoginButtonWrapper>
-      </LoginForm>
+          </StyledLoginButton>
+        </StyledLoginButtonWrapper>
+      </StyledLoginForm>
     </Main>
   );
 };
 
-const LoginForm = styled.form`
+const StyledLoginForm = styled.form`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -77,16 +77,16 @@ const LoginForm = styled.form`
     rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
 `;
 
-const LoginLogoWrapper = styled.div`
+const StyledLoginLogoWrapper = styled.div`
   position: absolute;
   left: 50%;
   top: -20%;
   transform: translate(-50%, 20%);
 `;
 
-const LoginTitleWrapper = styled.div``;
+const StyledLoginTitleWrapper = styled.div``;
 
-const LoginTitle = styled.h2`
+const StyledLoginTitle = styled.h2`
   color: whitesmoke;
   font-size: 1.4rem;
   font-weight: normal;
@@ -98,7 +98,7 @@ const LoginTitle = styled.h2`
   }
 `;
 
-const LoginButtonWrapper = styled.div`
+const StyledLoginButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-self: center;
@@ -106,7 +106,7 @@ const LoginButtonWrapper = styled.div`
   width: 100%;
 `;
 
-const LoginButton = styled.button`
+const StyledLoginButton = styled.button`
   display: flex;
   align-items: center;
   width: 100%;
