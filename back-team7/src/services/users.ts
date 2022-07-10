@@ -9,6 +9,7 @@ export interface UserInfo {
   contactNumber?: number | undefined;
   location?: object | undefined;
   friends?: string[] | undefined;
+  refreshToken?: string | undefined;
 }
 
 export interface UserData extends UserInfo {

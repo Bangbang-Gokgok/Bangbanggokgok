@@ -32,6 +32,10 @@ const UserSchema = new Schema(
       type: Array,
       required: false,
     },
+    refreshToken: {
+      type: String,
+      required: false,
+    },
   },
   {
     collection: 'users',
