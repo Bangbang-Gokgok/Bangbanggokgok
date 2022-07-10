@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
+import Home from './pages/HomePage';
 import UserMap from './pages/UserMap';
 import MyMap from './pages/MyMap';
-import Search from './pages/Search';
-import Profile from './pages/Profile';
-import Login from './pages/Login';
-import NotFound from './pages/NotFound';
+import Search from './pages/SearchPage';
+import Profile from './pages/ProfilePage';
+import Login from './pages/LoginPage';
+import NotFound from './pages/NotFoundPage';
 
 const AppRouter = ({ isLoggedIn }) => {
   return (
