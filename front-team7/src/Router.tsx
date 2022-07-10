@@ -6,26 +6,38 @@ import Search from './pages/Search';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
+import AuthRouter from './components/AuthRouter';
 
-const AppRouter = ({ isLoggedIn }) => {
+const AppRouter = () => {
   return (
     <Router>
       <Routes>
-        {isLoggedIn ? (
-          <>
-            <Route path="/" element={<Home />} />
-            <Route path="/usermap/:userId" element={<UserMap />} />
-            <Route path="/mymap" element={<MyMap />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="*" element={<NotFound />} />
-          </>
-        ) : (
-          <>
-            <Route path="/" element={<Login />} />
-            <Route path="*" element={<NotFound />} />
-          </>
-        )}
+        <Route path="/" element={
+          <AuthRouter>
+            <Home />
+          </AuthRouter>
+        } />
+        <Route path="/usermap/:userId" element={
+          <AuthRouter>
+            <UserMap />
+          </AuthRouter>
+        } />
+        <Route path="/mymap" element={
+          <AuthRouter>
+            <MyMap />
+          </AuthRouter>
+        } />
+        <Route path="/search" element={
+          <AuthRouter>
+            <Search />
+          </AuthRouter>} />
+        <Route path="/profile" element={
+          <AuthRouter>
+            <Profile />
+          </AuthRouter>
+        } />
+        <Route path="*" element={<NotFound />} />
+        <Route path="/signin" element={<Login />} />
       </Routes>
     </Router>
   );
