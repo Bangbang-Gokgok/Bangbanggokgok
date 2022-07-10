@@ -32,8 +32,7 @@ interface FeedProps {
   title: string,
   description: string,
   address: string,
-  lat: number,
-  lng: number;
+  location: CenterLatLng;
   createAt: string;
 }
 
@@ -86,7 +85,7 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, 
         <span style="font-size: 12px; color:blue">${feed.address}</span>
       </div>
       `,
-      latlng: new kakao.maps.LatLng(feed.lat, feed.lng),
+      latlng: new kakao.maps.LatLng(feed.location.lat, feed.location.lng),
     }));
 
     // 마커 이미지 크기
@@ -204,25 +203,25 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, 
   };
 
   return (
-    <Wrapper>
-      <MapContainer width={mapSize.width} height={mapSize.height} ref={mapContainer}></MapContainer>
+    <StyledWrapper>
+      <StyledMapContainer width={mapSize.width} height={mapSize.height} ref={mapContainer}></StyledMapContainer>
       <Button onClick={onClickModal}><BsPlus /></Button>
-      <Feeds >
+      <StyledFeeds >
         {feedList.map((item, idx) => (
-          <FeedFolded onClickHandler={() => onClickMapFeed(item.lat, item.lng)} key={idx} name={item.username} title={item.title}></FeedFolded>
+          <FeedFolded onClickHandler={() => onClickMapFeed(item.location.lat, item.location.lng)} key={idx} name={item.username} title={item.title}></FeedFolded>
         ))}
-      </Feeds>
-    </Wrapper >
+      </StyledFeeds>
+    </StyledWrapper >
   );
 };
 
-const MapContainer = styled.div<MapContainer>`
+const StyledMapContainer = styled.div<MapContainer>`
   width: ${props => props.width};
   height: ${props => props.height};
   border-radius: 10px;
 `;
 
-const Wrapper = styled.div`
+const StyledWrapper = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
@@ -250,7 +249,7 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const Feeds = styled.div`
+const StyledFeeds = styled.div`
   position: absolute;
   max-height: 20%;
   width: 90%;
