@@ -11,7 +11,7 @@ export interface AvartarProps extends BorderProps {
   alt?: string;
 }
 
-interface IAvartarVariants {
+interface AvartarVariants {
   kindVariant: ReturnType<typeof getKindVariant>;
   sizeVariant: ReturnType<typeof getSizeVariant>;
 }
@@ -34,7 +34,7 @@ export const Avartar = (props: AvartarProps) => {
   );
 };
 
-const StyledAvartar = styled.div<AvartarProps & IAvartarVariants>`
+const StyledAvartar = styled.div<AvartarProps & AvartarVariants>`
   display: flex;
   justify-content: center;
   align-items: center;
