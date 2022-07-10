@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Main } from '@/components/Layout';
 import { UserInfo } from '@/components/UserInfo';
-import InputComponent from '@/components/InputComponent/InputComponent';
+import Input from '@/components/Input/Input';
 import unknownUser from '@/assets/images/unknown-user.png';
 
 const StyledSearchContainer = styled.div`
@@ -25,7 +25,7 @@ const Search = () => {
       alignItems={'center'}
     >
       <StyledSearchContainer>
-        <InputComponent></InputComponent>
+        <Input></Input>
         <UserInfo name={name} image={unknownUser as string}></UserInfo>
         <UserInfo name={name} image={unknownUser as string}></UserInfo>
         <UserInfo name={name} image={unknownUser as string}></UserInfo>

@@ -25,7 +25,7 @@ const StyledSearchIconContainer = styled.div`
   top: 7px;
 `;
 
-const InputComponent = () => {
+const Input = () => {
   return (
     <StyledInputContainer>
       <StyledInput></StyledInput>
@@ -39,4 +39,4 @@ const InputComponent = () => {
   );
 };
 
-export default InputComponent;
+export default Input;
