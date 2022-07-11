@@ -25,15 +25,21 @@ interface MainProps extends SpaceProps, LayoutProps, ColorProps, BackgroundProps
 }
 
 export const Main = (props: MainProps & HTMLAttributes<HTMLDivElement>) => {
+  const { header, footer, children } = props;
   return (
     <>
-      {props.header && <Header />}
-      <StyledMain role="main" {...props}>
-        {props.children}
+      {header && <Header />}
+      <StyledMain {...props} role="main">
+        {children}
       </StyledMain>
-      {props.footer && <Footer />}
+      {footer && <Footer />}
     </>
   );
+};
+
+Main.defaultProps = {
+  header: true,
+  footer: true,
 };
 
 const StyledMain = styled.main<MainProps>`
@@ -44,8 +50,8 @@ const StyledMain = styled.main<MainProps>`
   padding-bottom: ${({ footer }) => (footer ? '70px' : '0')};
 
   ${system({
-  gap: true,
-})}
+    gap: true,
+  })}
 
   ${space}
   ${layout}
@@ -53,8 +59,3 @@ const StyledMain = styled.main<MainProps>`
   ${background}
   ${flexbox}
 `;
-
-Main.defaultProps = {
-  header: true,
-  footer: true,
-};
