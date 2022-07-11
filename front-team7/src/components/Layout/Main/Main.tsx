@@ -24,14 +24,8 @@ interface MainProps extends SpaceProps, LayoutProps, ColorProps, BackgroundProps
   children?: ReactNode;
 }
 
-export const Main = ({
-  header = true,
-  footer = true,
-  gap,
-  children,
-}: MainProps & HTMLAttributes<HTMLDivElement>) => {
-  const props = { header, footer, gap };
-
+export const Main = (props: MainProps & HTMLAttributes<HTMLDivElement>) => {
+  const { header, footer, children } = props;
   return (
     <>
       {header && <Header />}
@@ -41,6 +35,11 @@ export const Main = ({
       {footer && <Footer />}
     </>
   );
+};
+
+Main.defaultProps = {
+  header: true,
+  footer: true,
 };
 
 const StyledMain = styled.main<MainProps>`
