@@ -29,3 +29,9 @@ export const updateOneFeed = async (id, sendData) => {
   console.log('updated res.data : ', res.data);
   return res.data;
 };
+
+export const deleteOneFeed = async (id) => {
+  let res = await axios.delete(`/api/feeds/${id}`);
+  // console.log('deleted res.data : ', res.data);
+  return res.data;
+};
