@@ -9,7 +9,7 @@ const StyledContainer = styled.div`
   right: 0%;
   top: 0%;
   bottom: 0%;
-
+  z-index: 100;
   background: rgba(4, 4, 4, 0.4);
   opacity: 0.9;
 
@@ -31,16 +31,17 @@ const StyledClose = styled.div`
   top: 15px;
 `;
 
-const ModalFrame = () => {
-  return (
+const ModalFrame = ({ handleModal, state, children }: { handleModal: (e: React.MouseEvent<HTMLDivElement>) => void, state: boolean, children: React.ReactNode; }) => {
+  return state ? (
     <StyledContainer>
       <StyledModal>
-        <StyledClose>
+        <StyledClose onClick={e => handleModal(e)}>
           <GrClose></GrClose>
         </StyledClose>
+        {children}
       </StyledModal>
     </StyledContainer>
-  );
+  ) : (<></>);
 };
 
 export default ModalFrame;
