@@ -16,6 +16,11 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    refreshToken: {
+      type: String,
+      required: true,
+      default: '',
+    },
     profileImage: {
       type: String,
       required: false,
@@ -30,10 +35,6 @@ const UserSchema = new Schema(
     },
     friends: {
       type: Array,
-      required: false,
-    },
-    refreshToken: {
-      type: String,
       required: false,
     },
   },

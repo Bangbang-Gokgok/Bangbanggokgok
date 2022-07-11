@@ -45,7 +45,7 @@ authRouter.get(
 
 authRouter.get('/logout', async (req: Request, res: Response, next: NextFunction) => {
   if (req.user) {
-    await userService.setUser(req.user._id, { refreshToken: undefined });
+    await userService.setUser(req.user._id, { refreshToken: '' });
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken').redirect(DOMAIN);
   } else {
