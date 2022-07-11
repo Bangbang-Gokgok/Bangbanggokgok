@@ -62,13 +62,13 @@ const HomePage = () => {
   // };
 
   // delete 구현 (onClick 이벤트)
-  async function del() {
-    if (confirm('삭제하시겠습니까?')) {
-      // const deleteFeedID = '62cbc449cc2e9840852d11b1';
-      const result: FeedListProps = await Api.deleteOneFeed(deleteFeedID);
-      console.log('delete() : ', result);
-    }
-  }
+  // async function del() {
+  //   if (confirm('삭제하시겠습니까?')) {
+  //     // const deleteFeedID = '62cbc449cc2e9840852d11b1';
+  //     const result: FeedListProps = await Api.deleteOneFeed(deleteFeedID);
+  //     console.log('delete() : ', result);
+  //   }
+  // }
 
   useEffect(() => {
     async function get() {
