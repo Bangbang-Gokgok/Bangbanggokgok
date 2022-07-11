@@ -28,16 +28,15 @@ interface CenterLatLng {
 }
 
 interface FeedProps {
-  username: string;
-  title: string;
-  description: string;
-  address: string;
-  lat: number;
-  lng: number;
+  username: string,
+  title: string,
+  description: string,
+  address: string,
+  location: CenterLatLng;
   createAt: string;
 }
 
-interface FeedListProps extends Array<FeedProps> {}
+interface FeedListProps extends Array<FeedProps> { }
 
 const { kakao } = window;
 
@@ -83,8 +82,8 @@ const Map = ({
     // --------------
     // | 마커 생성    |
     // --------------
-    // 마커를 표시할 위치와 title 객체 배열입니다
 
+    // 마커를 표시할 위치와 title 객체 배열입니다
     const positions = feedList.map((feed) => ({
       content: `
       <div style="display: flex; flex-direction: column; background-color:white; border: 1px solid white; border-radius:10px; padding:5px; box-shadow: 3px 3px 3px grey;">
@@ -92,7 +91,7 @@ const Map = ({
         <span style="font-size: 12px; color:blue">${feed.address}</span>
       </div>
       `,
-      latlng: new kakao.maps.LatLng(feed.lat, feed.lng),
+      latlng: new kakao.maps.LatLng(feed.location.lat, feed.location.lng),
     }));
 
     // 마커 이미지 크기
@@ -195,7 +194,7 @@ const Map = ({
 
   const onClickMapFeed = (lat: number, lng: number) => {
     changeCenterLatLng(lat, lng);
-    unfoldFeed();
+    unFoldFeed();
   };
 
   const changeCenterLatLng = (lat: number, lng: number) => {
@@ -204,28 +203,22 @@ const Map = ({
     setLevel(1);
   };
 
-  const unfoldFeed = () => {
+  const unFoldFeed = () => {
     console.log('피드 펼치기');
   };
 
   return (
     <StyledWrapper>
-      <StyledMapContainer
-        width={mapSize.width}
-        height={mapSize.height}
-        ref={mapContainer}
-      ></StyledMapContainer>
-      <StyledButton onClick={onClickModal}>
-        <BsPlus />
-      </StyledButton>
-      <StyledFeeds>
+      <StyledMapContainer width={mapSize.width} height={mapSize.height} ref={mapContainer}></StyledMapContainer>
+      <Button onClick={onClickModal}><BsPlus /></Button>
+      <StyledFeeds >
         {feedList.map((item, idx) => (
           <FeedFolded
-            onClickHandler={() => onClickMapFeed(item.lat, item.lng)}
+            onClickHandler={() => onClickMapFeed(item.location.lat, item.location.lng)}
             key={idx}
             name={item.username}
             title={item.title}
-          ></FeedFolded>
+          />
         ))}
       </StyledFeeds>
     </StyledWrapper>
@@ -247,7 +240,7 @@ const StyledWrapper = styled.div`
   align-items: center;
 `;
 
-const StyledButton = styled.button`
+const Button = styled.button`
   position: absolute;
   z-index: 4;
   bottom: 20%;
