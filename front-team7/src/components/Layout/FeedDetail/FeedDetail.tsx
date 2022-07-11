@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
-import { FeedFolded } from '@/components/FeedFolded/FeedFolded';
+import { FeedHeader } from '@/components/FeedHeader/FeedHeader';
 import { UserInfoProps } from '@/components/UserInfo';
 
 const StyledFeedDetailContainer = styled.div`
@@ -126,7 +126,7 @@ const FeedDetail = ({ name, image, title }: UserInfoProps & { title: string }) =
 
   return (
     <StyledFeedDetailContainer>
-      <FeedFolded name={name} image={image} title={title}></FeedFolded>
+      <FeedHeader isFolded={false} name={name} image={image} title={title}></FeedHeader>
       <StyledFeedDetailBody>
         <StyledTitle>👍🏽 홀로 여행기</StyledTitle>
         <StyledDescription>
