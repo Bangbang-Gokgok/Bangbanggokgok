@@ -5,7 +5,7 @@ import { FooterIcon } from './FooterIcon';
 
 export const Footer = () => {
 
-  const userId = '123123';
+  const userId = 'userId';
 
   return (
     <StyledFooter>
