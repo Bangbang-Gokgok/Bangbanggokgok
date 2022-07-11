@@ -5,11 +5,11 @@ export interface UserInfo {
   authority: string;
   email: string;
   name: string;
+  refreshToken: string;
   profileImage?: string | undefined;
   contactNumber?: number | undefined;
   location?: object | undefined;
   friends?: string[] | undefined;
-  refreshToken?: string | undefined;
 }
 
 export interface UserData extends UserInfo {
@@ -47,6 +47,19 @@ class UserService {
     // db에서 찾지 못한 경우, 에러 메시지 반환
     if (!user) {
       const error = new Error('해당 id의 사용자가 없습니다. 다시 한 번 확인해 주세요.');
+      error.name = 'NotFound';
+      throw error;
+    }
+
+    return user;
+  }
+
+  async getUserDataByRefreshToken(refreshToken: string): Promise<UserData> {
+    const user = await User.findOne({ refreshToken });
+
+    // db에서 찾지 못한 경우, 에러 메시지 반환
+    if (!user) {
+      const error = new Error('해당 token 사용자가 없습니다. 다시 한 번 확인해 주세요.');
       error.name = 'NotFound';
       throw error;
     }
