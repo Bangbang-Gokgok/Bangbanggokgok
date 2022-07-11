@@ -10,18 +10,14 @@ export const FeedHeader = ({
   name,
   image,
   title,
-}: UserInfoProps & { title: string } & { isFolded: boolean } & { onClickHandler?: () => void }) => {
+}: UserInfoProps & { title: string; } & { isFolded: boolean; } & { onClickHandler?: () => void; }) => {
   return (
-    <StyledFeedHeader>
+    <StyledFeedHeader onClick={onClickHandler}>
       <span className="user-info-container">
         <UserInfo name={name} image={image} />
       </span>
       <span className="title-container">{title}</span>
-      {isFolded ? (
-        <span className="arrow-down" onClick={onClickHandler}>
-          <MdOutlineKeyboardArrowDown />
-        </span>
-      ) : (
+      {!isFolded && (
         <span
           className="arrow-down"
           onClick={() => {
