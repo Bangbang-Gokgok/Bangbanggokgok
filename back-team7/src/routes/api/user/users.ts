@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { userService, UserInfo } from '../../../services';
 import { adminRouter } from './admin';
-import { isAdmin } from '../../../middlewares';
+// import { adminCheck } from '../../../middlewares';
 import { Types } from 'mongoose';
 
 const userRouter = Router();
@@ -13,12 +13,11 @@ declare global {
       authority: string;
       email: string;
       name: string;
-      // profileImage?: string | undefined;
-      // contactNumber?: number | undefined;
-      // location?: object | undefined;
-      // friends?: Array<string> | undefined;
-      iat: Number;
-      exp: Number;
+      // refreshToken: string;
+      profileImage?: string | undefined;
+      contactNumber?: number | undefined;
+      location?: object | undefined;
+      friends?: Array<string> | undefined;
     }
   }
 }
@@ -26,6 +25,7 @@ declare global {
 // userRouter.use('/admin', isAdmin, adminRouter);
 userRouter.use('/admin', adminRouter);
 
+// 로컬 로그인 - 현재 없으므로 주석 처리
 // userRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
 //   try {
 //     const userInfo: UserInfo = req.body;
@@ -37,12 +37,9 @@ userRouter.use('/admin', adminRouter);
 //   }
 // });
 
-userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
+userRouter.get('/user', async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.user) {
-      // const _id: Types.ObjectId = req.user._id;
-      // const userData = await userService.getUserDataById(_id);
-      // res.status(200).json(userData);
       res.json(req.user);
     } else {
       const error = new Error('user 정보가 없습니다.');
