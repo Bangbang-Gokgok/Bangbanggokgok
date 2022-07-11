@@ -28,7 +28,6 @@ interface FeedProps {
   description: string;
   address: string;
   location: CenterLatLng;
-  createAt: string;
 }
 
 interface FeedListProps extends Array<FeedProps> { }
