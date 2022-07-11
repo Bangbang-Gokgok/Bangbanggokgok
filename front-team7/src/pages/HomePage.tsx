@@ -2,7 +2,7 @@ import { Main } from '@/components/Layout';
 import styled from 'styled-components';
 import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
 import unknownUser from '@/assets/images/unknown-user.png';
-const FeedListContainer = styled.div`
+const StyledFeedListContainer = styled.div`
   width: 330px;
   display: flex;
   flex-direction: column;
@@ -24,12 +24,12 @@ const Home = () => {
       justifyContent={'flex-start'}
       alignItems={'center'}
     >
-      <FeedListContainer>
+      <StyledFeedListContainer>
         <FeedDetail name={name} image={unknownUser as string} title={title}></FeedDetail>
         <FeedDetail name={name} image={unknownUser as string} title={title}></FeedDetail>
         <FeedDetail name={name} image={unknownUser as string} title={title}></FeedDetail>
         <FeedDetail name={name} image={unknownUser as string} title={title}></FeedDetail>
-      </FeedListContainer>
+      </StyledFeedListContainer>
     </Main>
   );
 };

@@ -1,11 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import UserMap from './pages/UserMap';
-import MyMap from './pages/MyMap';
-import Search from './pages/Search';
-import Profile from './pages/Profile';
-import Login from './pages/Login';
-import NotFound from './pages/NotFound';
+import HomePage from './pages/HomePage';
+import UserMapPage from './pages/UserMap';
+import MyMapPage from './pages/MyMap';
+import SearchPage from './pages/SearchPage';
+import ProfilePage from './pages/ProfilePage';
+import LoginPage from './pages/LoginPage';
+import NotFoundPage from './pages/NotFoundPage';
 import AuthRouter from './components/AuthRouter';
 
 const AppRouter = () => {
@@ -14,30 +14,30 @@ const AppRouter = () => {
       <Routes>
         <Route path="/" element={
           <AuthRouter>
-            <Home />
+            <HomePage />
           </AuthRouter>
         } />
         <Route path="/usermap/:userId" element={
           <AuthRouter>
-            <UserMap />
+            <UserMapPage />
           </AuthRouter>
         } />
         <Route path="/mymap" element={
           <AuthRouter>
-            <MyMap />
+            <MyMapPage />
           </AuthRouter>
         } />
         <Route path="/search" element={
           <AuthRouter>
-            <Search />
+            <SearchPage />
           </AuthRouter>} />
         <Route path="/profile" element={
           <AuthRouter>
-            <Profile />
+            <ProfilePage />
           </AuthRouter>
         } />
-        <Route path="*" element={<NotFound />} />
-        <Route path="/signin" element={<Login />} />
+        <Route path="*" element={<NotFoundPage />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </Router>
   );

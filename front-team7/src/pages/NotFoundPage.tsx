@@ -12,22 +12,23 @@ const NotFound = () => {
       backgroundImage="linear-gradient(315deg, #485461 0%, #28313b 74%)"
       display="flex"
       justifyContent="center"
-      alignItems="center">
-      <Title>
-        <CommentIcon>
+      alignItems="center"
+    >
+      <StyledTitle>
+        <StyledCommentIcon>
           <AiFillFrown />
-        </CommentIcon>
-        <CommentTitle>404</CommentTitle>
-        <Comment>NOT FOUND</Comment>
-        <GoHome>
-          <LinkTag to="/">Go Home</LinkTag>
-        </GoHome>
-      </Title>
+        </StyledCommentIcon>
+        <StyledCommentTitle>404</StyledCommentTitle>
+        <StyledComment>NOT FOUND</StyledComment>
+        <StyledGoHome>
+          <StyledLinkTag to="/">Go Home</StyledLinkTag>
+        </StyledGoHome>
+      </StyledTitle>
     </Main>
   );
 };
 
-const Title = styled.p`
+const StyledTitle = styled.p`
   width: 100%;
   height: 500px;
   display: flex;
@@ -42,7 +43,7 @@ const Title = styled.p`
   }
 `;
 
-const CommentTitle = styled.span`
+const StyledCommentTitle = styled.span`
   width: 100%;
   text-align: center;
   line-height: 6.5rem;
@@ -91,15 +92,15 @@ const CommentTitle = styled.span`
   }
 `;
 
-const Comment = styled(CommentTitle)`
+const StyledComment = styled(StyledCommentTitle)`
   font-size: 3rem;
 `;
 
-const CommentIcon = styled(CommentTitle)`
+const StyledCommentIcon = styled(StyledCommentTitle)`
   font-size: 10rem;
 `;
 
-const GoHome = styled.button`
+const StyledGoHome = styled.button`
   border: 1px solid #f39c12;
   border-radius: 5px;
   background-color: #f39c12;
@@ -107,7 +108,7 @@ const GoHome = styled.button`
   font-size: 2.5rem;
 `;
 
-const LinkTag = styled(Link)`
+const StyledLinkTag = styled(Link)`
   &:visited {
     text-decoration: none;
   }

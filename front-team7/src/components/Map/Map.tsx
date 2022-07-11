@@ -1,30 +1,30 @@
 /*global kakao*/
-import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
-import { FeedFolded } from "../FeedFolded";
+import { useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import { FeedFolded } from '../FeedFolded';
 import { BsPlus } from 'react-icons/bs';
 import pinImg from '@/assets/images/blue-pin.png';
 import centerPinImg from '@/assets/images/red-pin.png';
 
 declare global {
   interface Window {
-    kakao?: any,
+    kakao?: any;
   }
 }
 
 interface MapSize {
-  width: string,
-  height: string,
+  width: string;
+  height: string;
 }
 
 interface MapContainer {
-  width: string,
-  height: string,
+  width: string;
+  height: string;
 }
 
 interface CenterLatLng {
-  lat: number,
-  lng: number,
+  lat: number;
+  lng: number;
 }
 
 interface FeedProps {
@@ -40,8 +40,17 @@ interface FeedListProps extends Array<FeedProps> { }
 
 const { kakao } = window;
 
-const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, mapLevel: number, centerLatLng: CenterLatLng, feedList: FeedListProps; }) => {
-
+const Map = ({
+  mapSize,
+  mapLevel,
+  centerLatLng,
+  feedList,
+}: {
+  mapSize: MapSize;
+  mapLevel: number;
+  centerLatLng: CenterLatLng;
+  feedList: FeedListProps;
+}) => {
   const [centerLat, setCenterLat] = useState(centerLatLng.lat);
   const [centerLng, setCenterLng] = useState(centerLatLng.lng);
   const [positions, setPositions] = useState([]);
@@ -49,11 +58,10 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, 
 
   const mapContainer = useRef<HTMLDivElement>(null);
 
-
   const drawMap = () => {
     const options: Object = {
       center: new kakao.maps.LatLng(centerLat, centerLng),
-      level: level
+      level: level,
     };
     const map = new kakao.maps.Map(mapContainer.current, options);
 
@@ -64,19 +72,19 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, 
     const zoomControl = new kakao.maps.ZoomControl();
     map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
-    // 마커 클러스터러를 생성합니다 
+    // 마커 클러스터러를 생성합니다
     const clusterer = new kakao.maps.MarkerClusterer({
-      map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체 
-      averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정 
-      minLevel: 8 // 클러스터 할 최소 지도 레벨 
+      map: map, // 마커들을 클러스터로 관리하고 표시할 지도 객체
+      averageCenter: true, // 클러스터에 포함된 마커들의 평균 위치를 클러스터 마커 위치로 설정
+      minLevel: 8, // 클러스터 할 최소 지도 레벨
     });
-
 
     // --------------
     // | 마커 생성    |
     // --------------
-    // 마커를 표시할 위치와 title 객체 배열입니다 
-    const positions = feedList.map(feed => ({
+
+    // 마커를 표시할 위치와 title 객체 배열입니다
+    const positions = feedList.map((feed) => ({
       content: `
       <div style="display: flex; flex-direction: column; background-color:white; border: 1px solid white; border-radius:10px; padding:5px; box-shadow: 3px 3px 3px grey;">
         <span style="font-size: 18px; font-weight: bold;">${feed.title}</span>
@@ -91,23 +99,25 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, 
 
     // 센터 마커 이미지를 생성합니다
     const centerMarkerImage = new kakao.maps.MarkerImage(centerPinImg, imageSize);
-    // 일반 마커 이미지를 생성합니다 
+    // 일반 마커 이미지를 생성합니다
     const markerImage = new kakao.maps.MarkerImage(pinImg, imageSize);
 
     const markers = positions.map((position, idx) => {
-
       // 마커를 생성합니다
       const marker = new kakao.maps.Marker({
         map: map, // 마커를 표시할 지도
         position: position.latlng, // 마커의 위치
-        image: (centerLat === position.latlng.Ma && centerLng === position.latlng.La) ? centerMarkerImage : markerImage
+        image:
+          centerLat === position.latlng.Ma && centerLng === position.latlng.La
+            ? centerMarkerImage
+            : markerImage,
       });
 
-      // 마커에 표시할 커스텀 오버레이를 생성합니다 
+      // 마커에 표시할 커스텀 오버레이를 생성합니다
       const customOverlay = new kakao.maps.CustomOverlay({
         position: position.latlng,
         content: position.content, // 커스텀 오버레이에 표시할 내용
-        yAnchor: 1.8
+        yAnchor: 1.8,
       });
 
       // 마커에 mouseover 이벤트와 mouseout 이벤트, click 이벤트를 등록합니다
@@ -120,19 +130,18 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, 
 
     function makeClickListener(customOverlay) {
       return function () {
-        console.log(customOverlay, "클릭됐습니다.");
+        console.log(customOverlay, '클릭됐습니다.');
       };
-
     }
 
-    // 커스텀 오버레이를 표시하는 클로저를 만드는 함수입니다 
+    // 커스텀 오버레이를 표시하는 클로저를 만드는 함수입니다
     function makeOverListener(customOverlay) {
       return function () {
         customOverlay.setMap(map);
       };
     }
 
-    // 커스텀 오버레이를 닫는 클로저를 만드는 함수입니다 
+    // 커스텀 오버레이를 닫는 클로저를 만드는 함수입니다
     function makeOutListener(customOverlay) {
       return function () {
         customOverlay.setMap(null);
@@ -147,7 +156,7 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, 
 
     //   geocoder.addressSearch('서울특별시 용산구 녹사평대로 150', (result, status) => {
 
-    //     // 정상적으로 검색이 완료됐으면 
+    //     // 정상적으로 검색이 완료됐으면
     //     if (status === kakao.maps.services.Status.OK) {
     //       console.log(result[0].y, result[0].x);
 
@@ -176,7 +185,6 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, 
   useEffect(() => {
     drawMap();
     console.log('side Effect');
-
   }, [centerLat, centerLng, level]);
 
   const onClickModal = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -197,7 +205,6 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, 
 
   const unFoldFeed = () => {
     console.log('피드 펼치기');
-
   };
 
   return (
@@ -219,8 +226,8 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, 
 };
 
 const StyledMapContainer = styled.div<MapContainer>`
-  width: ${props => props.width};
-  height: ${props => props.height};
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
   border-radius: 10px;
 `;
 
@@ -267,6 +274,5 @@ const StyledFeeds = styled.div`
     display: none; /* Chrome, Safari, Opera*/
   }
 `;
-
 
 export default Map;
