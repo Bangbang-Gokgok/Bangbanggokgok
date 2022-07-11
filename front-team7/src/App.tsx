@@ -1,23 +1,21 @@
 import 'sanitize.css';
 
+import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { ThemeProvider } from 'styled-components';
 
 import { defaultTheme, GlobalStyle } from '@/style';
-import { useLogin } from '@/features/auth';
-import { useAxiosInterceptor } from '@/lib';
 import AppRouter from './Router';
 
 const App = () => {
-  // useLogin();
-  // useAxiosInterceptor();
-
   return (
     <>
       <RecoilRoot>
         <ThemeProvider theme={defaultTheme}>
           <GlobalStyle />
-          <AppRouter />
+          <Suspense fallback={<div>loading...</div>}>
+            <AppRouter />
+          </Suspense>
         </ThemeProvider>
       </RecoilRoot>
     </>
