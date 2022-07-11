@@ -48,6 +48,18 @@ const HomePage = () => {
   //     lng: 2,
   //   },
   // };
+
+  // const updateFeedID = '62cbc5aacc2e9840852d11bf';
+  // const updateData = {
+  //   userName: '수정된 김지환',
+  //   title: '수정된 PUT의 세계',
+  //   description: '저는 지금 PUT를 구현중입니다.',
+  //   address: '서울시 수정구 수정동',
+  //   location: {
+  //     lat: 11111,
+  //     lng: 22222,
+  //   },
+  // };
   useEffect(() => {
     async function get() {
       const result: FeedListProps = await Api.getAllFeeds();
@@ -60,6 +72,15 @@ const HomePage = () => {
     //   console.log('create() : ', result);
     // }
     // create();
+
+    // update 구현
+    // async function update() {
+    //   console.log('updateData : ', updateData);
+    //   const result: FeedListProps = await Api.updateOneFeed(updateFeedID, updateData);
+    //   console.log('update() : ', result);
+    // }
+
+    // update();
     get();
   }, []);
   return (

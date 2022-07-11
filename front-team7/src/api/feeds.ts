@@ -8,16 +8,24 @@ export const getAllFeeds = async () => {
   return res.data;
 };
 
-export const getOneFeeds = async (id) => {
+export const getOneFeed = async (id) => {
   let res = await axios.get(`/api/feeds/${id}`);
   // console.log('res.data : ', res.data);
   return res.data;
 };
 
-export const createOneFeeds = async (sendData) => {
+export const createOneFeed = async (sendData) => {
   let res = await axios.post(`/api/feeds`, JSON.stringify(sendData), {
     headers: { 'Content-Type': `application/json` },
   });
   // console.log('res.data : ', res.data);
+  return res.data;
+};
+
+export const updateOneFeed = async (id, sendData) => {
+  let res = await axios.put(`/api/feeds/${id}`, JSON.stringify(sendData), {
+    headers: { 'Content-Type': `application/json` },
+  });
+  console.log('updated res.data : ', res.data);
   return res.data;
 };
