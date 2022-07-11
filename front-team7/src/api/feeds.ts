@@ -5,3 +5,9 @@ export const getAllFeeds = async () => {
   // console.log(res.data);
   return res.data;
 };
+
+export const getOneFeeds = async (id) => {
+  let res = await axios.get(`/api/feeds/${id}`);
+  // console.log(res.data);
+  return res.data;
+};
