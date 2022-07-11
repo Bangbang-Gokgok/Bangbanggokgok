@@ -2,7 +2,7 @@ import { Main } from '@/components/Layout';
 import styled from 'styled-components';
 import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
 import unknownUser from '@/assets/images/unknown-user.png';
-import { getAllFeeds, getOneFeeds } from '@/api/feeds';
+import * as Api from '@/api/feeds';
 import { UserInfoProps } from '@/components/UserInfo';
 import { useEffect, useState } from 'react';
 
@@ -38,12 +38,28 @@ const HomePage = () => {
   // let title = '👍🏽 홀로 여행기';
 
   const [feedList, setFeedList] = useState<FeedListProps>();
-
+  // const sendData = {
+  //   userName: '김지환',
+  //   title: '신기한 POST의 세계',
+  //   description: '저는 지금 POST를 구현중입니다.',
+  //   address: '서울시 광진구',
+  //   location: {
+  //     lat: 1,
+  //     lng: 2,
+  //   },
+  // };
   useEffect(() => {
     async function get() {
-      const result: FeedListProps = await getAllFeeds();
+      const result: FeedListProps = await Api.getAllFeeds();
       setFeedList(result);
     }
+    // create 구현
+    // async function create() {
+    //   console.log('sendData : ', sendData);
+    //   const result: FeedListProps = await Api.createOneFeeds(sendData);
+    //   console.log('create() : ', result);
+    // }
+    // create();
     get();
   }, []);
   return (
