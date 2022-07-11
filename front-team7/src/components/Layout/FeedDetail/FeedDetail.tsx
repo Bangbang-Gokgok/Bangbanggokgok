@@ -4,7 +4,7 @@ import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
 import { FeedFolded } from '@/components/FeedFolded/FeedFolded';
 import { UserInfoProps } from '@/components/UserInfo';
 
-const FeedDetailContainer = styled.div`
+const StyledFeedDetailContainer = styled.div`
   width: 330px;
   height: 280px;
   background-color: white;
@@ -13,13 +13,13 @@ const FeedDetailContainer = styled.div`
   border-radius: 10px;
   box-shadow: 5px 10px 5px #c2c2c2;
 `;
-const FeedDetailHeader = styled.div`
+const StyledFeedDetailHeader = styled.div`
   width: 100%;
   height: 32px;
   background-color: #d9d9d9;
   border-radius: 10px 10px 0px 0px;
 `;
-const FeedDetailBody = styled.div`
+const StyledFeedDetailBody = styled.div`
   width: 100%;
   height: 250px;
   padding: 8px;
@@ -29,13 +29,13 @@ const FeedDetailBody = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const FeedDetailFooter = styled.div`
+const StyledFeedDetailFooter = styled.div`
   width: 100%;
   height: 56px;
   background-color: #d9d9d9;
   border-radius: 0px 0px 10px 10px;
 `;
-const Title = styled.div`
+const StyledTitle = styled.div`
   width: 100%;
   height: 20px;
   margin-bottom: 8px;
@@ -45,7 +45,7 @@ const Title = styled.div`
   align-items: center;
   text-align: center;
 `;
-const Description = styled.div`
+const StyledDescription = styled.div`
   width: 100%;
   margin: 8px 0;
   font-size: 1.2rem;
@@ -56,7 +56,7 @@ const Description = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 `;
-const SlideShow = styled.div`
+const StyledSlideShow = styled.div`
   width: 100%;
   height: 110px;
   margin: 5px auto;
@@ -64,7 +64,7 @@ const SlideShow = styled.div`
   overflow: hidden;
 `;
 
-const SlideList = styled.div`
+const StyledSlideList = styled.div`
   width: 1000px;
   height: 100%;
   position: absolute;
@@ -72,7 +72,7 @@ const SlideList = styled.div`
   top: 0;
 `;
 
-const Slide = styled.div<{ data: string }>`
+const StyledSlide = styled.div<{ data: string }>`
   width: 120px;
   height: 100%;
   float: left;
@@ -83,7 +83,7 @@ const Slide = styled.div<{ data: string }>`
   transition: left 0.5s ease-out;
 `;
 
-const Btn = styled.span<{ PrevOrNext: string }>`
+const StyledBtn = styled.span<{ PrevOrNext: string }>`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -125,39 +125,39 @@ const FeedDetail = ({ name, image, title }: UserInfoProps & { title: string }) =
   let colorlist: Array<string> = ['lightgray', '#f5e6bf', '#bfccf5', '#bff5cc'];
 
   return (
-    <FeedDetailContainer>
+    <StyledFeedDetailContainer>
       <FeedFolded name={name} image={image} title={title}></FeedFolded>
-      <FeedDetailBody>
-        <Title>👍🏽 홀로 여행기</Title>
-        <Description>
+      <StyledFeedDetailBody>
+        <StyledTitle>👍🏽 홀로 여행기</StyledTitle>
+        <StyledDescription>
           최고의 여행장소! 최고의 데이터 코스! 후회하지 않는 장소로 놀러오세요!
-        </Description>
-        <SlideShow>
-          <SlideList>
+        </StyledDescription>
+        <StyledSlideShow>
+          <StyledSlideList>
             {colorlist.map((color, index) => (
-              <Slide key={index} data={color}></Slide>
+              <StyledSlide key={index} data={color}></StyledSlide>
             ))}
-          </SlideList>
-          <Btn
+          </StyledSlideList>
+          <StyledBtn
             PrevOrNext={'prev'}
             onClick={() => {
               handleSlider;
             }}
           >
             <GrFormPrevious></GrFormPrevious>
-          </Btn>
-          <Btn
+          </StyledBtn>
+          <StyledBtn
             PrevOrNext={'next'}
             onClick={() => {
               handleSlider;
             }}
           >
             <GrFormNext></GrFormNext>
-          </Btn>
-        </SlideShow>
-      </FeedDetailBody>
-      <FeedDetailFooter></FeedDetailFooter>
-    </FeedDetailContainer>
+          </StyledBtn>
+        </StyledSlideShow>
+      </StyledFeedDetailBody>
+      <StyledFeedDetailFooter></StyledFeedDetailFooter>
+    </StyledFeedDetailContainer>
   );
 };
 

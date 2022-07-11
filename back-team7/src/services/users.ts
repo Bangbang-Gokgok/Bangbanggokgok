@@ -5,6 +5,10 @@ export interface UserInfo {
   authority: string;
   email: string;
   name: string;
+  profileImage?: string | undefined;
+  contactNumber?: number | undefined;
+  location?: object | undefined;
+  friends?: string[] | undefined;
 }
 
 export interface UserData extends UserInfo {
@@ -30,9 +34,10 @@ class UserService {
     return createdNewUser;
   }
 
-  async getUsers(): Promise<UserData[]> {
+  async getUsers(): Promise<Partial<UserData>[]> {
     const users = await User.find({});
-    return users;
+    const data = await users.map(({ _id, name, profileImage }) => ({ _id, name, profileImage }));
+    return data;
   }
 
   async getUserDataById(_id: Types.ObjectId | string): Promise<UserData> {

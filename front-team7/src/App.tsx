@@ -17,7 +17,7 @@ const App = () => {
       <RecoilRoot>
         <ThemeProvider theme={defaultTheme}>
           <GlobalStyle />
-          <AppRouter isLoggedIn={false} />
+          <AppRouter />
         </ThemeProvider>
       </RecoilRoot>
     </>

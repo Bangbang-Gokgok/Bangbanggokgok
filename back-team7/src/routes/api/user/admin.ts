@@ -1,34 +1,16 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { userService, UserInfo } from '../../../services';
+import { userService } from '../../../services';
+
+interface UserAuthority {
+  authority: string;
+}
 
 const adminRouter = Router();
-
-adminRouter.get('/list', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    // 전체 사용자 목록을 얻음
-    const users = await userService.getUsers();
-
-    res.status(200).json(users);
-  } catch (error) {
-    next(error);
-  }
-});
-
-adminRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const _id = req.params._id;
-    const userData = await userService.getUserDataById(_id);
-
-    res.status(200).json(userData);
-  } catch (error) {
-    next(error);
-  }
-});
 
 adminRouter.put('/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const _id = req.params._id;
-    const update: Partial<UserInfo> = req.body;
+    const update: UserAuthority = req.body;
 
     // 사용자 정보를 업데이트함.
     const updatedUser = await userService.setUser(_id, update);

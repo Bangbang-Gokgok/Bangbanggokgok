@@ -16,12 +16,20 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    profileImage: {
+      type: String,
+      required: false,
+    },
     contactNumber: {
       type: Number,
       required: false,
     },
-    address: {
-      type: String,
+    location: {
+      type: Object,
+      required: false,
+    },
+    friends: {
+      type: Array,
       required: false,
     },
   },

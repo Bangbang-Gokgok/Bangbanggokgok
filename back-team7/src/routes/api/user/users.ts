@@ -13,6 +13,10 @@ declare global {
       authority: string;
       email: string;
       name: string;
+      // profileImage?: string | undefined;
+      // contactNumber?: number | undefined;
+      // location?: object | undefined;
+      // friends?: Array<string> | undefined;
       iat: Number;
       exp: Number;
     }
@@ -45,6 +49,26 @@ userRouter.get('/', async (req: Request, res: Response, next: NextFunction) => {
       error.name = 'NotFound';
       throw error;
     }
+  } catch (error) {
+    next(error);
+  }
+});
+
+userRouter.get('/list', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const users = await userService.getUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    next(error);
+  }
+});
+
+userRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const _id = req.params._id;
+    const userData = await userService.getUserDataById(_id);
+
+    res.status(200).json(userData);
   } catch (error) {
     next(error);
   }
