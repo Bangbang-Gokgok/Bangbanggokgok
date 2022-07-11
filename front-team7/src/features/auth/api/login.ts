@@ -1,23 +1,23 @@
 import { useEffect } from 'react';
 import { axios } from '@/lib';
 import { useSetRecoilState } from 'recoil';
+import Cookie from 'js-cookie';
 
-import { authAtom } from '@/store';
-
-interface LoginResponse {
-  access_token: string;
-}
+import { authState } from '@/store';
 
 export const useLogin = () => {
-  const setAuth = useSetRecoilState(authAtom);
+  const setAuth = useSetRecoilState(authState);
 
   useEffect(() => {
     async function getAccessToken() {
-      const { data } = await axios.post<LoginResponse>('/auth/login');
-      const { access_token } = data;
+      await axios.get<void>('/auth/login');
+      const user = await axios.get('/api/users');
+      console.log(user);
+
+      const accessToken = Cookie.get('accessToken');
 
       setAuth((prevState) => {
-        return { ...prevState, token: access_token };
+        return { ...prevState, token: accessToken };
       });
     }
 
