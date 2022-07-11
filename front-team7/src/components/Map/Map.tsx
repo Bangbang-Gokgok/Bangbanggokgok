@@ -1,7 +1,7 @@
 /*global kakao*/
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { FeedFolded } from '../FeedFolded';
+import { FeedHeader } from '../FeedHeader';
 import { BsPlus } from 'react-icons/bs';
 import pinImg from '@/assets/images/blue-pin.png';
 import centerPinImg from '@/assets/images/red-pin.png';
@@ -28,15 +28,15 @@ interface CenterLatLng {
 }
 
 interface FeedProps {
-  username: string,
-  title: string,
-  description: string,
-  address: string,
+  username: string;
+  title: string;
+  description: string;
+  address: string;
   location: CenterLatLng;
   createAt: string;
 }
 
-interface FeedListProps extends Array<FeedProps> { }
+interface FeedListProps extends Array<FeedProps> {}
 
 const { kakao } = window;
 
@@ -209,12 +209,19 @@ const Map = ({
 
   return (
     <StyledWrapper>
-      <StyledMapContainer width={mapSize.width} height={mapSize.height} ref={mapContainer}></StyledMapContainer>
-      <Button onClick={onClickModal}><BsPlus /></Button>
-      <StyledFeeds >
+      <StyledMapContainer
+        width={mapSize.width}
+        height={mapSize.height}
+        ref={mapContainer}
+      ></StyledMapContainer>
+      <Button onClick={onClickModal}>
+        <BsPlus />
+      </Button>
+      <StyledFeeds>
         {feedList.map((item, idx) => (
-          <FeedFolded
+          <FeedHeader
             onClickHandler={() => onClickMapFeed(item.location.lat, item.location.lng)}
+            isFolded={true}
             key={idx}
             name={item.username}
             title={item.title}
