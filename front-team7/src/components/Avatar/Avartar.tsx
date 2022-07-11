@@ -6,7 +6,7 @@ import unknown from '@/assets/images/unknown-user.png';
 
 export interface AvartarProps extends BorderProps {
   kind?: 'circle' | 'square';
-  size?: 'sm' | 'md' | 'lg' | 'xxl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
   src?: string;
   alt?: string;
 }
@@ -44,7 +44,6 @@ const StyledAvartar = styled.div<AvartarProps & AvartarVariants>`
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border: ${(props) => (props.src !== unknown ? 'none' : '2px solid #ccc')};
 
   .avatar-img {
     width: 100%;

@@ -36,6 +36,12 @@ export const getSizeVariant = () => {
         minWidth: '40px',
         minHeight: '40px',
       },
+      xl: {
+        width: '80px',
+        height: '80px',
+        minWidth: '80px',
+        minHeight: '80px',
+      },
       xxl: {
         width: '100px',
         height: '100px',
