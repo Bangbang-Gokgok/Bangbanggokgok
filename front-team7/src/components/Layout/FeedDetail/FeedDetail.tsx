@@ -121,17 +121,20 @@ const StyledBtn = styled.span<{ PrevOrNext: string }>`
 // 참고 : https://eunhee-programming.tistory.com/106
 const handleSlider = () => {};
 
-const FeedDetail = ({ name, image, title }: UserInfoProps & { title: string }) => {
+const FeedDetail = ({
+  name,
+  image,
+  title,
+  desc,
+}: UserInfoProps & { title: string } & { desc: string }) => {
   let colorlist: Array<string> = ['lightgray', '#f5e6bf', '#bfccf5', '#bff5cc'];
 
   return (
     <StyledFeedDetailContainer>
       <FeedHeader isFolded={false} name={name} image={image} title={title}></FeedHeader>
       <StyledFeedDetailBody>
-        <StyledTitle>👍🏽 홀로 여행기</StyledTitle>
-        <StyledDescription>
-          최고의 여행장소! 최고의 데이터 코스! 후회하지 않는 장소로 놀러오세요!
-        </StyledDescription>
+        <StyledTitle>👍🏽 {title}</StyledTitle>
+        <StyledDescription>{desc}</StyledDescription>
         <StyledSlideShow>
           <StyledSlideList>
             {colorlist.map((color, index) => (
