@@ -46,7 +46,7 @@ const StyledMain = styled.main<MainProps>`
   width: 100vw;
   height: 100vh;
   overflow-y: auto;
-  padding-top: ${({ header }) => (header ? '80px' : '0')};
+  padding-top: ${({ header }) => (header ? '70px' : '0')};
   padding-bottom: ${({ footer }) => (footer ? '70px' : '0')};
 
   ${system({
