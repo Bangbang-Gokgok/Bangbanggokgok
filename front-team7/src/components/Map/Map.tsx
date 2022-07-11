@@ -1,7 +1,7 @@
 /*global kakao*/
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { FeedHeader } from '../FeedHeader';
+import { FeedHeader } from '@/components/FeedHeader/FeedHeader';
 import { BsPlus } from 'react-icons/bs';
 import pinImg from '@/assets/images/blue-pin.png';
 import centerPinImg from '@/assets/images/red-pin.png';
@@ -36,7 +36,7 @@ interface FeedProps {
   createAt: string;
 }
 
-interface FeedListProps extends Array<FeedProps> {}
+interface FeedListProps extends Array<FeedProps> { }
 
 const { kakao } = window;
 
