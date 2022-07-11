@@ -1,8 +1,12 @@
 import { Main } from "@/components/Layout";
 import Map from "@/components/Map/Map";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 
-const MyMap = () => {
+const FeedMapPage = () => {
+  const { userId } = useParams();
+  console.log(userId);
+
   const mapSize = {
     width: '100%',
     height: '100%'
@@ -80,4 +84,4 @@ const MyMap = () => {
   );
 };
 
-export default MyMap;
+export default FeedMapPage;
