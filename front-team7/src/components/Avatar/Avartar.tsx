@@ -16,11 +16,16 @@ interface IAvartarVariants {
   sizeVariant: ReturnType<typeof getSizeVariant>;
 }
 
-export const Avartar = (props: AvartarProps) => {
+export const Avartar = ({
+  kind = 'circle',
+  size = 'md',
+  src = unknown as string,
+  alt = 'unknown-user-img',
+}: AvartarProps) => {
   const kindVariant = getKindVariant();
   const sizeVariant = getSizeVariant();
-  const src = props.src || (unknown as string);
-  const alt = props.alt || 'unknown-user-img';
+
+  const props = { kind, size, src, alt };
 
   const variants = {
     kindVariant,
@@ -39,7 +44,7 @@ const StyledAvartar = styled.div<AvartarProps & IAvartarVariants>`
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border: ${(props) => (props.src ? 'none' : '2px solid #ccc')};
+  border: ${(props) => (props.src !== unknown ? 'none' : '2px solid #ccc')};
 
   .avatar-img {
     width: 100%;
@@ -52,8 +57,3 @@ const StyledAvartar = styled.div<AvartarProps & IAvartarVariants>`
 
   ${border}
 `;
-
-Avartar.defaultProps = {
-  kind: 'circle',
-  size: 'md',
-};
