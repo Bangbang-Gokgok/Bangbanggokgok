@@ -35,6 +35,7 @@ module.exports = {
         additionalHooks: 'useRecoilCallback',
       },
     ],
+    '@typescript-eslint/no-unsafe-return': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
   },
