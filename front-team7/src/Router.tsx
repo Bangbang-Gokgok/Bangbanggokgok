@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import UserMapPage from './pages/UserMap';
-import MyMapPage from './pages/MyMap';
+import FeedMapPage from './pages/FeedMapPage';
 import SearchPage from './pages/SearchPage';
 import ProfilePage from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
@@ -17,14 +16,9 @@ const AppRouter = () => {
             <HomePage />
           </AuthRouter>
         } />
-        <Route path="/usermap/:userId" element={
+        <Route path="/feedmap/:userId" element={
           <AuthRouter>
-            <UserMapPage />
-          </AuthRouter>
-        } />
-        <Route path="/mymap" element={
-          <AuthRouter>
-            <MyMapPage />
+            <FeedMapPage />
           </AuthRouter>
         } />
         <Route path="/search" element={
