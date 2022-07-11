@@ -76,8 +76,6 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, 
     // | 마커 생성    |
     // --------------
     // 마커를 표시할 위치와 title 객체 배열입니다 
-
-
     const positions = feedList.map(feed => ({
       content: `
       <div style="display: flex; flex-direction: column; background-color:white; border: 1px solid white; border-radius:10px; padding:5px; box-shadow: 3px 3px 3px grey;">
@@ -188,7 +186,7 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, 
 
   const onClickMapFeed = (lat: number, lng: number) => {
     changeCenterLatLng(lat, lng);
-    unfoldFeed();
+    unFoldFeed();
   };
 
   const changeCenterLatLng = (lat: number, lng: number) => {
@@ -197,7 +195,7 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, 
     setLevel(1);
   };
 
-  const unfoldFeed = () => {
+  const unFoldFeed = () => {
     console.log('피드 펼치기');
 
   };
@@ -208,10 +206,15 @@ const Map = ({ mapSize, mapLevel, centerLatLng, feedList }: { mapSize: MapSize, 
       <Button onClick={onClickModal}><BsPlus /></Button>
       <StyledFeeds >
         {feedList.map((item, idx) => (
-          <FeedFolded onClickHandler={() => onClickMapFeed(item.location.lat, item.location.lng)} key={idx} name={item.username} title={item.title}></FeedFolded>
+          <FeedFolded
+            onClickHandler={() => onClickMapFeed(item.location.lat, item.location.lng)}
+            key={idx}
+            name={item.username}
+            title={item.title}
+          />
         ))}
       </StyledFeeds>
-    </StyledWrapper >
+    </StyledWrapper>
   );
 };
 
