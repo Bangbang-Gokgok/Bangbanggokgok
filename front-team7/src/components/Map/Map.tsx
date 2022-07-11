@@ -1,15 +1,20 @@
 /*global kakao*/
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { FeedHeader } from '@/components/FeedHeader/FeedHeader';
+import { BsPlus } from 'react-icons/bs';
 import pinImg from '@/assets/images/blue-pin.png';
 import centerPinImg from '@/assets/images/red-pin.png';
-import { useRecoilValue, useRecoilState } from "recoil";
-import { mapAtom } from "@/store/map";
 
 declare global {
   interface Window {
     kakao?: any;
   }
+}
+
+interface MapSize {
+  width: string;
+  height: string;
 }
 
 interface MapContainer {
@@ -35,15 +40,28 @@ interface FeedListProps extends Array<FeedProps> { }
 
 const { kakao } = window;
 
-const Map = ({ feedList, }: { feedList: FeedListProps; }) => {
-  const mapValue = useRecoilValue(mapAtom);
-  const [_, setMapValue] = useRecoilState(mapAtom);
+const Map = ({
+  mapSize,
+  mapLevel,
+  centerLatLng,
+  feedList,
+}: {
+  mapSize: MapSize;
+  mapLevel: number;
+  centerLatLng: CenterLatLng;
+  feedList: FeedListProps;
+}) => {
+  const [centerLat, setCenterLat] = useState(centerLatLng.lat);
+  const [centerLng, setCenterLng] = useState(centerLatLng.lng);
+  const [positions, setPositions] = useState([]);
+  const [level, setLevel] = useState(mapLevel);
+
   const mapContainer = useRef<HTMLDivElement>(null);
 
   const drawMap = () => {
     const options: Object = {
-      center: new kakao.maps.LatLng(mapValue.centerLatLng.lat, mapValue.centerLatLng.lng),
-      level: mapValue.mapLevel,
+      center: new kakao.maps.LatLng(centerLat, centerLng),
+      level: level,
     };
     const map = new kakao.maps.Map(mapContainer.current, options);
 
@@ -90,7 +108,7 @@ const Map = ({ feedList, }: { feedList: FeedListProps; }) => {
         map: map, // 마커를 표시할 지도
         position: position.latlng, // 마커의 위치
         image:
-          mapValue.centerLatLng.lat === position.latlng.Ma && mapValue.centerLatLng.lng === position.latlng.La
+          centerLat === position.latlng.Ma && centerLng === position.latlng.La
             ? centerMarkerImage
             : markerImage,
       });
@@ -131,21 +149,86 @@ const Map = ({ feedList, }: { feedList: FeedListProps; }) => {
     }
 
     clusterer.addMarkers(markers);
+    // --------------
+    // | 주소 기반 탐색 |
+    // --------------
+    //   const geocoder = new kakao.maps.services.Geocoder();
+
+    //   geocoder.addressSearch('서울특별시 용산구 녹사평대로 150', (result, status) => {
+
+    //     // 정상적으로 검색이 완료됐으면
+    //     if (status === kakao.maps.services.Status.OK) {
+    //       console.log(result[0].y, result[0].x);
+
+    //       const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+    //       // 결과값으로 받은 위치를 마커로 표시합니다
+    //       const marker = new kakao.maps.Marker({
+    //         map: map,
+    //         position: coords
+    //       });
+    //       console.log(coords);
+    //       // 커스텀 오버레이로 장소에 대한 설명을 표시합니다
+    //       const infowindow = new kakao.maps.InfoWindow({
+    //         content: `<div style="width:150px;text-align:center;padding:6px 0;">용산구청</div>`
+    //       });
+    //       infowindow.open(map, marker);
+
+    //       // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+    //       map.setCenter(coords);
+    //     } else {
+    //       console.log(result); // []
+    //       console.log(status); // ZERO_RESULT
+    //     }
+    //   });
   };
 
   useEffect(() => {
     drawMap();
     console.log('side Effect');
-  }, [mapValue]);
+  }, [centerLat, centerLng, level]);
+
+  const onClickModal = (event: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(event);
+    console.log('click');
+  };
+
+  const onClickMapFeed = (lat: number, lng: number) => {
+    changeCenterLatLng(lat, lng);
+    unFoldFeed();
+  };
+
+  const changeCenterLatLng = (lat: number, lng: number) => {
+    setCenterLat(lat);
+    setCenterLng(lng);
+    setLevel(1);
+  };
+
+  const unFoldFeed = () => {
+    console.log('피드 펼치기');
+  };
 
   return (
-
-    <StyledMapContainer
-      width={mapValue.mapSize.width}
-      height={mapValue.mapSize.height}
-      ref={mapContainer}
-    ></StyledMapContainer>
-
+    <StyledWrapper>
+      <StyledMapContainer
+        width={mapSize.width}
+        height={mapSize.height}
+        ref={mapContainer}
+      ></StyledMapContainer>
+      <Button onClick={onClickModal}>
+        <BsPlus />
+      </Button>
+      <StyledFeeds>
+        {feedList.map((item, idx) => (
+          <FeedHeader
+            onClickHandler={() => onClickMapFeed(item.location.lat, item.location.lng)}
+            isFolded={true}
+            key={idx}
+            name={item.username}
+            title={item.title}
+          />
+        ))}
+      </StyledFeeds>
+    </StyledWrapper>
   );
 };
 
@@ -155,6 +238,48 @@ const StyledMapContainer = styled.div<MapContainer>`
   border-radius: 10px;
 `;
 
+const StyledWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
+const Button = styled.button`
+  position: absolute;
+  z-index: 4;
+  bottom: 20%;
+  right: 5%;
+  margin-bottom: 5px;
+  font-size: 4.5rem;
+  width: 56px;
+  height: 56px;
+  border: none;
+  background-color: #00cec9;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+`;
+
+const StyledFeeds = styled.div`
+  position: absolute;
+  max-height: 20%;
+  width: 90%;
+  z-index: 3;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
+`;
 
 export default Map;
