@@ -15,7 +15,7 @@ const StyledSearchContainer = styled.div`
   gap: 35px;
 `;
 
-const Search = () => {
+const SearchPage = () => {
   let name = '김지환';
   return (
     <Main
@@ -44,4 +44,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default SearchPage;

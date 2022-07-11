@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { AiFillFrown } from 'react-icons/ai';
 
-const NotFound = () => {
+const NotFoundPage = () => {
   return (
     <Main
       header={false}
@@ -114,4 +114,4 @@ const StyledLinkTag = styled(Link)`
   }
 `;
 
-export default NotFound;
+export default NotFoundPage;

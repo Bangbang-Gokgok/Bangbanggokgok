@@ -13,7 +13,7 @@ const StyledFeedListContainer = styled.div`
   gap: 30px;
 `;
 
-const Home = () => {
+const HomePage = () => {
   let name = '김지환';
   let title = '👍🏽 홀로 여행기';
 
@@ -34,4 +34,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;

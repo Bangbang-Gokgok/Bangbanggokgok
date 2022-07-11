@@ -1,11 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import FeedMapPage from './pages/FeedMapPage';
-import SearchPage from './pages/SearchPage';
-import ProfilePage from './pages/ProfilePage';
-import LoginPage from './pages/LoginPage';
-import NotFoundPage from './pages/NotFoundPage';
-import AuthRouter from './components/AuthRouter';
+
+import FeedMapPage from '@/pages/FeedMapPage';
+import SearchPage from '@/pages/SearchPage';
+import ProfilePage from '@/pages/ProfilePage';
+import LoginPage from '@/pages/LoginPage';
+import NotFoundPage from '@/pages/NotFoundPage';
+import HomePage from '@/pages/HomePage';
+import AuthRouter from '@/components/AuthRouter';
 
 const AppRouter = () => {
   return (

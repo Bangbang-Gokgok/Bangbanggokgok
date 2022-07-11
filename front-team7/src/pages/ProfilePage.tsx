@@ -1,9 +1,9 @@
 import { Main } from "@/components/Layout";
 
-const Profile = () => {
+const ProfilePage = () => {
   return (
     <Main>Profile</Main>
   );
 };
 
-export default Profile;
+export default ProfilePage;

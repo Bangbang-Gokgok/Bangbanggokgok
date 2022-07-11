@@ -1,24 +1,41 @@
 import styled from 'styled-components';
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
 
+import { FaMapMarkedAlt } from 'react-icons/fa';
 import { UserInfo, UserInfoProps } from '@/components/UserInfo';
 
-export const FeedFolded = ({ onClickHandler, name, image, title }: UserInfoProps & { title: string; } & { onClickHandler: () => void; }) => {
-
+export const FeedHeader = ({
+  onClickHandler,
+  isFolded,
+  name,
+  image,
+  title,
+}: UserInfoProps & { title: string } & { isFolded: boolean } & { onClickHandler?: () => void }) => {
   return (
-    <StyledFeedFolded onClick={onClickHandler}>
+    <StyledFeedHeader>
       <span className="user-info-container">
         <UserInfo name={name} image={image} />
       </span>
       <span className="title-container">{title}</span>
-      <span className="arrow-down">
-        <MdOutlineKeyboardArrowDown />
-      </span>
-    </StyledFeedFolded>
+      {isFolded ? (
+        <span className="arrow-down" onClick={onClickHandler}>
+          <MdOutlineKeyboardArrowDown />
+        </span>
+      ) : (
+        <span
+          className="arrow-down"
+          onClick={() => {
+            console.log('지도 icon 클릭됨!');
+          }}
+        >
+          <FaMapMarkedAlt />
+        </span>
+      )}
+    </StyledFeedHeader>
   );
 };
 
-const StyledFeedFolded = styled.div`
+const StyledFeedHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 5px;
