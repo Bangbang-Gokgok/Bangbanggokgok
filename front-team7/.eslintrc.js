@@ -1,16 +1,12 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
-
   parserOptions: {
     project: 'tsconfig.json',
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
-
   ignorePatterns: ['**/*.js', 'declarations.d.ts'],
-
   plugins: ['@typescript-eslint'],
-
   extends: [
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
@@ -20,8 +16,8 @@ module.exports = {
     'plugin:import/recommended',
     'prettier',
     'plugin:prettier/recommended',
+    'plugin:storybook/recommended',
   ],
-
   rules: {
     'no-unused-vars': 'warn',
     'no-console': 'off',
@@ -32,6 +28,13 @@ module.exports = {
     'react/prop-types': 'off',
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': [
+      'warn',
+      {
+        additionalHooks: 'useRecoilCallback',
+      },
+    ],
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
   },
