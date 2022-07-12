@@ -11,19 +11,22 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.9.5",
     "axios": "^0.27.2",
     "dotenv": "^16.0.1",
     "esbuild": "^0.14.48",
     "js-cookie": "^3.0.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-hook-form": "^7.33.1",
     "react-icons": "^4.4.0",
     "react-is": "^18.2.0",
     "react-router-dom": "^6.3.0",
     "recoil": "^0.7.4",
     "sanitize.css": "^13.0.0",
     "styled-system": "^5.1.5",
-    "tsconfig-paths-webpack-plugin": "^3.5.2"
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",
