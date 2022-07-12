@@ -2,7 +2,7 @@ import axios from 'axios';
 
 export const getMyUserInfo = async () => {
   try {
-    let res = await axios.get('/api/users');
+    let res = await axios.get('/api/users/user');
     // console.log('res.data : ', res.data);
     return res.data;
   } catch (err) {
@@ -34,7 +34,7 @@ export const getOneUser = async (id) => {
 
 export const updateUser = async (updateData) => {
   try {
-    let res = await axios.put(`/api/users/`, JSON.stringify(updateData), {
+    let res = await axios.put(`/api/users/user`, JSON.stringify(updateData), {
       headers: { 'Content-Type': `application/json` },
     });
     // console.log('updated res.data : ', res.data);
@@ -46,7 +46,7 @@ export const updateUser = async (updateData) => {
 
 export const deleteUser = async () => {
   try {
-    let res = await axios.delete(`/api/users/`);
+    let res = await axios.delete(`/api/users/user`);
     // console.log('deleted res.data : ', res.data);
     return res.data;
   } catch (err) {
