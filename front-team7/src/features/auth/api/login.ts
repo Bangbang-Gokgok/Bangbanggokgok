@@ -1,26 +1,20 @@
 import { useEffect } from 'react';
 import { axios } from '@/lib';
 import { useSetRecoilState } from 'recoil';
-import Cookie from 'js-cookie';
 
-import { authState } from '@/store';
+import { authState, type AuthState } from '@/store';
 
 export const useLogin = () => {
   const setAuth = useSetRecoilState(authState);
 
   useEffect(() => {
     async function getAccessToken() {
-      await axios.get<void>('/auth/login');
-      const user = await axios.get('/api/users');
-      console.log(user);
+      await axios.get<void>('/api/loginCheck'); // access, refresh 갱신하는 api
+      const user = await axios.get<AuthState>('/api/users/user'); // user 데이터 가져오는 api
 
-      const accessToken = Cookie.get('accessToken');
-
-      setAuth((prevState) => {
-        return { ...prevState, token: accessToken };
-      });
+      setAuth(user);
     }
 
     getAccessToken().catch((e) => console.log(e));
-  }, [setAuth]);
+  }, []);
 };

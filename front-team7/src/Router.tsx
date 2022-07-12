@@ -5,6 +5,7 @@ import { useLogin } from '@/features/auth';
 import FeedMapPage from '@/pages/FeedMapPage';
 import SearchPage from '@/pages/SearchPage';
 import ProfilePage from '@/pages/ProfilePage';
+import ProfileEditPage from '@/pages/ProfileEditPage';
 import LoginPage from '@/pages/LoginPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import HomePage from '@/pages/HomePage';
@@ -45,6 +46,14 @@ const AppRouter = () => {
           element={
             <AuthRouter>
               <ProfilePage />
+            </AuthRouter>
+          }
+        />
+        <Route
+          path="/profile-edit"
+          element={
+            <AuthRouter>
+              <ProfileEditPage />
             </AuthRouter>
           }
         />

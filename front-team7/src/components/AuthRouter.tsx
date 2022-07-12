@@ -8,8 +8,10 @@ interface RequireAuthProps {
 }
 
 const AuthRouter = ({ children }: RequireAuthProps) => {
-  const authAtom = useRecoilValue(authState); // Recoil로 userInfo Atoms를 가져오게 변경
-  if (authAtom.user === undefined && authAtom.token === undefined) return <Navigate to="/login" />;
+  const authAtom = useRecoilValue(authState);
+
+  console.log(authAtom);
+  if (authAtom === undefined) return <Navigate to="/login" />;
 
   return <>{children}</>;
 };

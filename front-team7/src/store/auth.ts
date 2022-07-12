@@ -1,20 +1,17 @@
 import { atom, selector } from 'recoil';
 
-interface AuthState {
-  user: null | {
-    id: string;
-    email: string;
-    role: string;
-    phone?: string;
-    address?: string;
-  };
-  token?: null | string;
+import { type AxiosResponse } from 'axios';
+
+export interface AuthState {
+  _id: string;
+  email: string;
+  name: string;
+  authority: string;
+  iat: number;
+  exp: number;
 }
 
-export const authState = atom<AuthState>({
+export const authState = atom<AxiosResponse<AuthState> | null>({
   key: 'Auth',
-  default: {
-    user: null,
-    token: null,
-  },
+  default: null,
 });
