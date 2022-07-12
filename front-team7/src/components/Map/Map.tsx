@@ -22,19 +22,29 @@ interface CenterLatLng {
   lng: number;
 }
 
+interface Review {
+  userName: string;
+  contents: string;
+  timestamp: Date;
+}
+
 interface FeedProps {
-  username: string;
+  _id: string;
+  userName: string;
   title: string;
   description: string;
+  review: Array<Review>;
   address: string;
   location: CenterLatLng;
+  createdAt: string,
+  updatedAt: string;
 }
 
 interface FeedListProps extends Array<FeedProps> { }
 
 const { kakao } = window;
 
-const Map = ({ feedList, }: { feedList: FeedListProps; }) => {
+const Map = ({ feedList }: { feedList: FeedListProps; }) => {
   const mapValue = useRecoilValue(mapAtom);
   const [_, setMapValue] = useRecoilState(mapAtom);
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -135,7 +145,7 @@ const Map = ({ feedList, }: { feedList: FeedListProps; }) => {
   useEffect(() => {
     drawMap();
     console.log('side Effect');
-  }, [mapValue]);
+  }, [mapValue, feedList]);
 
   return (
 
