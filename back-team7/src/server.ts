@@ -10,6 +10,7 @@ import { errorHandler, getUserFromJWT } from './middlewares';
 import { usePassport } from './passport';
 // import webSocket from './socket';
 // import path from 'path';
+import { createClient } from 'redis';
 
 usePassport();
 const app = express();
@@ -53,5 +54,20 @@ const db = mongoose.connection;
 
 db.on('connected', () => console.log('정상적으로 MongoDB 서버에 연결되었습니다.  ' + DB_URL));
 db.on('error', (error: Error) =>
-  console.error('\nMongoDB 연결에 실패하였습니다...\n' + DB_URL + '\n' + error)
+  console.error(`\nMongoDB 연결에 실패하였습니다...\n ${DB_URL} \n  ${error}`)
 );
+
+const redisClient = createClient();
+
+redisClient.on('ready', (err) => console.log('정상적으로 Redis 서버에 연결되었습니다.'));
+redisClient.on('error', (error: Error) =>
+  console.error(`\nRedis 연결에 실패하였습니다...\n ${DB_URL} \n  ${error}`)
+);
+
+redisClient.connect();
+
+app.get('/', async (req, res, next) => {
+  redisClient.sAdd('test', '2');
+  const value = await redisClient.sMembers('test');
+  res.json(value);
+});
