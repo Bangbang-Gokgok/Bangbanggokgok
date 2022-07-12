@@ -5,6 +5,7 @@ import pinImg from '@/assets/images/blue-pin.png';
 import centerPinImg from '@/assets/images/red-pin.png';
 import { useRecoilValue, useRecoilState } from "recoil";
 import { mapAtom } from "@/store/map";
+import { feedModalAtom } from '@/store/feedModal';
 
 declare global {
   interface Window {
@@ -22,22 +23,32 @@ interface CenterLatLng {
   lng: number;
 }
 
+interface Review {
+  userName: string;
+  contents: string;
+  timestamp: Date;
+}
+
 interface FeedProps {
-  username: string;
+  _id: string;
+  userName: string;
   title: string;
   description: string;
+  review: Array<Review>;
   address: string;
   location: CenterLatLng;
-  createAt: string;
+  createdAt: string,
+  updatedAt: string;
 }
 
 interface FeedListProps extends Array<FeedProps> { }
 
 const { kakao } = window;
 
-const Map = ({ feedList, }: { feedList: FeedListProps; }) => {
+const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: () => void; }) => {
   const mapValue = useRecoilValue(mapAtom);
   const [_, setMapValue] = useRecoilState(mapAtom);
+  const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
   const mapContainer = useRef<HTMLDivElement>(null);
 
   const drawMap = () => {
@@ -113,6 +124,7 @@ const Map = ({ feedList, }: { feedList: FeedListProps; }) => {
     function makeClickListener(customOverlay) {
       return function () {
         console.log(customOverlay, '클릭됐습니다.');
+        // toggleModal();
       };
     }
 
@@ -136,7 +148,7 @@ const Map = ({ feedList, }: { feedList: FeedListProps; }) => {
   useEffect(() => {
     drawMap();
     console.log('side Effect');
-  }, [mapValue]);
+  }, [mapValue, feedList]);
 
   return (
 
