@@ -13,6 +13,15 @@ const StyledContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: modal-show-op 1.5s;
+  @keyframes modal-show-op {
+      from {
+        opacity: 0.6;
+      }
+      to {
+        opacity: 1;
+      }
+  }
 `;
 const StyledModal = styled.div`
   display: flex;
@@ -20,15 +29,6 @@ const StyledModal = styled.div`
   align-items: center;
   position: relative;
   border-radius: 10px;
-  animation: modal-show 0.5s;
-  @keyframes modal-show {
-      from {
-        transform: translate3d(0, 100%, 0);
-      }
-      to {
-        transform: translateZ(0);
-      }
-  }
 `;
 
 const StyledClose = styled.div`
