@@ -37,3 +37,12 @@ export const adminCheck = (req: Request, res: Response, next: NextFunction) => {
     throw error;
   }
 };
+
+export const logout = async (req: Request, res: Response, next: NextFunction) => {
+  if (req.cookies.refreshToken) {
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken').redirect(DOMAIN);
+  } else {
+    res.status(404).json();
+  }
+};
