@@ -31,7 +31,7 @@ interface FeedProps {
   createAt: string;
 }
 
-interface FeedListProps extends Array<FeedProps> {}
+interface FeedListProps extends Array<FeedProps> { }
 
 const HomePage = () => {
   // let name = '김지환';
@@ -103,6 +103,7 @@ const HomePage = () => {
       <StyledFeedListContainer>
         {feedList?.map((feed, index) => (
           <FeedDetail
+            isModal={false}
             key={`${feed.title}-${index}`}
             name={feed.username}
             image={unknownUser as string}

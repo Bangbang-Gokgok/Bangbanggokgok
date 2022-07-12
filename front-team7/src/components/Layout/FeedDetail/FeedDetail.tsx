@@ -73,7 +73,7 @@ const StyledSlideList = styled.div`
   top: 0;
 `;
 
-const StyledSlide = styled.div<{ data: string }>`
+const StyledSlide = styled.div<{ data: string; }>`
   width: 120px;
   height: 100%;
   float: left;
@@ -84,7 +84,7 @@ const StyledSlide = styled.div<{ data: string }>`
   transition: left 0.5s ease-out;
 `;
 
-const StyledBtn = styled.span<{ PrevOrNext: string }>`
+const StyledBtn = styled.span<{ PrevOrNext: string; }>`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -120,19 +120,20 @@ const StyledBtn = styled.span<{ PrevOrNext: string }>`
 
 // handleSlider : 이미지 슬라이더 기능 (typescript)
 // 참고 : https://eunhee-programming.tistory.com/106
-const handleSlider = () => {};
+const handleSlider = () => { };
 
 const FeedDetail = ({
   name,
   image,
   title,
   desc,
-}: UserInfoProps & { title: string } & { desc: string }) => {
+  isModal
+}: UserInfoProps & { title: string; } & { desc: string; } & { isModal: boolean; }) => {
   let colorlist: Array<string> = ['lightgray', '#f5e6bf', '#bfccf5', '#bff5cc'];
 
   return (
     <StyledFeedDetailContainer>
-      <FeedHeader isFolded={false} name={name} image={image} title={title}></FeedHeader>
+      <FeedHeader isFolded={isModal} name={name} image={image} title={title}></FeedHeader>
       <StyledFeedDetailBody>
         <StyledTitle>👍🏽 {title}</StyledTitle>
         <StyledDescription>{desc}</StyledDescription>
