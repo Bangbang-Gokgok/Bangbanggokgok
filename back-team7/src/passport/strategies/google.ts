@@ -3,12 +3,12 @@ const { Strategy, StrategyOptions, Profile, VerifyCallback } = require('passport
 import { User } from '../../models';
 
 const config: typeof StrategyOptions = {
-  clientID: process.env.CLIENT_ID as string, // clientId 설정하기
-  clientSecret: process.env.CLIENT_SECRET as string, // clientSecret 설정하기
+  clientID: process.env.CLIENT_ID!, // clientId 설정하기
+  clientSecret: process.env.CLIENT_SECRET!, // clientSecret 설정하기
   callbackURL: '/auth/google/callback',
 };
 
-async function findOrCreateUser(name: string, email: string) {
+async function findOrCreateUser(email: string, name: string) {
   const user = await User.findOne({
     email,
   });
@@ -16,10 +16,9 @@ async function findOrCreateUser(name: string, email: string) {
   if (user) {
     return user;
   }
-
   const created = await User.create({
-    name,
     email,
+    name,
   });
 
   return created;
@@ -35,12 +34,12 @@ export const google = new Strategy(
   ) => {
     const { email, name } = profile._json;
     try {
-      const user = await findOrCreateUser(name!, email!);
+      const { _id, authority } = await findOrCreateUser(email!, name!);
       done(null, {
-        _id: user._id,
-        authority: user.authority,
-        email: user.email,
-        name: user.name,
+        _id,
+        authority,
+        email,
+        name,
       });
     } catch (e: any) {
       done(e, undefined);
