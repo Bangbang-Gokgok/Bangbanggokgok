@@ -11,15 +11,17 @@ const StyledContainer = styled.div`
   bottom: 0%;
   z-index: 100;
   background: rgba(4, 4, 4, 0.4);
-  opacity: 0.9;
+  
 
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 const StyledModal = styled.div`
-  width: 300px;
-  height: 550px;
+  padding: 40px 10px;
+  display: flex;
+  justify-items: center;
+  align-items: center;
   position: relative;
   background: #ffffff;
   border-radius: 10px;
@@ -29,6 +31,7 @@ const StyledClose = styled.div`
   position: absolute;
   right: 15px;
   top: 15px;
+  cursor: pointer;
 `;
 
 const ModalFrame = ({ handleModal, state, children }: { handleModal: (e: React.MouseEvent<HTMLDivElement>) => void, state: boolean, children: React.ReactNode; }) => {
