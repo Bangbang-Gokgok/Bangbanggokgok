@@ -22,11 +22,11 @@ declare global {
   }
 }
 
-// userRouter.use('/admin', isAdmin, adminRouter);
+// userRouter.use('/admin', adminCheck, adminRouter);
 userRouter.use('/admin', adminRouter);
 
-// 로컬 로그인 - 현재 없으므로 주석 처리
-// userRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
+// 회원가입 - 미구현, 주석 처리
+// userRouter.post('/user', async (req: Request, res: Response, next: NextFunction) => {
 //   try {
 //     const userInfo: UserInfo = req.body;
 //     // 위 데이터를 사용자 db에 추가하기
@@ -71,7 +71,7 @@ userRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction) 
   }
 });
 
-userRouter.put('/', async (req: Request, res: Response, next: NextFunction) => {
+userRouter.put('/user', async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.user) {
       const _id: Types.ObjectId | string = req.user._id;
@@ -91,7 +91,7 @@ userRouter.put('/', async (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-userRouter.delete('/', async (req: Request, res: Response, next: NextFunction) => {
+userRouter.delete('/user', async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.user) {
       const _id: Types.ObjectId | string = req.user._id;
