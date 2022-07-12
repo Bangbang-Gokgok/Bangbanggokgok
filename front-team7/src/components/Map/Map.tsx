@@ -5,6 +5,7 @@ import pinImg from '@/assets/images/blue-pin.png';
 import centerPinImg from '@/assets/images/red-pin.png';
 import { useRecoilValue, useRecoilState } from "recoil";
 import { mapAtom } from "@/store/map";
+import { feedModalAtom } from '@/store/feedModal';
 
 declare global {
   interface Window {
@@ -44,9 +45,10 @@ interface FeedListProps extends Array<FeedProps> { }
 
 const { kakao } = window;
 
-const Map = ({ feedList }: { feedList: FeedListProps; }) => {
+const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: () => void; }) => {
   const mapValue = useRecoilValue(mapAtom);
   const [_, setMapValue] = useRecoilState(mapAtom);
+  const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
   const mapContainer = useRef<HTMLDivElement>(null);
 
   const drawMap = () => {
@@ -122,6 +124,7 @@ const Map = ({ feedList }: { feedList: FeedListProps; }) => {
     function makeClickListener(customOverlay) {
       return function () {
         console.log(customOverlay, '클릭됐습니다.');
+        // toggleModal();
       };
     }
 

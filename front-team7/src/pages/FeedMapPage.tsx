@@ -9,6 +9,7 @@ import { useRecoilState } from "recoil";
 import { mapAtom } from "@/store/map";
 import ModalFrame from "@/components/Layout/ModalFrame/ModalFrame";
 import FeedDetail from "@/components/Layout/FeedDetail/FeedDetail";
+import { feedModalAtom } from "@/store/feedModal";
 
 interface CenterLatLng {
   lat: number;
@@ -50,15 +51,9 @@ const FeedMapPage = () => {
   const [feedList, setFeedList] = useState<FeedListProps>([]);
   const [_, setMapValue] = useRecoilState(mapAtom);
   const [stateModal, SetStateModal] = useState(false);
-  const [stateModalContents, setStateModalContents] = useState<FeedDetail>({
-    userName: 'aa',
-    title: 'aa',
-    description: 'aa',
-    address: 'aa',
-    review: [],
-    createdAt: 'aa',
-    updatedAt: 'aa'
-  });
+  const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
+
+  console.log(feedModalState);
 
 
   useEffect(() => {
@@ -149,7 +144,7 @@ const FeedMapPage = () => {
   const onClickMapFeed = (event: React.MouseEvent<HTMLButtonElement>, item: FeedProps) => {
     const { userName, title, description, address, location, review, createdAt } = item;
     changeCenterLatLng(location);
-    setStateModalContents((prev) => ({
+    setFeedModalState((prev) => ({
       ...prev,
       userName,
       title,
@@ -179,7 +174,7 @@ const FeedMapPage = () => {
   return (
     <Main>
       <StyledWrapper>
-        <Map feedList={feedList} ></Map>
+        <Map feedList={feedList} toggleModal={toggleModal} ></Map>
         <Button onClick={onClickModal}>
           <BsPlus />
         </Button>
@@ -196,12 +191,11 @@ const FeedMapPage = () => {
         </StyledFeeds>
       </StyledWrapper>
       <ModalFrame handleModal={toggleModal} state={stateModal}>
-        <FeedDetail name={stateModalContents.userName} title={stateModalContents.title} desc={stateModalContents.description}></FeedDetail>
+        <FeedDetail isModal={true} name={feedModalState.userName} title={feedModalState.title} desc={feedModalState.description}></FeedDetail>
       </ModalFrame>
     </Main >
   );
 };
-
 
 const StyledWrapper = styled.div`
   position: relative;
