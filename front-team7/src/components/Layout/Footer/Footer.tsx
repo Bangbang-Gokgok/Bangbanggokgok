@@ -4,13 +4,10 @@ import { FaHome, FaMapMarkedAlt, FaSearch, FaUserAlt } from 'react-icons/fa';
 import { FooterIcon } from './FooterIcon';
 
 export const Footer = () => {
-
-  const userId = 'userId';
-
   return (
     <StyledFooter>
       <FooterIcon icon={<FaHome />} to="/" />
-      <FooterIcon icon={<FaMapMarkedAlt />} to={`/feedmap/${userId}`} />
+      <FooterIcon icon={<FaMapMarkedAlt />} to="/mymap" />
       <FooterIcon icon={<FaSearch />} to="/search" />
       <FooterIcon icon={<FaUserAlt />} to="/profile" />
     </StyledFooter>

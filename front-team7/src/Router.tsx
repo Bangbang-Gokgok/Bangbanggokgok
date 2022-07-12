@@ -1,38 +1,31 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import UserMap from './pages/UserMap';
+import MyMap from './pages/MyMap';
+import Search from './pages/Search';
+import Profile from './pages/Profile';
+import Login from './pages/Login';
+import NotFound from './pages/NotFound';
 
-import FeedMapPage from '@/pages/FeedMapPage';
-import SearchPage from '@/pages/SearchPage';
-import ProfilePage from '@/pages/ProfilePage';
-import LoginPage from '@/pages/LoginPage';
-import NotFoundPage from '@/pages/NotFoundPage';
-import HomePage from '@/pages/HomePage';
-import AuthRouter from '@/components/AuthRouter';
-
-const AppRouter = () => {
+const AppRouter = ({ isLoggedIn }) => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={
-          <AuthRouter>
-            <HomePage />
-          </AuthRouter>
-        } />
-        <Route path="/feedmap/:userId" element={
-          <AuthRouter>
-            <FeedMapPage />
-          </AuthRouter>
-        } />
-        <Route path="/search" element={
-          <AuthRouter>
-            <SearchPage />
-          </AuthRouter>} />
-        <Route path="/profile" element={
-          <AuthRouter>
-            <ProfilePage />
-          </AuthRouter>
-        } />
-        <Route path="*" element={<NotFoundPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        {isLoggedIn ? (
+          <>
+            <Route path="/" element={<Home />} />
+            <Route path="/usermap/:userId" element={<UserMap />} />
+            <Route path="/mymap" element={<MyMap />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="*" element={<NotFound />} />
+          </>
+        ) : (
+          <>
+            <Route path="/" element={<Login />} />
+            <Route path="*" element={<NotFound />} />
+          </>
+        )}
       </Routes>
     </Router>
   );

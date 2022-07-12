@@ -11,21 +11,16 @@ export interface AvartarProps extends BorderProps {
   alt?: string;
 }
 
-interface AvartarVariants {
+interface IAvartarVariants {
   kindVariant: ReturnType<typeof getKindVariant>;
   sizeVariant: ReturnType<typeof getSizeVariant>;
 }
 
-export const Avartar = ({
-  kind = 'circle',
-  size = 'md',
-  src = unknown as string,
-  alt = 'unknown-user-img',
-}: AvartarProps) => {
+export const Avartar = (props: AvartarProps) => {
   const kindVariant = getKindVariant();
   const sizeVariant = getSizeVariant();
-
-  const props = { kind, size, src, alt };
+  const src = props.src || (unknown as string);
+  const alt = props.alt || 'unknown-user-img';
 
   const variants = {
     kindVariant,
@@ -39,12 +34,12 @@ export const Avartar = ({
   );
 };
 
-const StyledAvartar = styled.div<AvartarProps & AvartarVariants>`
+const StyledAvartar = styled.div<AvartarProps & IAvartarVariants>`
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border: ${(props) => (props.src !== unknown ? 'none' : '2px solid #ccc')};
+  border: ${(props) => (props.src ? 'none' : '2px solid #ccc')};
 
   .avatar-img {
     width: 100%;
@@ -57,3 +52,8 @@ const StyledAvartar = styled.div<AvartarProps & AvartarVariants>`
 
   ${border}
 `;
+
+Avartar.defaultProps = {
+  kind: 'circle',
+  size: 'md',
+};

@@ -1,10 +1,10 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
-import { FeedHeader } from '@/components/FeedHeader/FeedHeader';
+import { FeedFolded } from '@/components/FeedFolded/FeedFolded';
 import { UserInfoProps } from '@/components/UserInfo';
 
-const StyledFeedDetailContainer = styled.div`
+const FeedDetailContainer = styled.div`
   width: 330px;
   height: 280px;
   background-color: white;
@@ -13,13 +13,13 @@ const StyledFeedDetailContainer = styled.div`
   border-radius: 10px;
   box-shadow: 5px 10px 5px #c2c2c2;
 `;
-const StyledFeedDetailHeader = styled.div`
+const FeedDetailHeader = styled.div`
   width: 100%;
   height: 32px;
   background-color: #d9d9d9;
   border-radius: 10px 10px 0px 0px;
 `;
-const StyledFeedDetailBody = styled.div`
+const FeedDetailBody = styled.div`
   width: 100%;
   height: 250px;
   padding: 8px;
@@ -29,13 +29,13 @@ const StyledFeedDetailBody = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const StyledFeedDetailFooter = styled.div`
+const FeedDetailFooter = styled.div`
   width: 100%;
   height: 56px;
   background-color: #d9d9d9;
   border-radius: 0px 0px 10px 10px;
 `;
-const StyledTitle = styled.div`
+const Title = styled.div`
   width: 100%;
   height: 20px;
   margin-bottom: 8px;
@@ -45,7 +45,7 @@ const StyledTitle = styled.div`
   align-items: center;
   text-align: center;
 `;
-const StyledDescription = styled.div`
+const Description = styled.div`
   width: 100%;
   margin: 8px 0;
   font-size: 1.2rem;
@@ -56,7 +56,7 @@ const StyledDescription = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 `;
-const StyledSlideShow = styled.div`
+const SlideShow = styled.div`
   width: 100%;
   height: 110px;
   margin: 5px auto;
@@ -64,7 +64,7 @@ const StyledSlideShow = styled.div`
   overflow: hidden;
 `;
 
-const StyledSlideList = styled.div`
+const SlideList = styled.div`
   width: 1000px;
   height: 100%;
   position: absolute;
@@ -72,7 +72,7 @@ const StyledSlideList = styled.div`
   top: 0;
 `;
 
-const StyledSlide = styled.div<{ data: string }>`
+const Slide = styled.div<{ data: string }>`
   width: 120px;
   height: 100%;
   float: left;
@@ -83,7 +83,7 @@ const StyledSlide = styled.div<{ data: string }>`
   transition: left 0.5s ease-out;
 `;
 
-const StyledBtn = styled.span<{ PrevOrNext: string }>`
+const Btn = styled.span<{ PrevOrNext: string }>`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -121,46 +121,43 @@ const StyledBtn = styled.span<{ PrevOrNext: string }>`
 // 참고 : https://eunhee-programming.tistory.com/106
 const handleSlider = () => {};
 
-const FeedDetail = ({
-  name,
-  image,
-  title,
-  desc,
-}: UserInfoProps & { title: string } & { desc: string }) => {
+const FeedDetail = ({ name, image, title }: UserInfoProps & { title: string }) => {
   let colorlist: Array<string> = ['lightgray', '#f5e6bf', '#bfccf5', '#bff5cc'];
 
   return (
-    <StyledFeedDetailContainer>
-      <FeedHeader isFolded={false} name={name} image={image} title={title}></FeedHeader>
-      <StyledFeedDetailBody>
-        <StyledTitle>👍🏽 {title}</StyledTitle>
-        <StyledDescription>{desc}</StyledDescription>
-        <StyledSlideShow>
-          <StyledSlideList>
+    <FeedDetailContainer>
+      <FeedFolded name={name} image={image} title={title}></FeedFolded>
+      <FeedDetailBody>
+        <Title>👍🏽 홀로 여행기</Title>
+        <Description>
+          최고의 여행장소! 최고의 데이터 코스! 후회하지 않는 장소로 놀러오세요!
+        </Description>
+        <SlideShow>
+          <SlideList>
             {colorlist.map((color, index) => (
-              <StyledSlide key={index} data={color}></StyledSlide>
+              <Slide key={index} data={color}></Slide>
             ))}
-          </StyledSlideList>
-          <StyledBtn
+          </SlideList>
+          <Btn
             PrevOrNext={'prev'}
             onClick={() => {
               handleSlider;
             }}
           >
             <GrFormPrevious></GrFormPrevious>
-          </StyledBtn>
-          <StyledBtn
+          </Btn>
+          <Btn
             PrevOrNext={'next'}
             onClick={() => {
               handleSlider;
             }}
           >
             <GrFormNext></GrFormNext>
-          </StyledBtn>
-        </StyledSlideShow>
-      </StyledFeedDetailBody>
-      <StyledFeedDetailFooter></StyledFeedDetailFooter>
-    </StyledFeedDetailContainer>
+          </Btn>
+        </SlideShow>
+      </FeedDetailBody>
+      <FeedDetailFooter></FeedDetailFooter>
+    </FeedDetailContainer>
   );
 };
 
