@@ -17,10 +17,7 @@ export const loginCheckAndRefreshToken = async (
         req.cookies.refreshToken
       );
       const accessToken = setAccessToken({ _id, authority, email, name });
-      res
-        .cookie('accessToken', accessToken, { maxAge: accessExp * 60 * 1000, httpOnly: true })
-        .status(200)
-        .json();
+      res.cookie('accessToken', accessToken, { maxAge: accessExp * 60 * 1000, httpOnly: true });
     }
   } else {
     const error = new Error('로그인해주세요.');
