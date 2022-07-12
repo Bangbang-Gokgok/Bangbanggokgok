@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { GrClose } from 'react-icons/gr';
 
-const Container = styled.div`
+const StyledContainer = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
@@ -17,7 +17,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const Modal = styled.div`
+const StyledModal = styled.div`
   width: 300px;
   height: 550px;
   position: relative;
@@ -25,7 +25,7 @@ const Modal = styled.div`
   border-radius: 10px;
 `;
 
-const Close = styled.div`
+const StyledClose = styled.div`
   position: absolute;
   right: 15px;
   top: 15px;
@@ -33,13 +33,13 @@ const Close = styled.div`
 
 const ModalFrame = () => {
   return (
-    <Container>
-      <Modal>
-        <Close>
+    <StyledContainer>
+      <StyledModal>
+        <StyledClose>
           <GrClose></GrClose>
-        </Close>
-      </Modal>
-    </Container>
+        </StyledClose>
+      </StyledModal>
+    </StyledContainer>
   );
 };
 
