@@ -2,12 +2,12 @@ import styled from 'styled-components';
 import { IconContext } from 'react-icons';
 import { BsSearch } from 'react-icons/bs';
 
-const StyledInputContainer = styled.div`
+const InputContainer = styled.div`
   width: 100%;
   position: relative;
   display: flex;
 `;
-const StyledInput = styled.input`
+const Input = styled.input`
   width: 100%;
   height: 40px;
   font-size: 15px;
@@ -19,24 +19,24 @@ const StyledInput = styled.input`
 
   background-color: rgb(235, 235, 235);
 `;
-const StyledSearchIconContainer = styled.div`
+const SearchIconContainer = styled.div`
   position: absolute;
   right: 12px;
   top: 7px;
 `;
 
-const Input = () => {
+const InputComponent = () => {
   return (
-    <StyledInputContainer>
-      <StyledInput></StyledInput>
+    <InputContainer>
+      <Input></Input>
 
-      <StyledSearchIconContainer>
+      <SearchIconContainer>
         <IconContext.Provider value={{ size: '20px' }}>
           <BsSearch></BsSearch>
         </IconContext.Provider>
-      </StyledSearchIconContainer>
-    </StyledInputContainer>
+      </SearchIconContainer>
+    </InputContainer>
   );
 };
 
-export default Input;
+export default InputComponent;

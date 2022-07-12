@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { AiFillFrown } from 'react-icons/ai';
 
-const NotFoundPage = () => {
+const NotFound = () => {
   return (
     <Main
       header={false}
@@ -12,23 +12,22 @@ const NotFoundPage = () => {
       backgroundImage="linear-gradient(315deg, #485461 0%, #28313b 74%)"
       display="flex"
       justifyContent="center"
-      alignItems="center"
-    >
-      <StyledTitle>
-        <StyledCommentIcon>
+      alignItems="center">
+      <Title>
+        <CommentIcon>
           <AiFillFrown />
-        </StyledCommentIcon>
-        <StyledCommentTitle>404</StyledCommentTitle>
-        <StyledComment>NOT FOUND</StyledComment>
-        <StyledGoHome>
-          <StyledLinkTag to="/">Go Home</StyledLinkTag>
-        </StyledGoHome>
-      </StyledTitle>
+        </CommentIcon>
+        <CommentTitle>404</CommentTitle>
+        <Comment>NOT FOUND</Comment>
+        <GoHome>
+          <LinkTag to="/">Go Home</LinkTag>
+        </GoHome>
+      </Title>
     </Main>
   );
 };
 
-const StyledTitle = styled.p`
+const Title = styled.p`
   width: 100%;
   height: 500px;
   display: flex;
@@ -43,7 +42,7 @@ const StyledTitle = styled.p`
   }
 `;
 
-const StyledCommentTitle = styled.span`
+const CommentTitle = styled.span`
   width: 100%;
   text-align: center;
   line-height: 6.5rem;
@@ -92,15 +91,15 @@ const StyledCommentTitle = styled.span`
   }
 `;
 
-const StyledComment = styled(StyledCommentTitle)`
+const Comment = styled(CommentTitle)`
   font-size: 3rem;
 `;
 
-const StyledCommentIcon = styled(StyledCommentTitle)`
+const CommentIcon = styled(CommentTitle)`
   font-size: 10rem;
 `;
 
-const StyledGoHome = styled.button`
+const GoHome = styled.button`
   border: 1px solid #f39c12;
   border-radius: 5px;
   background-color: #f39c12;
@@ -108,10 +107,10 @@ const StyledGoHome = styled.button`
   font-size: 2.5rem;
 `;
 
-const StyledLinkTag = styled(Link)`
+const LinkTag = styled(Link)`
   &:visited {
     text-decoration: none;
   }
 `;
 
-export default NotFoundPage;
+export default NotFound;
