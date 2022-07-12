@@ -16,16 +16,9 @@ interface AvartarVariants {
   sizeVariant: ReturnType<typeof getSizeVariant>;
 }
 
-export const Avartar = ({
-  kind = 'circle',
-  size = 'md',
-  src = unknown as string,
-  alt = 'unknown-user-img',
-}: AvartarProps) => {
+export const Avartar = (props: AvartarProps) => {
   const kindVariant = getKindVariant();
   const sizeVariant = getSizeVariant();
-
-  const props = { kind, size, src, alt };
 
   const variants = {
     kindVariant,
@@ -34,9 +27,16 @@ export const Avartar = ({
 
   return (
     <StyledAvartar {...props} {...variants}>
-      <img className="avatar-img" src={src} alt={alt} />
+      <img className="avatar-img" src={props.src} alt={props.alt} />
     </StyledAvartar>
   );
+};
+
+Avartar.defaultProps = {
+  kind: 'circle',
+  size: 'md',
+  src: unknown as string,
+  alt: 'unknown-user-img',
 };
 
 const StyledAvartar = styled.div<AvartarProps & AvartarVariants>`

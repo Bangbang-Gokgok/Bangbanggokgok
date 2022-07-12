@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { AiFillSetting } from 'react-icons/ai';
+import { BiEditAlt } from 'react-icons/bi';
 
 import profileBackground from '@/assets/images/profile-background.jpg';
 
@@ -15,8 +15,8 @@ export const ProfileTop = () => {
   return (
     <StyledProfileTop image={profileBackground as string}>
       <div className="profile-icon">
-        <StyledLinkButton to="/profile-setting">
-          <AiFillSetting />
+        <StyledLinkButton to="/profile-edit">
+          <BiEditAlt />
         </StyledLinkButton>
       </div>
       <div className="profile-main">
@@ -124,6 +124,7 @@ const StyledLinkButton = styled(Link)`
   border-radius: 50%;
   padding: 6px;
   transition: color 0.3s ease;
+  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 
   &:hover {
     color: gold;
