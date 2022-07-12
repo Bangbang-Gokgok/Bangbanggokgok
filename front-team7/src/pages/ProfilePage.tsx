@@ -1,11 +1,8 @@
 import { Main } from '@/components/Layout';
-<<<<<<< HEAD
+
 import { ProfileTop, ProfileMid, ProfileBot } from '@/features/user';
-=======
-import { ProfileTop, ProfileMid } from '@/features/user';
 // import * as reviewApi from '@/api/review';
 // import { useEffect } from 'react';
->>>>>>> 77c90270efae2ef58f168e7ad4d01e8f5df4aa80
 
 const ProfilePage = () => {
   // async function createReview() {
