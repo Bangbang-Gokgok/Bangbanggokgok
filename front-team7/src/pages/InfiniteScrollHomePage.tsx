@@ -51,8 +51,11 @@ const InfiniteScrollHomePage = () => {
       id="main-styled"
       display={'flex'}
       flexDirection={'column'}
-      justifyContent={'flex-start'}
+      // justifyContent={'flex-start'}
       alignItems={'center'}
+      padding={'70px 0'}
+      // 임의로 준 높이값. 위로 스크롤 잘 안됨 + 다른 크기의 창에서는 또 위아래가 잘려서 보임...
+      height={'800px'}
     >
       <FeedListContainer>
         <div style={{ width: '90%' }}>
