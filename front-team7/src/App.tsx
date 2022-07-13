@@ -1,6 +1,5 @@
 import 'sanitize.css';
 
-import { Suspense } from 'react';
 import { RecoilRoot } from 'recoil';
 import { ThemeProvider } from 'styled-components';
 
@@ -13,9 +12,7 @@ const App = () => {
       <RecoilRoot>
         <ThemeProvider theme={defaultTheme}>
           <GlobalStyle />
-          <Suspense fallback={<div>loading...</div>}>
-            <AppRouter />
-          </Suspense>
+          <AppRouter />
         </ThemeProvider>
       </RecoilRoot>
     </>

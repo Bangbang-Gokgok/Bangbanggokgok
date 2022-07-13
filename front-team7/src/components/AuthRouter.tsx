@@ -9,9 +9,8 @@ interface RequireAuthProps {
 
 const AuthRouter = ({ children }: RequireAuthProps) => {
   const authAtom = useRecoilValue(authState);
-
   console.log(authAtom);
-  if (authAtom === undefined) return <Navigate to="/login" />;
+  if (authAtom === null) return <Navigate to="/login" />;
 
   return <>{children}</>;
 };
