@@ -1,6 +1,18 @@
 import { Schema } from 'mongoose';
+//import { shortid } from 'shortid';
+const shortid = require('shortid');
+
 const FeedSchema = new Schema(
   {
+    _id: {
+      type: String,
+      default: shortid.generate,
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+      required: false,
+    },
     userName: {
       type: String,
       required: true,
@@ -30,7 +42,7 @@ const FeedSchema = new Schema(
       required: false,
     },
     imageUrl: {
-      type: String,
+      type: [String],
       required: false,
     },
   },

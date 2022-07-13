@@ -16,6 +16,8 @@ const StyledFeedDetailContainer = styled.div<FeedDetailContainerProps>`
   flex-direction: column;
   border-radius: 10px;
   box-shadow: ${(props) => (props.boxShadow ? '' : '5px 10px 5px #c2c2c2')};
+  box-shadow: 5px 10px 5px #c2c2c2;
+  margin-top: ${(props) => (props.boxShadow ? '' : '30px')};
 `;
 const StyledFeedDetailHeader = styled.div`
   width: 100%;
