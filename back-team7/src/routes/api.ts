@@ -1,8 +1,6 @@
 import { Router } from 'express';
-import { userRouter } from './api/';
+import { userRouter, feedRouter, reviewRouter } from './api/';
 import { loginCheckAndRefreshToken, logout } from '../middlewares';
-import { feedRouter } from './api/';
-import { reviewRouter } from './api/';
 
 const apiRouter = Router();
 

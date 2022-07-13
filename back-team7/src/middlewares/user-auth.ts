@@ -22,8 +22,8 @@ export const loginCheckAndRefreshToken = async (
   } else {
     const error = new Error('로그인해주세요.');
     error.name = 'NotAcceptable';
-    res.redirect(DOMAIN);
-    throw error;
+    res.redirect(DOMAIN); // http://localhost:3030/login으로 리다이렉트 해야함.
+    next(error);
   }
   next();
 };
