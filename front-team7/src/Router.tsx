@@ -13,15 +13,6 @@ const AppRouter = () => {
   return (
     <Router>
       <Routes>
-        {/* /temp는 무한 스크롤 css 문제 해결용도로 잠깐 만들어놓은 것! 무한 스크롤 css 문제 해결 후 삭제할 예정입니다. */}
-        <Route
-          path="/temp"
-          element={
-            <AuthRouter>
-              <InfiniteScrollHomePage />
-            </AuthRouter>
-          }
-        />
         <Route
           path="/"
           element={
