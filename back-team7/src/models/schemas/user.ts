@@ -16,6 +16,14 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    description: {
+      type: String,
+      required: false,
+    },
+    address: {
+      type: String,
+      required: false,
+    },
     refreshToken: {
       type: String,
       required: false,
