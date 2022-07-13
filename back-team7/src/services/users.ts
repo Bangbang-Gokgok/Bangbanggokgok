@@ -6,8 +6,8 @@ export interface UserInfo {
   email: string;
   name: string;
   refreshToken?: string | undefined;
-  profileImage?: string | undefined;
-  contactNumber?: number | undefined;
+  profileImage?: string[] | undefined;
+  contactNumber?: string | undefined;
   location?: object | undefined;
   friends?: string[] | undefined;
 }
@@ -38,7 +38,7 @@ class UserService {
   async getUsers(): Promise<Partial<UserData>[]> {
     const users = await User.find({});
     const data = await users.map(({ _id, name, profileImage }) => ({ _id, name, profileImage }));
-    return users;
+    return data;
   }
 
   async getUserDataById(_id: Types.ObjectId | string): Promise<UserData> {

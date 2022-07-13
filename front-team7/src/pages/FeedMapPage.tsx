@@ -11,6 +11,7 @@ import ModalFrame from "@/components/Layout/ModalFrame/ModalFrame";
 import FeedDetail from "@/components/Layout/FeedDetail/FeedDetail";
 import { feedModalAtom } from "@/store/feedModal";
 import * as Api from '@/api/feeds';
+import Form from '@/components/Form/Form';
 
 interface CenterLatLng {
   lat: number;
@@ -31,7 +32,7 @@ interface FeedProps {
   review: Array<Review>;
   address: string;
   location: CenterLatLng;
-  createdAt: string,
+  createdAt: string;
   updatedAt: string;
 }
 
@@ -41,7 +42,7 @@ interface FeedDetail {
   description: string;
   review: Array<Review>;
   address: string;
-  createdAt: string,
+  createdAt: string;
   updatedAt: string;
 }
 
@@ -53,6 +54,8 @@ const FeedMapPage = () => {
   const [feedList, setFeedList] = useState<FeedListProps>([]);
   const [_mapValue, setMapValue] = useRecoilState(mapAtom);
   const [stateModal, setStateModal] = useState(false);
+  const [modalChildrenState, setModalChildrenState] = useState(false);
+
   const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
 
   useEffect(() => {
@@ -75,11 +78,11 @@ const FeedMapPage = () => {
         address: '제주 제주시 첨단로 242',
         location: {
           lat: 33.450705,
-          lng: 126.570677
+          lng: 126.570677,
         },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
+        review: [],
+        createdAt: '2022-07-11T09:21:26.597Z',
+        updatedAt: '2022-07-11T09:21:26.597Z',
       },
       {
         _id: '62cbebe2ab0326b696cbe422',
@@ -89,25 +92,25 @@ const FeedMapPage = () => {
         address: '제주 제주시 첨단로 242',
         location: {
           lat: 33.451393,
-          lng: 126.570738
+          lng: 126.570738,
         },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
+        review: [],
+        createdAt: '2022-07-11T09:21:26.597Z',
+        updatedAt: '2022-07-11T09:21:26.597Z',
       },
       {
-        "_id": "62cbeb96ab0326b696cbe41c",
-        "userName": "제주도사람",
-        "title": "🌾 텃밭 방문해봤습니다.",
-        "description": "카카오 텃밭에 들렸읍니다.",
-        "address": "제주 제주시 첨단로 242",
-        "location": {
-          "lat": 33.450936,
-          "lng": 126.569477
+        _id: '62cbeb96ab0326b696cbe41c',
+        userName: '제주도사람',
+        title: '🌾 텃밭 방문해봤습니다.',
+        description: '카카오 텃밭에 들렸읍니다.',
+        address: '제주 제주시 첨단로 242',
+        location: {
+          lat: 33.450936,
+          lng: 126.569477,
         },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
+        review: [],
+        createdAt: '2022-07-11T09:21:26.597Z',
+        updatedAt: '2022-07-11T09:21:26.597Z',
       },
       {
         _id: '62cbebe2ab0326b696cbe423',
@@ -117,11 +120,11 @@ const FeedMapPage = () => {
         address: '제주 제주시 첨단로 242',
         location: {
           lat: 33.450879,
-          lng: 126.569940
+          lng: 126.56994,
         },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
+        review: [],
+        createdAt: '2022-07-11T09:21:26.597Z',
+        updatedAt: '2022-07-11T09:21:26.597Z',
       },
       {
         _id: '62cbebe2ab0326b696cbe420',
@@ -131,7 +134,7 @@ const FeedMapPage = () => {
         address: '서울 특별시 서울역',
         location: {
           lat: 37.55294316360036,
-          lng: 126.97289588774116
+          lng: 126.97289588774116,
         },
         "review": [],
         "createdAt": "2022-07-11T09:21:26.597Z",
@@ -201,9 +204,6 @@ const FeedMapPage = () => {
 
     setFeedList(result);
 
-
-
-
     if (result.length > 0) {
       setMapValue((currMapValue) => ({
         ...currMapValue,
@@ -216,11 +216,9 @@ const FeedMapPage = () => {
 
   }, []);
 
-
-
   const onClickModal = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(event);
-    console.log('click');
+    setModalChildrenState(false);
+    toggleModal();
   };
 
   const onClickMapFeed = (item: FeedProps) => {
@@ -233,8 +231,9 @@ const FeedMapPage = () => {
       description,
       address,
       review,
-      createdAt
+      createdAt,
     }));
+    setModalChildrenState(true);
     toggleModal();
   };
 
@@ -243,16 +242,14 @@ const FeedMapPage = () => {
       ...currMapValue,
       centerLatLng: {
         lat: newCenterLatLng.lat,
-        lng: newCenterLatLng.lng
+        lng: newCenterLatLng.lng,
       },
-      mapLevel: 1
+      mapLevel: 1,
     }));
   };
-
   const toggleModal = () => {
     setStateModal((prev) => !prev);
   };
-
 
   return (
     <Main>
@@ -274,14 +271,20 @@ const FeedMapPage = () => {
         </StyledFeeds>
       </StyledWrapper>
       <ModalFrame handleModal={toggleModal} state={stateModal}>
-        <FeedDetail
-          isModal={true}
-          name={feedModalState.userName}
-          title={feedModalState.title}
-          desc={feedModalState.description}
-        ></FeedDetail>
+        {modalChildrenState ?
+          (
+            <FeedDetail
+              isModal={true}
+              name={feedModalState.userName}
+              title={feedModalState.title}
+              desc={feedModalState.description}
+            />
+          )
+          : (
+            <Form />
+          )}
       </ModalFrame>
-    </Main >
+    </Main>
   );
 };
 
