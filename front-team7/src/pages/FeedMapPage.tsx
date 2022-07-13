@@ -47,6 +47,8 @@ interface FeedDetail {
 interface FeedListProps extends Array<FeedProps> { }
 
 const FeedMapPage = () => {
+  console.log(process.env.KAKAO_SEARCH_REST_API_KEY);
+
   const { userId } = useParams();
   const [feedList, setFeedList] = useState<FeedListProps>([]);
   const [_, setMapValue] = useRecoilState(mapAtom);
@@ -112,6 +114,126 @@ const FeedMapPage = () => {
         "createdAt": "2022-07-11T09:21:26.597Z",
         "updatedAt": "2022-07-11T09:21:26.597Z",
       },
+      {
+        _id: '62cbebe2ab0326b696cbe420',
+        userName: '서울사람',
+        title: '서울역 방문기',
+        description: '서울역에 들렸읍니다.',
+        address: '서울 특별시 서울역',
+        location: {
+          lat: 37.55294316360036,
+          lng: 126.97289588774116
+        },
+        "review": [],
+        "createdAt": "2022-07-11T09:21:26.597Z",
+        "updatedAt": "2022-07-11T09:21:26.597Z",
+      }
+      ,
+      {
+        _id: '62cbebe2ab0326b696cbe420',
+        userName: '서울사람',
+        title: '서울역 방문기',
+        description: '서울역에 들렸읍니다.',
+        address: '서울 특별시 서울역',
+        location: {
+          lat: 37.55294316360036,
+          lng: 126.97289588774116
+        },
+        "review": [],
+        "createdAt": "2022-07-11T09:21:26.597Z",
+        "updatedAt": "2022-07-11T09:21:26.597Z",
+      }
+      ,
+      {
+        _id: '62cbebe2ab0326b696cbe420',
+        userName: '서울사람',
+        title: '서울역 방문기',
+        description: '서울역에 들렸읍니다.',
+        address: '서울 특별시 서울역',
+        location: {
+          lat: 37.55294316360036,
+          lng: 126.97289588774116
+        },
+        "review": [],
+        "createdAt": "2022-07-11T09:21:26.597Z",
+        "updatedAt": "2022-07-11T09:21:26.597Z",
+      }
+      ,
+      {
+        _id: '62cbebe2ab0326b696cbe420',
+        userName: '서울사람',
+        title: '서울역 방문기',
+        description: '서울역에 들렸읍니다.',
+        address: '서울 특별시 서울역',
+        location: {
+          lat: 37.55294316360036,
+          lng: 126.97289588774116
+        },
+        "review": [],
+        "createdAt": "2022-07-11T09:21:26.597Z",
+        "updatedAt": "2022-07-11T09:21:26.597Z",
+      }
+      ,
+      {
+        _id: '62cbebe2ab0326b696cbe420',
+        userName: '서울사람',
+        title: '서울역 방문기',
+        description: '서울역에 들렸읍니다.',
+        address: '서울 특별시 서울역',
+        location: {
+          lat: 37.55294316360036,
+          lng: 126.97289588774116
+        },
+        "review": [],
+        "createdAt": "2022-07-11T09:21:26.597Z",
+        "updatedAt": "2022-07-11T09:21:26.597Z",
+      }
+      ,
+      {
+        _id: '62cbebe2ab0326b696cbe420',
+        userName: '서울사람',
+        title: '서울역 방문기',
+        description: '서울역에 들렸읍니다.',
+        address: '서울 특별시 서울역',
+        location: {
+          lat: 37.55294316360036,
+          lng: 126.97289588774116
+        },
+        "review": [],
+        "createdAt": "2022-07-11T09:21:26.597Z",
+        "updatedAt": "2022-07-11T09:21:26.597Z",
+      }
+      ,
+      {
+        _id: '62cbebe2ab0326b696cbe420',
+        userName: '서울사람',
+        title: '서울역 방문기',
+        description: '서울역에 들렸읍니다.',
+        address: '서울 특별시 서울역',
+        location: {
+          lat: 37.55294316360036,
+          lng: 126.97289588774116
+        },
+        "review": [],
+        "createdAt": "2022-07-11T09:21:26.597Z",
+        "updatedAt": "2022-07-11T09:21:26.597Z",
+      }
+      ,
+      {
+        _id: '62cbebe2ab0326b696cbe420',
+        userName: '서울사람',
+        title: '서울역 방문기',
+        description: '서울역에 들렸읍니다.',
+        address: '서울 특별시 서울역',
+        location: {
+          lat: 37.55294316360036,
+          lng: 126.97289588774116
+        },
+        "review": [],
+        "createdAt": "2022-07-11T09:21:26.597Z",
+        "updatedAt": "2022-07-11T09:21:26.597Z",
+      }
+      ,
       {
         _id: '62cbebe2ab0326b696cbe420',
         userName: '서울사람',
@@ -207,7 +329,7 @@ const StyledWrapper = styled.div`
 const Button = styled.button`
   position: absolute;
   z-index: 4;
-  bottom: 20%;
+  bottom: 160px;
   right: 5%;
   margin-bottom: 5px;
   font-size: 4.5rem;
@@ -221,22 +343,50 @@ const Button = styled.button`
   justify-content: center;
   color: white;
   cursor: pointer;
+
+  @media only screen and (min-width: 768px) {
+    bottom: 5%;
+    width: 70px;
+    height: 70px;
+    font-size: 7rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    bottom: 5%;
+    width: 80px;
+    height: 80px;
+    font-size: 8rem;
+  }
 `;
 
 const StyledFeeds = styled.div`
   position: absolute;
-  max-height: 27%;
+  max-height: 160px;
   width: 90%;
   z-index: 3;
   bottom: 0;
   display: flex;
   flex-direction: column;
   overflow: scroll;
+  gap: 5px;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
   &::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
   }
+
+  @media only screen and (min-width: 768px) {
+    width: 350px;
+    height: 100%;
+    max-height: 80%;
+    right: 2%;
+    top: 2%;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    width: 400px;
+  }
+
 `;
 
 export default FeedMapPage;
