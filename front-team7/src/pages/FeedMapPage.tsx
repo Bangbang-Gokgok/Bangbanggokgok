@@ -47,17 +47,16 @@ interface FeedDetail {
 interface FeedListProps extends Array<FeedProps> { }
 
 const FeedMapPage = () => {
-  console.log(process.env.KAKAO_SEARCH_REST_API_KEY);
 
   const { userId } = useParams();
   const [feedList, setFeedList] = useState<FeedListProps>([]);
-  const [_, setMapValue] = useRecoilState(mapAtom);
-  const [stateModal, SetStateModal] = useState(false);
+  const [_mapValue, setMapValue] = useRecoilState(mapAtom);
+  const [stateModal, setStateModal] = useState(false);
   const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
 
   useEffect(() => {
     // userId를 사용한 API Call -> feedList를 useState로 관리
-    setFeedList([
+    const result = [
       {
         _id: '62cbebe2ab0326b696cbe421',
         userName: '김정현',
@@ -248,9 +247,19 @@ const FeedMapPage = () => {
         "createdAt": "2022-07-11T09:21:26.597Z",
         "updatedAt": "2022-07-11T09:21:26.597Z",
       }
-    ]);
+    ];
 
-    console.log('FeedMap Side Effect');
+    setFeedList(result);
+    if (result.length > 0) {
+      setMapValue((currMapValue) => ({
+        ...currMapValue,
+        centerLatLng: {
+          lat: result[0].location.lat,
+          lng: result[0].location.lng
+        },
+      }));
+    }
+
   }, []);
 
 
@@ -260,7 +269,7 @@ const FeedMapPage = () => {
     console.log('click');
   };
 
-  const onClickMapFeed = (event: React.MouseEvent<HTMLButtonElement>, item: FeedProps) => {
+  const onClickMapFeed = (item: FeedProps) => {
     const { userName, title, description, address, location, review, createdAt } = item;
     changeCenterLatLng(location);
     setFeedModalState((prev) => ({
@@ -287,21 +296,21 @@ const FeedMapPage = () => {
   };
 
   const toggleModal = () => {
-    SetStateModal((prev) => !prev);
+    setStateModal((prev) => !prev);
   };
 
 
   return (
     <Main>
       <StyledWrapper>
-        <Map feedList={feedList} toggleModal={toggleModal} ></Map>
+        <Map feedList={feedList} toggleModal={onClickMapFeed} ></Map>
         <Button onClick={onClickModal}>
           <BsPlus />
         </Button>
         <StyledFeeds>
           {feedList.map((item, idx) => (
             <FeedHeader
-              onClickHandler={(event: any) => onClickMapFeed(event, item)}
+              onClickHandler={() => onClickMapFeed(item)}
               isFolded={true}
               key={idx}
               name={item.userName}
@@ -378,7 +387,7 @@ const StyledFeeds = styled.div`
   @media only screen and (min-width: 768px) {
     width: 350px;
     height: 100%;
-    max-height: 80%;
+    max-height: 68%;
     right: 2%;
     top: 2%;
   }
