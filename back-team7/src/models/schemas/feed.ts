@@ -11,10 +11,6 @@ const FeedSchema = new Schema(
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'users',
-      required: false,
-    },
-    userName: {
-      type: String,
       required: true,
     },
     title: {
