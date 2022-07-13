@@ -54,14 +54,17 @@ feedRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction) 
     next(error);
   }
 });
+
 feedRouter.get('/:_id/like', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const feedId = req.params._id;
     const userId = req.user!._id;
-    // _id 값으로 검색
-    redisClient.sAdd(`feeds:like:${feedId}`, `${userId}`);
+
+    const newUser = await redisClient.sAdd(`feeds:like:${feedId}`, `${userId}`);
+    if (!newUser) {
+      redisClient.sRem(`feeds:like:${feedId}`, `${userId}`);
+    }
     const like = await redisClient.sCard(`feeds:like:${feedId}`);
-    // const feedData = await feedService.getFeedById(_id);
     res.status(200).json(like);
   } catch (error) {
     next(error);
