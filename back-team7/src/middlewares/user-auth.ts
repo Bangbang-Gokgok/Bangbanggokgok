@@ -23,7 +23,7 @@ export const loginCheckAndRefreshToken = async (
     const error = new Error('로그인해주세요.');
     error.name = 'NotAcceptable';
     res.redirect(DOMAIN);
-    throw error;
+    next(error);
   }
   next();
 };
