@@ -85,6 +85,7 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
       </div>
       `,
       latlng: new kakao.maps.LatLng(feed.location.lat, feed.location.lng),
+      item: feed,
     }));
 
     // 마커 이미지 크기
@@ -117,14 +118,24 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
       // 이벤트 리스너로는 클로저를 만들어 등록합니다
       kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(customOverlay));
       kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
-      kakao.maps.event.addListener(marker, 'click', makeClickListener(customOverlay));
+      kakao.maps.event.addListener(marker, 'click', makeClickListener(position.item, customOverlay));
       return marker;
     });
 
-    function makeClickListener(customOverlay) {
+    function makeClickListener(item, customOverlay) {
+      const { userName, title, description, address, location, review, createdAt } = item;
       return function () {
         console.log(customOverlay, '클릭됐습니다.');
-        // toggleModal();
+        setFeedModalState((prev) => ({
+          ...prev,
+          userName,
+          title,
+          description,
+          address,
+          review,
+          createdAt
+        }));
+        toggleModal();
       };
     }
 
@@ -143,11 +154,24 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
     }
 
     clusterer.addMarkers(markers);
+    kakao.maps.event.addListener(clusterer, 'clusterclick', function (cluster) {
+
+      // 현재 지도 레벨에서 1레벨 확대한 레벨
+      var level = map.getLevel() - 3;
+
+      // 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확대합니다
+      map.setLevel(level, { anchor: cluster.getCenter() });
+    });
   };
+
+
 
   useEffect(() => {
     drawMap();
     console.log('side Effect');
+    return () => {
+      console.log('컴포넌트가 화면에서 사라짐');
+    };
   }, [mapValue, feedList]);
 
   return (
