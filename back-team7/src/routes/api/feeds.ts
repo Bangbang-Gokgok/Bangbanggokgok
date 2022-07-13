@@ -10,24 +10,24 @@ feedRouter.post(
   upload.array('imageUrl'),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      //  if (req.user) {
-      //    const _id: Types.ObjectId | string = req.user._id;
-      const feedInfo = req.body;
-      if (req.files) {
-        const postImages = getPostImageList(
-          req.files as {
-            [fieldname: string]: Express.Multer.File[];
-          }
-        );
-        feedInfo.imageUrl = postImages;
-      }
+      if (req.user) {
+        const _id: Types.ObjectId | string = req.user._id;
+        const feedInfo = req.body;
+        if (req.files) {
+          const postImages = getPostImageList(
+            req.files as {
+              [fieldname: string]: Express.Multer.File[];
+            }
+          );
+          feedInfo.imageUrl = postImages;
+        }
 
-      //feedInfo.userId = _id;
-      //console.log(img);
-      // 위 데이터를 사용자 db에 추가하기
-      const newFeed = await feedService.addFeed(feedInfo);
-      res.status(201).json(newFeed);
-      //}
+        feedInfo.userId = _id;
+
+        // 위 데이터를 사용자 db에 추가하기
+        const newFeed = await feedService.addFeed(feedInfo);
+        res.status(201).json(newFeed);
+      }
     } catch (error) {
       next(error);
     }
@@ -53,7 +53,7 @@ feedRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction) 
     next(error);
   }
 });
-feedRouter.get('/user/:userId', async (req: Request, res: Response, next: NextFunction) => {
+feedRouter.get('/list/:userId', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.params.userId;
     // userName 값으로 검색
