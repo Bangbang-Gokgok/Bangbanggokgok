@@ -3,8 +3,11 @@ const { Strategy } = require('passport-jwt');
 import { secret } from '../../utils/jwt';
 
 const cookieExtractor = (req: Request) => {
-  const { token } = req.cookies;
-  return token;
+  let accessToken = null;
+  if (req.cookies.accessToken) {
+    accessToken = req.cookies.accessToken;
+  }
+  return accessToken;
 };
 
 const opts = {

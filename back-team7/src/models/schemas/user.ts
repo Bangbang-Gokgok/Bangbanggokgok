@@ -16,6 +16,11 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    refreshToken: {
+      type: String,
+      required: false,
+      default: '',
+    },
     profileImage: {
       type: String,
       required: false,

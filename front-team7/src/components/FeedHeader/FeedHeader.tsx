@@ -10,7 +10,7 @@ export const FeedHeader = ({
   name,
   image,
   title,
-}: UserInfoProps & { title: string; } & { isFolded: boolean; } & { onClickHandler?: () => void; }) => {
+}: UserInfoProps & { title: string; } & { isFolded: boolean; } & { onClickHandler?: (event: any) => void; }) => {
   return (
     <StyledFeedHeader onClick={onClickHandler}>
       <span className="user-info-container">
