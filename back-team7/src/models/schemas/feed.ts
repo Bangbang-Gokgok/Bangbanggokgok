@@ -9,7 +9,7 @@ const FeedSchema = new Schema(
       default: shortid.generate,
     },
     userId: {
-      type: Schema.Types.ObjectId,
+      type: String,
       ref: 'users',
       required: true,
     },
