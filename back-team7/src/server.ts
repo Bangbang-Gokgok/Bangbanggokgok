@@ -66,8 +66,8 @@ redisClient.on('error', (error: Error) =>
 
 redisClient.connect();
 
-app.get('/', async (req, res, next) => {
-  redisClient.sAdd('test', '2');
-  const value = await redisClient.sMembers('test');
-  res.json(value);
-});
+// app.get('/', async (req, res, next) => {
+//   redisClient.sAdd('test', '2');
+//   const value = await redisClient.sMembers('test');
+//   res.json(value);
+// });
