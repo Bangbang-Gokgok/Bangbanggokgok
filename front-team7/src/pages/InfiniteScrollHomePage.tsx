@@ -6,6 +6,8 @@ import unknownUser from '@/assets/images/unknown-user.png';
 import InfiniteScroll from 'react-infinite-scroll-component';
 // import { useEffect } from '@storybook/addons';
 
+// 이 파일은 infinite Scroll 코드의 백업본입니다. HomePage.tsx 에 적용하였습니다.
+
 const FeedListContainer = styled.div`
   width: 100%;
   // height: 100vh;
