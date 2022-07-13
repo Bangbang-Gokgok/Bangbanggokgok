@@ -29,9 +29,13 @@ export const userQuery = selectorFamily({
   key: 'UserQuery',
   get: (userId: UserIdStateType) => async () => {
     if (!userId) return;
-
-    const user = await axios.get<never, UserResponse>(`/api/users/${userId}`);
-    return user;
+    try {
+      console.log(userId);
+      const user = await axios.get<never, UserResponse>(`/api/users/${userId}`);
+      return user;
+    } catch (e) {
+      console.log(e);
+    }
   },
 });
 
