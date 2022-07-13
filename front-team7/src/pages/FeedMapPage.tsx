@@ -10,6 +10,8 @@ import { mapAtom } from "@/store/map";
 import ModalFrame from "@/components/Layout/ModalFrame/ModalFrame";
 import FeedDetail from "@/components/Layout/FeedDetail/FeedDetail";
 import { feedModalAtom } from "@/store/feedModal";
+import { axios } from "@/lib";
+import { getUserFeedList } from "@/api/feeds";
 
 interface CenterLatLng {
   lat: number;
@@ -56,6 +58,13 @@ const FeedMapPage = () => {
 
   useEffect(() => {
     // userId를 사용한 API Call -> feedList를 useState로 관리
+    async function getFeedList() {
+      const result = await getUserFeedList(userId);
+      console.log(result);
+    }
+
+    getFeedList();
+
     const result = [
       {
         _id: '62cbebe2ab0326b696cbe421',

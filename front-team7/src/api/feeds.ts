@@ -53,3 +53,13 @@ export const deleteOneFeed = async (id) => {
     return err;
   }
 };
+
+export const getUserFeedList = async (userId) => {
+  try {
+    let res = await axios.get(`/api/feeds/${userId}`);
+    // console.log('deleted res.data : ', res.data);
+    return res.data;
+  } catch (err) {
+    return err;
+  }
+};

@@ -51,7 +51,7 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
   const [_feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
   const mapContainer = useRef<HTMLDivElement>(null);
 
-  const makePositionsContent = (feed) => {
+  const makePositionsContent = (feed: FeedProps) => {
     const content = document.createElement('div');
     content.style.cssText = 'display: flex; flex-direction: column; background-color:white; gap:3px; border: 1px solid white; border-radius:10px; padding:10px; box-shadow: 3px 3px 3px grey;';
     const title = document.createElement('span');
@@ -143,7 +143,7 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
       });
       // 마커에 mouseover 이벤트와 mouseout 이벤트, click 이벤트를 등록합니다
       // 이벤트 리스너로는 클로저를 만들어 등록합니다
-      kakao.maps.event.addListener(marker, 'click', makeOverListener(position.item, customOverlay));
+      kakao.maps.event.addListener(marker, 'click', makeOverListener(customOverlay));
       position.content.querySelector('.close-btn')?.addEventListener('click', closeOverlay(customOverlay));
       return marker;
     });
@@ -155,8 +155,7 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
     }
 
     // 커스텀 오버레이를 표시하는 클로저를 만드는 함수입니다
-    function makeOverListener(item, customOverlay) {
-
+    function makeOverListener(customOverlay) {
       return function () {
         customOverlay.setMap(map);
       };
