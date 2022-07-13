@@ -1,7 +1,16 @@
+import { useRecoilValue } from 'recoil';
+import { Navigate } from 'react-router-dom';
+
 import { Main } from '@/components/Layout';
 import { LoginForm, LoginLogo, LoginTitle, LoginButtons } from '@/features/auth';
 
+import { authState } from '@/store';
+
 const LoginPage = () => {
+  const authAtom = useRecoilValue(authState);
+
+  if (authAtom !== null) return <Navigate to="/" />;
+
   return (
     <Main
       header={false}
