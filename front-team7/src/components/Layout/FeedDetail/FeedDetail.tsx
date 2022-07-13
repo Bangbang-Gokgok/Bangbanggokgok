@@ -4,14 +4,18 @@ import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
 import { FeedHeader } from '@/components/FeedHeader/FeedHeader';
 import { UserInfoProps } from '@/components/UserInfo';
 
-const StyledFeedDetailContainer = styled.div`
+interface FeedDetailContainerProps {
+  boxShadow: boolean;
+};
+
+const StyledFeedDetailContainer = styled.div<FeedDetailContainerProps>`
   width: 330px;
   height: 280px;
   background-color: white;
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  box-shadow: 5px 10px 5px #c2c2c2;
+  box-shadow: ${(props) => (props.boxShadow ? '' : '5px 10px 5px #c2c2c2')};
 `;
 const StyledFeedDetailHeader = styled.div`
   width: 100%;
@@ -131,7 +135,7 @@ const FeedDetail = ({
   let colorlist: Array<string> = ['lightgray', '#f5e6bf', '#bfccf5', '#bff5cc'];
 
   return (
-    <StyledFeedDetailContainer>
+    <StyledFeedDetailContainer boxShadow={isModal}>
       <FeedHeader isFolded={isModal} name={name} image={image} title={title}></FeedHeader>
       <StyledFeedDetailBody>
         <StyledTitle>👍🏽 {title}</StyledTitle>
