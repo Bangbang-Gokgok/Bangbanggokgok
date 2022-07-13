@@ -30,7 +30,7 @@ const UserSchema = new Schema(
       default: '',
     },
     profileImage: {
-      type: String,
+      type: [String],
       required: false,
     },
     contactNumber: {
