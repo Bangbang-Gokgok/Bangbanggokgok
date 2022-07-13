@@ -40,7 +40,6 @@ const StyledFeedHeader = styled.div`
   border: 1px solid rgba(0, 0, 0, 15%);
   border-radius: 5px;
   box-shadow: 0 0.3rem 0.4rem rgba(0, 0, 0, 25%);
-  margin-bottom: 5px;
   background-color: white;
   cursor: pointer;
   .user-info-container {
@@ -62,4 +61,13 @@ const StyledFeedHeader = styled.div`
     width: 15%;
     font-size: 2.2rem;
   }
+
+  @media only screen and (min-width: 768px) {
+    min-height: 70px;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    min-height: 80px;
+  }
+  
 `;
