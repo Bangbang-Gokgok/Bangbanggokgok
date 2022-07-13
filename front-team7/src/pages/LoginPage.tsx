@@ -4,12 +4,12 @@ import { Navigate } from 'react-router-dom';
 import { Main } from '@/components/Layout';
 import { LoginForm, LoginLogo, LoginTitle, LoginButtons } from '@/features/auth';
 
-import { authState } from '@/store';
+import { userIdState } from '@/store';
 
 const LoginPage = () => {
-  const authAtom = useRecoilValue(authState);
+  const userId = useRecoilValue(userIdState);
 
-  if (authAtom !== null) return <Navigate to="/" />;
+  if (userId !== null) return <Navigate to="/" />;
 
   return (
     <Main

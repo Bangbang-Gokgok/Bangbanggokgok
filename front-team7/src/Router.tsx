@@ -14,7 +14,6 @@ import AuthRouter from '@/components/AuthRouter';
 
 const AppRouter = () => {
   const { loading } = useLogin();
-  console.log(loading);
 
   if (loading) return <h2>loading...</h2>;
 
