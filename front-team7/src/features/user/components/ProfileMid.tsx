@@ -11,7 +11,6 @@ export const ProfileMid = () => {
 };
 
 const StyledProfileMid = styled.div`
-  min-height: 20%;
   display: flex;
   flex-direction: column;
   gap: 5px;
