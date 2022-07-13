@@ -1,7 +1,12 @@
 import { Schema } from 'mongoose';
+import shortid from 'shortid';
 
 const UserSchema = new Schema(
   {
+    _id: {
+      type: String,
+      default: shortid.generate,
+    },
     authority: {
       type: String,
       required: true,
