@@ -1,13 +1,18 @@
 import styled from 'styled-components';
+import { useRecoilValue } from 'recoil';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { MdOutlineModeEditOutline } from 'react-icons/md';
 
 import { Avartar } from '@/components/Avatar';
 
+import { currentUserQuery } from '@/store';
 import { profileEditSchema } from '../schema';
 
 export const ProfileEditForm = () => {
+  const currentUser = useRecoilValue(currentUserQuery);
+  const { profileImage, email, name, description, contactNumber, address } = currentUser;
+
   const {
     register,
     handleSubmit,
@@ -35,35 +40,57 @@ export const ProfileEditForm = () => {
           <label className="login-label" htmlFor="email">
             이메일
           </label>
-          <input className="login-input" type="text" id="email" {...register('email')} />
+          <input
+            className="login-input"
+            type="text"
+            id="email"
+            value={email}
+            {...register('email')}
+          />
           {errors.email && <p className="login-error">{errors.email?.message}</p>}
         </li>
         <li className="login-li">
-          <label className="login-label" htmlFor="password">
+          <label className="login-label" htmlFor="username">
             이름
           </label>
-          <input className="login-input" type="password" id="password" {...register('password')} />
+          <input
+            className="login-input"
+            type="text"
+            id="username"
+            value={name}
+            {...register('username')}
+          />
           {errors.password && <p className="login-error">{errors.password?.message}</p>}
         </li>
         <li className="login-li">
-          <label className="login-label" htmlFor="password">
+          <label className="login-label" htmlFor="map-description">
             지도 소개말
           </label>
-          <input className="login-input" type="password" id="password" {...register('password')} />
+          <input
+            className="login-input"
+            type="text"
+            id="map-description"
+            {...register('map-description')}
+          />
           {errors.password && <p className="login-error">{errors.password?.message}</p>}
         </li>
         <li className="login-li">
-          <label className="login-label" htmlFor="password">
+          <label className="login-label" htmlFor="contact-number">
             연락처
           </label>
-          <input className="login-input" type="password" id="password" {...register('password')} />
+          <input
+            className="login-input"
+            type="text"
+            id="contact-number"
+            {...register('contact-number')}
+          />
           {errors.password && <p className="login-error">{errors.password?.message}</p>}
         </li>
         <li className="login-li">
-          <label className="login-label" htmlFor="password">
+          <label className="login-label" htmlFor="address">
             주소
           </label>
-          <input className="login-input" type="password" id="password" {...register('password')} />
+          <input className="login-input" type="text" id="address" {...register('address')} />
           {errors.password && <p className="login-error">{errors.password?.message}</p>}
         </li>
       </ul>

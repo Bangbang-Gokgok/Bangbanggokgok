@@ -1,17 +1,19 @@
 import styled from 'styled-components';
+import { useRecoilValue } from 'recoil';
 import { Link } from 'react-router-dom';
 import { BiEditAlt } from 'react-icons/bi';
 
 import profileBackground from '@/assets/images/profile-background.jpg';
 
 import { Avartar } from '@/components/Avatar';
-
-const dummyData = [
-  { title: '게시글', number: 15 },
-  { title: '친구', number: 30 },
-];
+import { currentUserQuery } from '@/store';
 
 export const ProfileTop = () => {
+  const currentUser = useRecoilValue(currentUserQuery);
+  console.log(currentUser);
+
+  if (!currentUser) return;
+
   return (
     <StyledProfileTop image={profileBackground as string}>
       <div className="profile-icon">
@@ -21,15 +23,19 @@ export const ProfileTop = () => {
       </div>
       <div className="profile-main">
         <Avartar size="xl" />
-        <span className="username">홍길동</span>
-        <span className="email">honggil@naver.com</span>
+        <span className="username">{currentUser.name}</span>
+        <span className="email">{currentUser.email}</span>
         <div className="profile-info-container">
-          {dummyData.map(({ title, number }) => (
-            <div className="profile-info" key={title}>
-              <span className="profile-info-title">{title}</span>
-              <span className="profile-info-number">{number}</span>
-            </div>
-          ))}
+          <div className="profile-info">
+            <span className="profile-info-title">게시글</span>
+            <span className="profile-info-number">15</span>
+          </div>
+          <div className="profile-info">
+            <span className="profile-info-title">친구</span>
+            <span className="profile-info-number">
+              {currentUser?.friends.length > 0 ? currentUser?.friends.length : 0}
+            </span>
+          </div>
         </div>
       </div>
     </StyledProfileTop>
@@ -94,8 +100,8 @@ const StyledProfileTop = styled.div<{ image: string }>`
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-width: 62px;
-      padding: 6px 0px;
+      width: 56px;
+      padding: 6px;
       height: 100%;
       border-radius: 5px;
       background-color: #f3f6fb;

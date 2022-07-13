@@ -1,6 +1,6 @@
 import { Main } from '@/components/Layout';
-
 import { ProfileTop, ProfileMid, ProfileBot } from '@/features/user';
+
 // import * as reviewApi from '@/api/review';
 // import { useEffect } from 'react';
 
