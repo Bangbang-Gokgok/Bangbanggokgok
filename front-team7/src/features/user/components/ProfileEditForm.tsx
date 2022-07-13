@@ -1,28 +1,89 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { MdOutlineModeEditOutline } from 'react-icons/md';
+import { useDaumPostcodePopup } from 'react-daum-postcode';
 
 import { Avartar } from '@/components/Avatar';
+import { axios } from '@/lib';
 
 import { currentUserQuery } from '@/store';
 import { profileEditSchema } from '../schema';
 
 export const ProfileEditForm = () => {
+  // const [name, setName] = useState(null);
+  // const [description, setDescription] = useState(null);
+  // const [contactNumber, setContactNumber] = useState(null);
+  // const [address, setAddress] = useState(null);
+  // const [image, setImage] = useState(null);
   const currentUser = useRecoilValue(currentUserQuery);
-  const { profileImage, email, name, description, contactNumber, address } = currentUser;
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    resolver: yupResolver(profileEditSchema),
-  });
+  } = useForm();
 
-  const submitForm = () => {
-    console.log('hi');
+  const submitForm = (data) => {
+    const dummy = {
+      ...data,
+      image: data.image[0],
+      location: {
+        lat: 33.450936,
+        lng: 126.569477,
+      },
+    };
+
+    const fd = new FormData();
+    console.log(
+      dummy.image,
+      dummy.name,
+      dummy.description,
+      dummy.contactNumber,
+      dummy.address,
+      dummy.location
+    );
+    fd.append('image', dummy.image);
+    fd.append('name', dummy.name);
+    fd.append('description', dummy.description);
+    fd.append('contactNumber', dummy.contactNumber);
+    fd.append('address', dummy.address);
+    fd.append('location', dummy.location);
+
+    console.log(fd);
+
+    axios
+      .put('/api/users/user', fd)
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e));
+  };
+
+  const open = useDaumPostcodePopup(
+    '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'
+  );
+
+  const handleComplete = (data) => {
+    let fullAddress = data.address;
+    let extraAddress = '';
+
+    if (data.addressType === 'R') {
+      if (data.bname !== '') {
+        extraAddress += data.bname;
+      }
+      if (data.buildingName !== '') {
+        extraAddress += extraAddress !== '' ? `, ${data.buildingName}` : data.buildingName;
+      }
+      fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
+    }
+
+    console.log(fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
+  };
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    open({ onComplete: handleComplete });
   };
 
   return (
@@ -37,6 +98,9 @@ export const ProfileEditForm = () => {
           </div>
         </li>
         <li className="login-li">
+          <input className="login-input" type="file" id="image" {...register('image')} />
+        </li>
+        <li className="login-li">
           <label className="login-label" htmlFor="email">
             이메일
           </label>
@@ -44,45 +108,47 @@ export const ProfileEditForm = () => {
             className="login-input"
             type="text"
             id="email"
-            value={email}
+            value={currentUser!.email}
             {...register('email')}
           />
           {errors.email && <p className="login-error">{errors.email?.message}</p>}
         </li>
         <li className="login-li">
-          <label className="login-label" htmlFor="username">
+          <label className="login-label" htmlFor="name">
             이름
           </label>
           <input
             className="login-input"
             type="text"
-            id="username"
-            value={name}
-            {...register('username')}
+            id="name"
+            value={currentUser!.name}
+            {...register('name')}
           />
           {errors.password && <p className="login-error">{errors.password?.message}</p>}
         </li>
         <li className="login-li">
-          <label className="login-label" htmlFor="map-description">
+          <label className="login-label" htmlFor="description">
             지도 소개말
           </label>
           <input
             className="login-input"
             type="text"
-            id="map-description"
-            {...register('map-description')}
+            id="description"
+            value={currentUser!.description}
+            {...register('description')}
           />
           {errors.password && <p className="login-error">{errors.password?.message}</p>}
         </li>
         <li className="login-li">
-          <label className="login-label" htmlFor="contact-number">
+          <label className="login-label" htmlFor="contactNumber">
             연락처
           </label>
           <input
             className="login-input"
             type="text"
-            id="contact-number"
-            {...register('contact-number')}
+            id="contactNumber"
+            value={currentUser!.contactNumber}
+            {...register('contactNumber')}
           />
           {errors.password && <p className="login-error">{errors.password?.message}</p>}
         </li>
@@ -90,7 +156,16 @@ export const ProfileEditForm = () => {
           <label className="login-label" htmlFor="address">
             주소
           </label>
-          <input className="login-input" type="text" id="address" {...register('address')} />
+          <input
+            className="login-input"
+            type="text"
+            id="address"
+            value={currentUser!.address}
+            {...register('address')}
+          />
+          <button type="button" onClick={(e) => handleClick(e)}>
+            우편주소 검색
+          </button>
           {errors.password && <p className="login-error">{errors.password?.message}</p>}
         </li>
       </ul>

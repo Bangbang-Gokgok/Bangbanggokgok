@@ -1,11 +1,17 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+
+import { useRecoilValue } from 'recoil';
+import { currentUserQuery } from '@/store';
 
 export const ProfileMid = () => {
+  const currentUser = useRecoilValue(currentUserQuery);
+
+  const newDescription = currentUser!.description || `${currentUser!.name}님의 지도입니다.`;
+
   return (
     <StyledProfileMid>
       <span className="introduction">나의 지도를 소개합니다 ✨</span>
-      <span className="content">다채롭고 색다른, 우아하고 멋있는 홍길동의 지도입니다.</span>
+      <span className="content">{newDescription}</span>
     </StyledProfileMid>
   );
 };

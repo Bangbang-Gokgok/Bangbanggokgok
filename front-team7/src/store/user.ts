@@ -40,8 +40,14 @@ export const userFeedsQuery = selectorFamily({
   get: (userId: UserIdStateType) => async () => {
     if (!userId) return;
 
-    const feeds = await axios.get<never, UserResponse>(`/api/feeds/list/${userId}`);
-    return feeds;
+    try {
+      const feeds = await axios.get(`/api/feeds/list/${userId}`);
+      return feeds;
+    } catch (e) {
+      console.log(e);
+    }
+
+    return [];
   },
 });
 

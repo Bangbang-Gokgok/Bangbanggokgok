@@ -6,7 +6,7 @@ export interface UserInfo {
   email: string;
   name: string;
   refreshToken?: string | undefined;
-  profileImage?: string | undefined;
+  profileImage?: string[] | undefined;
   contactNumber?: number | undefined;
   location?: object | undefined;
   friends?: string[] | undefined;

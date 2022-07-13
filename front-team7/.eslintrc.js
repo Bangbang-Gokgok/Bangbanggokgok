@@ -38,6 +38,7 @@ module.exports = {
     '@typescript-eslint/no-unsafe-return': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/restrict-template-expressions': 'off',
   },
   env: {
     node: true,

@@ -1,9 +1,12 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const ProfileBot = () => {
   return (
     <StyledProfileBot>
-      <button className="btn">지도 보러가기</button>
+      <Link to="/feedmap">
+        <button className="btn">지도 보러가기</button>
+      </Link>
     </StyledProfileBot>
   );
 };

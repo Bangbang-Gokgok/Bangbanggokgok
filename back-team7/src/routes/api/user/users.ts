@@ -1,6 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { userService, UserInfo } from '../../../services';
 import { adminRouter } from './admin';
+import { upload } from '../../../middlewares/';
+import { getPostImageList } from '../../../utils/img';
 // import { adminCheck } from '../../../middlewares';
 import { Types } from 'mongoose';
 
@@ -71,25 +73,36 @@ userRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction) 
   }
 });
 
-userRouter.put('/user', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (req.user) {
-      const _id: Types.ObjectId | string = req.user._id;
-      const update: Partial<UserInfo> = req.body;
+userRouter.put(
+  '/user',
+  upload.array('profileImage', 1),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (req.user) {
+        const _id: Types.ObjectId | string = req.user._id;
+        const update: Partial<UserInfo> = req.body;
+        if (req.files) {
+          const postImages = getPostImageList(
+            req.files as {
+              [fieldname: string]: Express.Multer.File[];
+            }
+          );
+          update.profileImage = postImages;
+        }
+        // 사용자 정보를 업데이트함.
+        const updatedUser = await userService.setUser(_id, update);
 
-      // 사용자 정보를 업데이트함.
-      const updatedUser = await userService.setUser(_id, update);
-
-      res.status(200).json(updatedUser);
-    } else {
-      const error = new Error('user 정보가 없습니다.');
-      error.name = 'NotFound';
-      throw error;
+        res.status(200).json(updatedUser);
+      } else {
+        const error = new Error('user 정보가 없습니다.');
+        error.name = 'NotFound';
+        throw error;
+      }
+    } catch (error) {
+      next(error);
     }
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 userRouter.delete('/user', async (req: Request, res: Response, next: NextFunction) => {
   try {

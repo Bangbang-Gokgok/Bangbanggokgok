@@ -6,13 +6,11 @@ import { BiEditAlt } from 'react-icons/bi';
 import profileBackground from '@/assets/images/profile-background.jpg';
 
 import { Avartar } from '@/components/Avatar';
-import { currentUserQuery } from '@/store';
+import { currentUserQuery, currentUserFeedsQuery } from '@/store';
 
 export const ProfileTop = () => {
   const currentUser = useRecoilValue(currentUserQuery);
-  console.log(currentUser);
-
-  if (!currentUser) return;
+  const currentUserFeeds = useRecoilValue(currentUserFeedsQuery);
 
   return (
     <StyledProfileTop image={profileBackground as string}>
@@ -23,17 +21,19 @@ export const ProfileTop = () => {
       </div>
       <div className="profile-main">
         <Avartar size="xl" />
-        <span className="username">{currentUser.name}</span>
-        <span className="email">{currentUser.email}</span>
+        <span className="username">{currentUser!.name}</span>
+        <span className="email">{currentUser!.email}</span>
         <div className="profile-info-container">
           <div className="profile-info">
             <span className="profile-info-title">게시글</span>
-            <span className="profile-info-number">15</span>
+            <span className="profile-info-number">
+              {currentUserFeeds!.length > 0 ? currentUserFeeds!.length : 0}
+            </span>
           </div>
           <div className="profile-info">
             <span className="profile-info-title">친구</span>
             <span className="profile-info-number">
-              {currentUser?.friends.length > 0 ? currentUser?.friends.length : 0}
+              {currentUser!.friends.length > 0 ? currentUser!.friends.length : 0}
             </span>
           </div>
         </div>
