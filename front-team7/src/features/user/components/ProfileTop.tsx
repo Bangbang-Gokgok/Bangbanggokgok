@@ -12,6 +12,8 @@ export const ProfileTop = () => {
   const currentUser = useRecoilValue(currentUserQuery);
   const currentUserFeeds = useRecoilValue(currentUserFeedsQuery);
 
+  console.log(currentUser?.profileImage[0]);
+
   return (
     <StyledProfileTop image={profileBackground as string}>
       <div className="profile-icon">
@@ -20,7 +22,7 @@ export const ProfileTop = () => {
         </StyledLinkButton>
       </div>
       <div className="profile-main">
-        <Avartar size="xl" />
+        <Avartar size="xl" src={currentUser?.profileImage[0] as string} />
         <span className="username">{currentUser!.name}</span>
         <span className="email">{currentUser!.email}</span>
         <div className="profile-info-container">

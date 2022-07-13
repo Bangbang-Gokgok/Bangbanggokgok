@@ -24,7 +24,15 @@ export const ProfileEditForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      email: currentUser?.email,
+      name: currentUser?.name,
+      description: currentUser?.description,
+      contactNumber: currentUser?.contactNumber,
+      address: currentUser?.address,
+    },
+  });
 
   const submitForm = (data) => {
     const dummy = {
@@ -45,14 +53,12 @@ export const ProfileEditForm = () => {
       dummy.address,
       dummy.location
     );
-    fd.append('image', dummy.image);
+    fd.append('profileImage', dummy.image);
     fd.append('name', dummy.name);
     fd.append('description', dummy.description);
     fd.append('contactNumber', dummy.contactNumber);
     fd.append('address', dummy.address);
     fd.append('location', dummy.location);
-
-    console.log(fd);
 
     axios
       .put('/api/users/user', fd)
@@ -91,39 +97,30 @@ export const ProfileEditForm = () => {
       <ul className="login-ul">
         <li className="avartar-li">
           <div className="avartar-container">
-            <Avartar size="xl" />
+            <Avartar size="xl" src={currentUser?.profileImage[0] as string} />
             <span className="edit-icon">
               <MdOutlineModeEditOutline />
             </span>
           </div>
         </li>
         <li className="login-li">
+          <label className="login-label" htmlFor="image">
+            임시 이미지 인풋
+          </label>
           <input className="login-input" type="file" id="image" {...register('image')} />
         </li>
         <li className="login-li">
           <label className="login-label" htmlFor="email">
             이메일
           </label>
-          <input
-            className="login-input"
-            type="text"
-            id="email"
-            value={currentUser!.email}
-            {...register('email')}
-          />
+          <input className="login-input" type="text" id="email" {...register('email')} />
           {errors.email && <p className="login-error">{errors.email?.message}</p>}
         </li>
         <li className="login-li">
           <label className="login-label" htmlFor="name">
             이름
           </label>
-          <input
-            className="login-input"
-            type="text"
-            id="name"
-            value={currentUser!.name}
-            {...register('name')}
-          />
+          <input className="login-input" type="text" id="name" {...register('name')} />
           {errors.password && <p className="login-error">{errors.password?.message}</p>}
         </li>
         <li className="login-li">
@@ -134,7 +131,6 @@ export const ProfileEditForm = () => {
             className="login-input"
             type="text"
             id="description"
-            value={currentUser!.description}
             {...register('description')}
           />
           {errors.password && <p className="login-error">{errors.password?.message}</p>}
@@ -147,7 +143,6 @@ export const ProfileEditForm = () => {
             className="login-input"
             type="text"
             id="contactNumber"
-            value={currentUser!.contactNumber}
             {...register('contactNumber')}
           />
           {errors.password && <p className="login-error">{errors.password?.message}</p>}
@@ -156,13 +151,7 @@ export const ProfileEditForm = () => {
           <label className="login-label" htmlFor="address">
             주소
           </label>
-          <input
-            className="login-input"
-            type="text"
-            id="address"
-            value={currentUser!.address}
-            {...register('address')}
-          />
+          <input className="login-input" type="text" id="address" {...register('address')} />
           <button type="button" onClick={(e) => handleClick(e)}>
             우편주소 검색
           </button>

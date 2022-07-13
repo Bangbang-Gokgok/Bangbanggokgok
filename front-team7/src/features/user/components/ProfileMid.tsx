@@ -6,7 +6,7 @@ import { currentUserQuery } from '@/store';
 export const ProfileMid = () => {
   const currentUser = useRecoilValue(currentUserQuery);
 
-  const newDescription = currentUser!.description || `${currentUser!.name}님의 지도입니다.`;
+  const newDescription = currentUser?.description || `${currentUser?.name}님의 지도입니다.`;
 
   return (
     <StyledProfileMid>
