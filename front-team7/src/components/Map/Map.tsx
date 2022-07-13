@@ -1,8 +1,8 @@
 /*global kakao*/
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import pinImg from '@/assets/images/blue-pin.png';
-import centerPinImg from '@/assets/images/red-pin.png';
+import pinImg from '@/assets/images/general-marker.png';
+import centerPinImg from '@/assets/images/point-marker.png';
 import { useRecoilValue, useRecoilState } from "recoil";
 import { mapAtom } from "@/store/map";
 import { feedModalAtom } from '@/store/feedModal';
@@ -45,11 +45,44 @@ interface FeedListProps extends Array<FeedProps> { }
 
 const { kakao } = window;
 
-const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: () => void; }) => {
+const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: (item: FeedProps) => void; }) => {
   const mapValue = useRecoilValue(mapAtom);
-  const [_, setMapValue] = useRecoilState(mapAtom);
-  const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
+  // const [_mapValue, setMapValue] = useRecoilState(mapAtom);
+  const [_feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
   const mapContainer = useRef<HTMLDivElement>(null);
+
+  const makePositionsContent = (feed: FeedProps) => {
+    const content = document.createElement('div');
+    content.style.cssText = 'display: flex; flex-direction: column; background-color:white; gap:3px; border: 1px solid white; border-radius:10px; padding:10px; box-shadow: 3px 3px 3px grey;';
+    const title = document.createElement('span');
+    title.style.cssText = 'font-size: 16px; font-weight: bold; cursor: pointer;';
+    title.innerHTML = feed.title;
+
+    const address = document.createElement('span');
+    address.style.cssText = 'font-size: 8px; color:blue;';
+    address.innerHTML = feed.address;
+
+    const reviewLength = document.createElement('span');
+    reviewLength.style.cssText = 'font-size: 4px;';
+    reviewLength.innerHTML = `${feed.review.length}개의 리뷰`;
+
+
+    const closeButton = document.createElement('button');
+    closeButton.className = 'close-btn';
+    closeButton.style.cssText = 'font-size: 12px; cursor: pointer; border: none; border-radius: 10px; font-weight: 400; text-align: center; padding:3px';
+    closeButton.innerHTML = '닫기';
+
+    title.addEventListener('click', () => toggleModal(feed));
+
+
+    content.appendChild(title);
+    content.appendChild(address);
+    content.appendChild(reviewLength);
+    content.appendChild(closeButton);
+
+
+    return content;
+  };
 
   const drawMap = () => {
     const options: Object = {
@@ -78,17 +111,13 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
 
     // 마커를 표시할 위치와 title 객체 배열입니다
     const positions = feedList.map((feed) => ({
-      content: `
-      <div style="display: flex; flex-direction: column; background-color:white; border: 1px solid white; border-radius:10px; padding:5px; box-shadow: 3px 3px 3px grey;">
-        <span style="font-size: 18px; font-weight: bold;">${feed.title}</span>
-        <span style="font-size: 12px; color:blue">${feed.address}</span>
-      </div>
-      `,
+      content: makePositionsContent(feed),
       latlng: new kakao.maps.LatLng(feed.location.lat, feed.location.lng),
+      item: feed,
     }));
 
     // 마커 이미지 크기
-    const imageSize = new kakao.maps.Size(24, 35);
+    const imageSize = new kakao.maps.Size(50, 50);
 
     // 센터 마커 이미지를 생성합니다
     const centerMarkerImage = new kakao.maps.MarkerImage(centerPinImg, imageSize);
@@ -110,21 +139,18 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
       const customOverlay = new kakao.maps.CustomOverlay({
         position: position.latlng,
         content: position.content, // 커스텀 오버레이에 표시할 내용
-        yAnchor: 1.8,
+        yAnchor: 1.6,
       });
-
       // 마커에 mouseover 이벤트와 mouseout 이벤트, click 이벤트를 등록합니다
       // 이벤트 리스너로는 클로저를 만들어 등록합니다
-      kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(customOverlay));
-      kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(customOverlay));
-      kakao.maps.event.addListener(marker, 'click', makeClickListener(customOverlay));
+      kakao.maps.event.addListener(marker, 'click', makeOverListener(customOverlay));
+      position.content.querySelector('.close-btn')?.addEventListener('click', closeOverlay(customOverlay));
       return marker;
     });
 
-    function makeClickListener(customOverlay) {
+    function closeOverlay(customOverlay) {
       return function () {
-        console.log(customOverlay, '클릭됐습니다.');
-        // toggleModal();
+        customOverlay.setMap(null);
       };
     }
 
@@ -135,19 +161,21 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
       };
     }
 
-    // 커스텀 오버레이를 닫는 클로저를 만드는 함수입니다
-    function makeOutListener(customOverlay) {
-      return function () {
-        customOverlay.setMap(null);
-      };
-    }
-
     clusterer.addMarkers(markers);
+    kakao.maps.event.addListener(clusterer, 'clusterclick', function (cluster) {
+
+      // 현재 지도 레벨에서 1레벨 확대한 레벨
+      var level = map.getLevel() - 3;
+
+      // 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확대합니다
+      map.setLevel(level, { anchor: cluster.getCenter() });
+    });
   };
 
   useEffect(() => {
     drawMap();
-    console.log('side Effect');
+    console.log('Map Side Effect');
+
   }, [mapValue, feedList]);
 
   return (

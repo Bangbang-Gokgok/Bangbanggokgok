@@ -145,7 +145,7 @@ interface PlaceProps {
   y: number;
 }
 
-interface PlaceListProps extends Array<PlaceProps> {}
+interface PlaceListProps extends Array<PlaceProps> { }
 
 interface CenterLatLng {
   lat: number;
@@ -170,7 +170,7 @@ interface FeedProps {
   updatedAt: string;
 }
 
-interface FeedListProps extends Array<FeedProps> {}
+interface FeedListProps extends Array<FeedProps> { }
 
 const Form = () => {
   const [feedList, setFeedList] = useState<FeedListProps>([]);
@@ -196,9 +196,9 @@ const Form = () => {
   };
 
   async function createFormData(sendData) {
-    // console.log('sendData : ', sendData);
+    console.log('sendData : ', sendData);
     const result: FeedListProps = await Api.createOneFeed(sendData);
-    // console.log('create Feed : ', result);
+    console.log('create Feed : ', result);
   }
 
   const postFormData = (address, x, y) => {
