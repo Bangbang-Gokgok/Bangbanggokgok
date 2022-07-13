@@ -1,26 +1,26 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { axios } from '@/lib';
 import { useSetRecoilState } from 'recoil';
 
-import { authAtom } from '@/store';
-
-interface LoginResponse {
-  access_token: string;
-}
+import { userIdState, type UserIdStateType, type UserResponse } from '@/store';
 
 export const useLogin = () => {
-  const setAuth = useSetRecoilState(authAtom);
+  const [loading, setLoading] = useState(true);
+  const setAuth = useSetRecoilState(userIdState);
 
   useEffect(() => {
-    async function getAccessToken() {
-      const { data } = await axios.post<LoginResponse>('/auth/login');
-      const { access_token } = data;
+    async function getAccessToken(): Promise<UserIdStateType> {
+      await axios.get<never, void>('/api/loginCheck'); // access, refresh 갱신하는 api
+      const user = await axios.get<never, UserResponse>('/api/users/user'); // user 데이터 가져오는 api
 
-      setAuth((prevState) => {
-        return { ...prevState, token: access_token };
-      });
+      return user._id;
     }
 
-    getAccessToken().catch((e) => console.log(e));
-  }, [setAuth]);
+    getAccessToken()
+      .then(setAuth)
+      .catch((e) => console.log(e))
+      .finally(() => setLoading(false));
+  }, []);
+
+  return { loading };
 };
