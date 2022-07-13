@@ -1,16 +1,20 @@
 import { Feed } from '../models';
 import { Types } from 'mongoose';
+import { Schema } from 'mongoose';
+import { upload } from '../middlewares';
 
 interface newLocation {
   lat: number;
   lng: number;
 }
 interface FeedInfo {
+  //userId: string | Types.ObjectId;
   userName: string;
   title: string;
   description: string;
   address: string;
   location: newLocation;
+  imageUrl?: string[] | undefined;
 }
 interface FeedData extends FeedInfo {
   _id: Types.ObjectId;
@@ -37,7 +41,17 @@ class FeedService {
     }
     return feed;
   }
-
+  //유저_id로 feed 조회
+  async getFeedByUserId(userId: string | Types.ObjectId): Promise<FeedData> {
+    // 우선 해당 상품이 db에 존재하는지 확인
+    const feed = await Feed.findOne({ userId });
+    if (!feed) {
+      const error = new Error('해당 피드가 존재하지 않습니다. 다시 확인해 주세요.');
+      error.name = 'NotFound';
+      throw error;
+    }
+    return feed;
+  }
   // 피드 정보 수정
   async setFeed(_id: string, update: Partial<FeedInfo>) {
     // 업데이트 진행
