@@ -3,6 +3,7 @@ import { feedService } from '../../services';
 import { upload } from '../../middlewares/';
 import { Types } from 'mongoose';
 import { getPostImageList } from '../../utils/img';
+import { redisClient } from '../../server';
 const feedRouter = Router();
 
 feedRouter.post(
@@ -53,6 +54,20 @@ feedRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction) 
     next(error);
   }
 });
+feedRouter.get('/:_id/like', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const feedId = req.params._id;
+    const userId = req.user!._id;
+    // _id 값으로 검색
+    redisClient.sAdd(`feeds:like:${feedId}`, `${userId}`);
+    const like = await redisClient.sCard(`feeds:like:${feedId}`);
+    // const feedData = await feedService.getFeedById(_id);
+    res.status(200).json(like);
+  } catch (error) {
+    next(error);
+  }
+});
+
 feedRouter.get('/user/:userId', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.params.userId;
