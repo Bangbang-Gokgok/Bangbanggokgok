@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const ProfileBot = () => {
   return (
     <StyledProfileBot>
-      <button className="btn">로그아웃</button>
+      <button className="btn">지도 보러가기</button>
     </StyledProfileBot>
   );
 };
@@ -13,7 +13,6 @@ const StyledProfileBot = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 20%;
 
   .btn {
     font-weight: bold;

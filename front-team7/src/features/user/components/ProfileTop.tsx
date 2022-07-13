@@ -38,7 +38,7 @@ export const ProfileTop = () => {
 
 const StyledProfileTop = styled.div<{ image: string }>`
   position: relative;
-  height: 55%;
+  height: 250px;
 
   :before {
     content: '';

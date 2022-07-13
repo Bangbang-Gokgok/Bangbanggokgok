@@ -1,8 +1,11 @@
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { MdOutlineModeEditOutline } from 'react-icons/md';
 
-import loginSchema from '../schema';
+import { Avartar } from '@/components/Avatar';
+
+import { profileEditSchema } from '../schema';
 
 export const ProfileEditForm = () => {
   const {
@@ -10,7 +13,7 @@ export const ProfileEditForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(loginSchema),
+    resolver: yupResolver(profileEditSchema),
   });
 
   const submitForm = () => {
@@ -18,40 +21,118 @@ export const ProfileEditForm = () => {
   };
 
   return (
-    <FormWrapper onSubmit={handleSubmit(submitForm)}>
+    <StyledForm onSubmit={handleSubmit(submitForm)}>
       <ul className="login-ul">
+        <li className="avartar-li">
+          <div className="avartar-container">
+            <Avartar size="xl" />
+            <span className="edit-icon">
+              <MdOutlineModeEditOutline />
+            </span>
+          </div>
+        </li>
         <li className="login-li">
           <label className="login-label" htmlFor="email">
-            사용자 이메일
+            이메일
           </label>
           <input className="login-input" type="text" id="email" {...register('email')} />
-          <p className="login-error">{errors.email?.message}</p>
+          {errors.email && <p className="login-error">{errors.email?.message}</p>}
         </li>
         <li className="login-li">
           <label className="login-label" htmlFor="password">
-            비밀번호
+            이름
           </label>
           <input className="login-input" type="password" id="password" {...register('password')} />
-          <p className="login-error">{errors.password?.message}</p>
+          {errors.password && <p className="login-error">{errors.password?.message}</p>}
+        </li>
+        <li className="login-li">
+          <label className="login-label" htmlFor="password">
+            지도 소개말
+          </label>
+          <input className="login-input" type="password" id="password" {...register('password')} />
+          {errors.password && <p className="login-error">{errors.password?.message}</p>}
+        </li>
+        <li className="login-li">
+          <label className="login-label" htmlFor="password">
+            연락처
+          </label>
+          <input className="login-input" type="password" id="password" {...register('password')} />
+          {errors.password && <p className="login-error">{errors.password?.message}</p>}
+        </li>
+        <li className="login-li">
+          <label className="login-label" htmlFor="password">
+            주소
+          </label>
+          <input className="login-input" type="password" id="password" {...register('password')} />
+          {errors.password && <p className="login-error">{errors.password?.message}</p>}
         </li>
       </ul>
-      <button className="login-button" type="submit">
-        로그인
-      </button>
-    </FormWrapper>
+
+      <div>
+        <button className="login-button" type="submit">
+          수정하기
+        </button>
+      </div>
+    </StyledForm>
   );
 };
 
-const FormWrapper = styled.form`
+const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 2rem;
+  gap: 20px;
+  width: 100%;
+  min-height: 100%;
+  padding: 20px 30px;
+  overflow-y: auto;
+  background-color: whitesmoke;
+
+  .avartar-li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .avartar-container {
+      position: relative;
+
+      .edit-icon {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2.5rem;
+        color: whitesmoke;
+        height: 30px;
+        width: 30px;
+        background-color: #8d3030;
+        border-radius: 50%;
+        padding: 6px;
+        transition: color 0.3s ease;
+        box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+      }
+    }
+  }
 
   .login-ul {
+    padding: 0;
+    height: 100%;
+  }
+
+  .login-label {
+    font-size: 1.4rem;
+  }
+
+  ul {
     display: grid;
-    row-gap: 1.5rem;
-    margin: 0 0 4rem 0;
+    gap: 10px;
+    margin: 0;
+  }
+
+  li {
+    list-style-type: none;
   }
 
   .login-li {
@@ -60,12 +141,11 @@ const FormWrapper = styled.form`
 
     .login-input {
       font-size: 1.7rem;
-      height: 4.5rem;
-      border-width: 0.1rem;
-      border-style: solid;
+      height: 38px;
+      border: 1.5px solid #6a6a6a;
       border-radius: 0.5rem;
       margin-top: 0.2rem;
-      padding: 0 0.8rem;
+      padding: 0 8px;
 
       :focus {
         outline: none;
@@ -74,25 +154,27 @@ const FormWrapper = styled.form`
     }
 
     .login-error {
-      margin-top: 0.32rem;
+      margin: 0;
+      margin-top: 3px;
       color: #e75349;
+      font-size: 1.3rem;
     }
   }
 
   .login-button {
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
+    width: 100%;
     cursor: pointer;
     color: white;
-    font-size: 1.75rem;
+    font-size: 1.6rem;
     font-weight: bold;
-    background-color: #49c5b6;
-    padding: 1.5rem 1.25rem;
+    color: #343434;
+    background-color: #ddcb51;
+    padding: 8px 15px;
     transition: background-color 0.3s;
+    border: none;
 
     :hover {
-      background-color: #5eaca0;
+      background-color: #e9d767;
     }
   }
 `;
