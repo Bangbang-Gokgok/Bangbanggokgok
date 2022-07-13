@@ -3,7 +3,7 @@ import { feedService } from '../../services';
 import { upload } from '../../middlewares/';
 import { Types } from 'mongoose';
 import { getPostImageList } from '../../utils/img';
-import { redisClient } from '../../server';
+// import { redisClient } from '../../server';
 const feedRouter = Router();
 
 feedRouter.post(
@@ -55,21 +55,21 @@ feedRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction) 
   }
 });
 
-feedRouter.get('/:_id/like', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const feedId = req.params._id;
-    const userId = req.user!._id;
+// feedRouter.get('/:_id/like', async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const feedId = req.params._id;
+//     const userId = req.user!._id;
 
-    const newUser = await redisClient.sAdd(`feeds:like:${feedId}`, `${userId}`);
-    if (!newUser) {
-      redisClient.sRem(`feeds:like:${feedId}`, `${userId}`);
-    }
-    const like = await redisClient.sCard(`feeds:like:${feedId}`);
-    res.status(200).json(like);
-  } catch (error) {
-    next(error);
-  }
-});
+//     const newUser = await redisClient.sAdd(`feeds:like:${feedId}`, `${userId}`);
+//     if (!newUser) {
+//       redisClient.sRem(`feeds:like:${feedId}`, `${userId}`);
+//     }
+//     const like = await redisClient.sCard(`feeds:like:${feedId}`);
+//     res.status(200).json(like);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 feedRouter.get('/user/:userId', async (req: Request, res: Response, next: NextFunction) => {
   try {
