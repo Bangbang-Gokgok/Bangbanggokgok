@@ -54,7 +54,6 @@ const FeedMapPage = () => {
   const [_mapValue, setMapValue] = useRecoilState(mapAtom);
   const [stateModal, setStateModal] = useState(false);
   const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
-  console.log(feedList);
 
   useEffect(() => {
     // userId를 사용한 API Call -> feedList를 useState로 관리
@@ -275,7 +274,12 @@ const FeedMapPage = () => {
         </StyledFeeds>
       </StyledWrapper>
       <ModalFrame handleModal={toggleModal} state={stateModal}>
-        <FeedDetail isModal={true} name={feedModalState.userName} title={feedModalState.title} desc={feedModalState.description}></FeedDetail>
+        <FeedDetail
+          isModal={true}
+          name={feedModalState.userName}
+          title={feedModalState.title}
+          desc={feedModalState.description}
+        ></FeedDetail>
       </ModalFrame>
     </Main >
   );

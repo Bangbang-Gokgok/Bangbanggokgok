@@ -129,6 +129,7 @@ const HomePage = () => {
     >
       <StyledFeedListContainer>
         <InfiniteScroll
+          style={{ overflow: "visibility" }}
           dataLength={feedList.length}
           next={fetchMoreData}
           hasMore={hasMore}
