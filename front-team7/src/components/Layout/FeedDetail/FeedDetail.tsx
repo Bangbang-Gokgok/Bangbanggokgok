@@ -12,6 +12,7 @@ const StyledFeedDetailContainer = styled.div`
   flex-direction: column;
   border-radius: 10px;
   box-shadow: 5px 10px 5px #c2c2c2;
+  margin-top: 30px;
 `;
 const StyledFeedDetailHeader = styled.div`
   width: 100%;
