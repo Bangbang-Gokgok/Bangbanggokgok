@@ -15,8 +15,18 @@ const StyledFeedDetailContainer = styled.div<FeedDetailContainerProps>`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  box-shadow: ${(props) => (props.boxShadow ? '' : '5px 10px 5px #c2c2c2')};
+  box-shadow: ${(props) => (props.boxShadow ? '' : '5px 5px 5px #c2c2c2')};
   margin-top: ${(props) => (props.boxShadow ? '' : '30px')};
+
+  @media only screen and (min-width: 768px) {
+    width: 450px;
+    height: 400px;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    width: 600px;
+    height: 500px;
+  }
 `;
 const StyledFeedDetailHeader = styled.div`
   width: 100%;
@@ -95,7 +105,6 @@ const StyledBtn = styled.span<{ PrevOrNext: string; }>`
   text-align: center;
   border-radius: 50%;
   cursor: pointer;
-
   width: 30px;
   height: 30px;
   line-height: 30px;
@@ -139,7 +148,7 @@ const FeedDetail = ({
     <StyledFeedDetailContainer boxShadow={isModal}>
       <FeedHeader isFolded={isModal} name={name} image={image} title={title}></FeedHeader>
       <StyledFeedDetailBody>
-        <StyledTitle>👍🏽 {title}</StyledTitle>
+        {/* <StyledTitle>👍🏽 {title}</StyledTitle> */}
         <StyledDescription>{desc}</StyledDescription>
         <StyledSlideShow>
           <StyledSlideList>

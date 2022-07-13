@@ -10,8 +10,7 @@ import { mapAtom } from "@/store/map";
 import ModalFrame from "@/components/Layout/ModalFrame/ModalFrame";
 import FeedDetail from "@/components/Layout/FeedDetail/FeedDetail";
 import { feedModalAtom } from "@/store/feedModal";
-import { axios } from "@/lib";
-import { getUserFeedList } from "@/api/feeds";
+import * as Api from '@/api/feeds';
 
 interface CenterLatLng {
   lat: number;
@@ -55,15 +54,18 @@ const FeedMapPage = () => {
   const [_mapValue, setMapValue] = useRecoilState(mapAtom);
   const [stateModal, setStateModal] = useState(false);
   const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
+  console.log(feedList);
 
   useEffect(() => {
     // userId를 사용한 API Call -> feedList를 useState로 관리
-    async function getFeedList() {
-      const result = await getUserFeedList(userId);
-      console.log(result);
-    }
+    // async function getFeedList() {
+    //   const result: FeedProps = await Api.getUserFeedList(userId);
+    //   setFeedList([result]);
 
-    getFeedList();
+    // }
+
+    // getFeedList();
+    // console.log(feedList);
 
     const result = [
       {
@@ -140,67 +142,7 @@ const FeedMapPage = () => {
       {
         _id: '62cbebe2ab0326b696cbe420',
         userName: '서울사람',
-        title: '서울역 방문기',
-        description: '서울역에 들렸읍니다.',
-        address: '서울 특별시 서울역',
-        location: {
-          lat: 37.55294316360036,
-          lng: 126.97289588774116
-        },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
-      {
-        _id: '62cbebe2ab0326b696cbe420',
-        userName: '서울사람',
-        title: '서울역 방문기',
-        description: '서울역에 들렸읍니다.',
-        address: '서울 특별시 서울역',
-        location: {
-          lat: 37.55294316360036,
-          lng: 126.97289588774116
-        },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
-      {
-        _id: '62cbebe2ab0326b696cbe420',
-        userName: '서울사람',
-        title: '서울역 방문기',
-        description: '서울역에 들렸읍니다.',
-        address: '서울 특별시 서울역',
-        location: {
-          lat: 37.55294316360036,
-          lng: 126.97289588774116
-        },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
-      {
-        _id: '62cbebe2ab0326b696cbe420',
-        userName: '서울사람',
-        title: '서울역 방문기',
-        description: '서울역에 들렸읍니다.',
-        address: '서울 특별시 서울역',
-        location: {
-          lat: 37.55294316360036,
-          lng: 126.97289588774116
-        },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
-      {
-        _id: '62cbebe2ab0326b696cbe420',
-        userName: '서울사람',
-        title: '서울역 방문기',
+        title: '짠내투어 2 : 그의 서울역 방문기. 과연 살아남을 것인가',
         description: '서울역에 들렸읍니다.',
         address: '서울 특별시 서울역',
         location: {
@@ -259,6 +201,10 @@ const FeedMapPage = () => {
     ];
 
     setFeedList(result);
+
+
+
+
     if (result.length > 0) {
       setMapValue((currMapValue) => ({
         ...currMapValue,
