@@ -174,11 +174,7 @@ const FeedDetail = ({
           </StyledBtn>
         </StyledSlideShow>
       </StyledFeedDetailBody>
-      <StyledFeedDetailFooter>
-        <button>수정</button>
-        <span>공백</span>
-        <button>삭제</button>
-      </StyledFeedDetailFooter>
+      <StyledFeedDetailFooter></StyledFeedDetailFooter>
     </StyledFeedDetailContainer>
   );
 };
