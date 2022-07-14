@@ -14,6 +14,7 @@ feedRouter.post(
       if (req.user) {
         const _id: Types.ObjectId | string = req.user._id;
         const feedInfo = req.body;
+        feedInfo.location = JSON.parse(feedInfo.location);
         if (req.files) {
           const postImages = getPostImageList(
             req.files as {
@@ -86,8 +87,8 @@ feedRouter.get('/list/:userId', async (req: Request, res: Response, next: NextFu
 feedRouter.put('/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const _id = req.params._id;
-    const update = req.body;
-
+    const update = req.body; // any 처리 필요
+    update.location = JSON.parse(update.location);
     // 피드를 업데이트함.
     const updatedFeed = await feedService.setFeed(_id, update);
 
