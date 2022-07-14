@@ -60,159 +60,168 @@ const FeedMapPage = () => {
 
   useEffect(() => {
     // userId를 사용한 API Call -> feedList를 useState로 관리
-    // async function getFeedList() {
-    //   const result: FeedProps = await Api.getUserFeedList(userId);
-    //   setFeedList([result]);
+    async function getFeedList() {
+      const result = await Api.getUserFeedList(userId);
+      console.log(result);
+      setFeedList([result]);
+
+      // if (result.length > 0) {
+      //   console.log('조건문들어옴!');
+
+      //   setMapValue((currMapValue) => ({
+      //     ...currMapValue,
+      //     centerLatLng: {
+      //       lat: result[0].location.lat,
+      //       lng: result[0].location.lng
+      //     },
+      //   }));
+      // }
+    }
+
+    // async function deleteFeed(feedId) {
+    //   const result = await Api.deleteOneFeed(feedId);
+    //   console.log(result);
 
     // }
 
-    // getFeedList();
-    // console.log(feedList);
+    // deleteFeed("hvT7xS5ut");
 
-    const result = [
-      {
-        _id: '62cbebe2ab0326b696cbe421',
-        userName: '김정현',
-        title: '👍🏽 카카오에 방문해봤습니다.',
-        description: '카카오 본사에 들렸읍니다.',
-        address: '제주 제주시 첨단로 242',
-        location: {
-          lat: 33.450705,
-          lng: 126.570677,
-        },
-        review: [],
-        createdAt: '2022-07-11T09:21:26.597Z',
-        updatedAt: '2022-07-11T09:21:26.597Z',
-      },
-      {
-        _id: '62cbebe2ab0326b696cbe422',
-        userName: '김정',
-        title: '근린공원이네요',
-        description: '카카오 근린공원에 들렸읍니다.',
-        address: '제주 제주시 첨단로 242',
-        location: {
-          lat: 33.451393,
-          lng: 126.570738,
-        },
-        review: [],
-        createdAt: '2022-07-11T09:21:26.597Z',
-        updatedAt: '2022-07-11T09:21:26.597Z',
-      },
-      {
-        _id: '62cbeb96ab0326b696cbe41c',
-        userName: '제주도사람',
-        title: '🌾 텃밭 방문해봤습니다.',
-        description: '카카오 텃밭에 들렸읍니다.',
-        address: '제주 제주시 첨단로 242',
-        location: {
-          lat: 33.450936,
-          lng: 126.569477,
-        },
-        review: [],
-        createdAt: '2022-07-11T09:21:26.597Z',
-        updatedAt: '2022-07-11T09:21:26.597Z',
-      },
-      {
-        _id: '62cbebe2ab0326b696cbe423',
-        userName: '그냥아저씨',
-        title: '제주도 카카오',
-        description: '아저씨가 카카오에',
-        address: '제주 제주시 첨단로 242',
-        location: {
-          lat: 33.450879,
-          lng: 126.56994,
-        },
-        review: [],
-        createdAt: '2022-07-11T09:21:26.597Z',
-        updatedAt: '2022-07-11T09:21:26.597Z',
-      },
-      {
-        _id: '62cbebe2ab0326b696cbe420',
-        userName: '서울사람',
-        title: '서울역 방문기',
-        description: '서울역에 들렸읍니다.',
-        address: '서울 특별시 서울역',
-        location: {
-          lat: 37.55294316360036,
-          lng: 126.97289588774116,
-        },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
-      {
-        _id: '62cbebe2ab0326b696cbe420',
-        userName: '서울사람',
-        title: '짠내투어 2 : 그의 서울역 방문기. 과연 살아남을 것인가',
-        description: '서울역에 들렸읍니다.',
-        address: '서울 특별시 서울역',
-        location: {
-          lat: 37.55294316360036,
-          lng: 126.97289588774116
-        },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
-      {
-        _id: '62cbebe2ab0326b696cbe420',
-        userName: '서울사람',
-        title: '서울역 방문기',
-        description: '서울역에 들렸읍니다.',
-        address: '서울 특별시 서울역',
-        location: {
-          lat: 37.55294316360036,
-          lng: 126.97289588774116
-        },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
-      {
-        _id: '62cbebe2ab0326b696cbe420',
-        userName: '서울사람',
-        title: '서울역 방문기',
-        description: '서울역에 들렸읍니다.',
-        address: '서울 특별시 서울역',
-        location: {
-          lat: 37.55294316360036,
-          lng: 126.97289588774116
-        },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
-      {
-        _id: '62cbebe2ab0326b696cbe420',
-        userName: '서울사람',
-        title: '서울역 방문기',
-        description: '서울역에 들렸읍니다.',
-        address: '서울 특별시 서울역',
-        location: {
-          lat: 37.55294316360036,
-          lng: 126.97289588774116
-        },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-    ];
+    getFeedList();
 
-    setFeedList(result);
+    // const result = [
+    //   {
+    //     _id: '62cbebe2ab0326b696cbe421',
+    //     userName: '김정현',
+    //     title: '👍🏽 카카오에 방문해봤습니다.',
+    //     description: '카카오 본사에 들렸읍니다.',
+    //     address: '제주 제주시 첨단로 242',
+    //     location: {
+    //       lat: 33.450705,
+    //       lng: 126.570677,
+    //     },
+    //     review: [],
+    //     createdAt: '2022-07-11T09:21:26.597Z',
+    //     updatedAt: '2022-07-11T09:21:26.597Z',
+    //   },
+    //   {
+    //     _id: '62cbebe2ab0326b696cbe422',
+    //     userName: '김정',
+    //     title: '근린공원이네요',
+    //     description: '카카오 근린공원에 들렸읍니다.',
+    //     address: '제주 제주시 첨단로 242',
+    //     location: {
+    //       lat: 33.451393,
+    //       lng: 126.570738,
+    //     },
+    //     review: [],
+    //     createdAt: '2022-07-11T09:21:26.597Z',
+    //     updatedAt: '2022-07-11T09:21:26.597Z',
+    //   },
+    //   {
+    //     _id: '62cbeb96ab0326b696cbe41c',
+    //     userName: '제주도사람',
+    //     title: '🌾 텃밭 방문해봤습니다.',
+    //     description: '카카오 텃밭에 들렸읍니다.',
+    //     address: '제주 제주시 첨단로 242',
+    //     location: {
+    //       lat: 33.450936,
+    //       lng: 126.569477,
+    //     },
+    //     review: [],
+    //     createdAt: '2022-07-11T09:21:26.597Z',
+    //     updatedAt: '2022-07-11T09:21:26.597Z',
+    //   },
+    //   {
+    //     _id: '62cbebe2ab0326b696cbe423',
+    //     userName: '그냥아저씨',
+    //     title: '제주도 카카오',
+    //     description: '아저씨가 카카오에',
+    //     address: '제주 제주시 첨단로 242',
+    //     location: {
+    //       lat: 33.450879,
+    //       lng: 126.56994,
+    //     },
+    //     review: [],
+    //     createdAt: '2022-07-11T09:21:26.597Z',
+    //     updatedAt: '2022-07-11T09:21:26.597Z',
+    //   },
+    //   {
+    //     _id: '62cbebe2ab0326b696cbe420',
+    //     userName: '서울사람',
+    //     title: '서울역 방문기',
+    //     description: '서울역에 들렸읍니다.',
+    //     address: '서울 특별시 서울역',
+    //     location: {
+    //       lat: 37.55294316360036,
+    //       lng: 126.97289588774116,
+    //     },
+    //     "review": [],
+    //     "createdAt": "2022-07-11T09:21:26.597Z",
+    //     "updatedAt": "2022-07-11T09:21:26.597Z",
+    //   }
+    //   ,
+    //   {
+    //     _id: '62cbebe2ab0326b696cbe420',
+    //     userName: '서울사람',
+    //     title: '짠내투어 2 : 그의 서울역 방문기. 과연 살아남을 것인가',
+    //     description: '서울역에 들렸읍니다.',
+    //     address: '서울 특별시 서울역',
+    //     location: {
+    //       lat: 37.55294316360036,
+    //       lng: 126.97289588774116
+    //     },
+    //     "review": [],
+    //     "createdAt": "2022-07-11T09:21:26.597Z",
+    //     "updatedAt": "2022-07-11T09:21:26.597Z",
+    //   }
+    //   ,
+    //   {
+    //     _id: '62cbebe2ab0326b696cbe420',
+    //     userName: '서울사람',
+    //     title: '서울역 방문기',
+    //     description: '서울역에 들렸읍니다.',
+    //     address: '서울 특별시 서울역',
+    //     location: {
+    //       lat: 37.55294316360036,
+    //       lng: 126.97289588774116
+    //     },
+    //     "review": [],
+    //     "createdAt": "2022-07-11T09:21:26.597Z",
+    //     "updatedAt": "2022-07-11T09:21:26.597Z",
+    //   }
+    //   ,
+    //   {
+    //     _id: '62cbebe2ab0326b696cbe420',
+    //     userName: '서울사람',
+    //     title: '서울역 방문기',
+    //     description: '서울역에 들렸읍니다.',
+    //     address: '서울 특별시 서울역',
+    //     location: {
+    //       lat: 37.55294316360036,
+    //       lng: 126.97289588774116
+    //     },
+    //     "review": [],
+    //     "createdAt": "2022-07-11T09:21:26.597Z",
+    //     "updatedAt": "2022-07-11T09:21:26.597Z",
+    //   }
+    //   ,
+    //   {
+    //     _id: '62cbebe2ab0326b696cbe420',
+    //     userName: '서울사람',
+    //     title: '서울역 방문기',
+    //     description: '서울역에 들렸읍니다.',
+    //     address: '서울 특별시 서울역',
+    //     location: {
+    //       lat: 37.55294316360036,
+    //       lng: 126.97289588774116
+    //     },
+    //     "review": [],
+    //     "createdAt": "2022-07-11T09:21:26.597Z",
+    //     "updatedAt": "2022-07-11T09:21:26.597Z",
+    //   }
+    // ];
 
-    if (result.length > 0) {
-      setMapValue((currMapValue) => ({
-        ...currMapValue,
-        centerLatLng: {
-          lat: result[0].location.lat,
-          lng: result[0].location.lng
-        },
-      }));
-    }
+    // setFeedList(result);
 
   }, []);
 
