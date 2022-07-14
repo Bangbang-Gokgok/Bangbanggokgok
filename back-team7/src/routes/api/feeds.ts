@@ -61,7 +61,7 @@ feedRouter.get('/:_id/like', async (req: Request, res: Response, next: NextFunct
     const userId = req.user!._id;
     const reaction = 'like';
     const key = `feeds:${feedId}:${reaction}`;
-    changed.add({ key, feedId, reaction });
+    changed.add(key);
     const newUser = await redisClient.sAdd(key, `${userId}`);
 
     if (!newUser) {
