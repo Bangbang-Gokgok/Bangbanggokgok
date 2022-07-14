@@ -57,8 +57,8 @@ const FeedMapPage = () => {
   const [stateModal, setStateModal] = useState(false);
   const [modalChildrenState, setModalChildrenState] = useState(false);
   const userIdAtom = useRecoilValue(userIdState);
-
   const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
+
 
   useEffect(() => {
     // userId를 사용한 API Call -> feedList를 useState로 관리

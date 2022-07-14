@@ -3,6 +3,7 @@ import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
 
 import { FaMapMarkedAlt } from 'react-icons/fa';
 import { UserInfo, UserInfoProps } from '@/components/UserInfo';
+import { NavLink } from 'react-router-dom';
 
 export const FeedHeader = ({
   onClickHandler,
@@ -12,7 +13,8 @@ export const FeedHeader = ({
   image,
   title,
   feedId,
-}: UserInfoProps & { title: string; } & { feedId: string; } & { isFolded: boolean; } & { isUser: boolean; } & { onClickHandler?: (event: any) => void; }) => {
+  feedUser,
+}: UserInfoProps & { title: string; } & { feedId?: string; } & { feedUser?: string; } & { isFolded: boolean; } & { isUser: boolean; } & { onClickHandler?: (event: any) => void; }) => {
   return (
     <StyledFeedHeader isModal={isFolded}>
       <span className="user-info-container">
@@ -20,16 +22,9 @@ export const FeedHeader = ({
       </span>
       <span className="title-container" onClick={onClickHandler}>{title}</span>
       {!isFolded ? (
-        <span
-          className="arrow-down"
-          onClick={() => {
-            console.log('지도 icon 클릭됨!');
-            console.log(feedId);
-
-          }}
-        >
+        <StyleNav to={`/feedmap/${feedUser}?feedId=${feedId}`}>
           <FaMapMarkedAlt />
-        </span>
+        </StyleNav>
       ) : isUser && (<>
         <StyleEditIcon onClick={(event) => {
           console.log(feedId);
@@ -43,6 +38,15 @@ export const FeedHeader = ({
     </StyledFeedHeader>
   );
 };
+
+const StyleNav = styled(NavLink)`
+  display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 10%;
+    font-size: 2.2rem;
+    color: black
+`;
 
 const StyleEditIcon = styled(AiFillEdit)`
   font-size: 1.8rem;
@@ -74,14 +78,6 @@ const StyledFeedHeader = styled.div<{ isModal: boolean; }>`
     font-size: 1.45rem;
     font-weight: 500;
     word-break: break-all;
-  }
-
-  .arrow-down {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    width: 10%;
-    font-size: 2.2rem;
   }
 
   /* @media only screen and (min-width: 768px) {

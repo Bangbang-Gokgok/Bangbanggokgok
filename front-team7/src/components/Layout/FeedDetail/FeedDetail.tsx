@@ -140,13 +140,15 @@ const FeedDetail = ({
   image,
   title,
   desc,
-  isModal
-}: UserInfoProps & { title: string; } & { desc: string; } & { isModal: boolean; }) => {
+  isModal,
+  feedId,
+  feedUser
+}: UserInfoProps & { title: string; } & { feedUser?: string; } & { feedId?: string; } & { desc: string; } & { isModal: boolean; }) => {
   let colorlist: Array<string> = ['lightgray', '#f5e6bf', '#bfccf5', '#bff5cc'];
 
   return (
     <StyledFeedDetailContainer boxShadow={isModal}>
-      <FeedHeader isFolded={isModal} name={name} image={image} title={title}></FeedHeader>
+      <FeedHeader feedId={feedId} feedUser={feedUser} isUser={false} isFolded={isModal} name={name} image={image} title={title}></FeedHeader>
       <StyledFeedDetailBody>
         {/* <StyledTitle>👍🏽 {title}</StyledTitle> */}
         <StyledDescription>{desc}</StyledDescription>
