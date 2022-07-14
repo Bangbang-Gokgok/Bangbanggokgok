@@ -211,7 +211,7 @@ const Form = () => {
     // createFormData(sendData);
     // alert('Feed create 완료되었습니다.');
     // console.log('data : ', data);
-    const { title, description, address, image, location, searching } = data;
+    const { title, description, address, image, x, y, searching } = data;
 
     const dummy = {
       title,
@@ -232,7 +232,7 @@ const Form = () => {
     fd.append('title', dummy.title);
     fd.append('description', dummy.description);
     fd.append('address', dummy.address);
-    fd.append('location', dummy.location);
+    fd.append('location', JSON.stringify(dummy.location));
     fd.append('imageUrl', dummy.imageUrl);
 
     try {
@@ -259,7 +259,7 @@ const Form = () => {
     createFormData(sendData);
     alert('Feed create 완료되었습니다.');
 
-    // image도 추가하고, create 성공 이후에 입력칸 전부 비우는 코드 필요
+    // create 성공 이후에 입력칸 전부 비우는 코드 필요
   };
 
   return (
@@ -316,7 +316,6 @@ const Form = () => {
                   value={place.address_name}
                   {...register('address')}
                 />
-
                 <input className="x" value={place.x} {...register('x')} />
                 <input className="y" value={place.y} {...register('y')} />
               </StyledSearchInfoData>
