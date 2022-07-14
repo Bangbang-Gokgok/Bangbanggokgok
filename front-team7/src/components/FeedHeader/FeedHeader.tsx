@@ -12,7 +12,7 @@ export const FeedHeader = ({
   title,
 }: UserInfoProps & { title: string; } & { isFolded: boolean; } & { onClickHandler?: (event: any) => void; }) => {
   return (
-    <StyledFeedHeader onClick={onClickHandler}>
+    <StyledFeedHeader onClick={onClickHandler} isModal={isFolded}>
       <span className="user-info-container">
         <UserInfo name={name} image={image} />
       </span>
@@ -31,27 +31,27 @@ export const FeedHeader = ({
   );
 };
 
-const StyledFeedHeader = styled.div`
+const StyledFeedHeader = styled.div<{ isModal: boolean; }>`
   display: flex;
   align-items: center;
-  gap: 5px;
-  min-height: 50px;
-  padding: 30px 10px;
-  border: 1px solid rgba(0, 0, 0, 15%);
-  border-radius: 5px;
+  gap: 8px;
+  min-height: 60px;
+  padding: 20px 10px;
+  border : 1px solid rgba(0, 0, 0, 15%);
+  
+  ${(props) => props.isModal ? 'border-radius: 10px;' : 'border-radius: 10px 10px 0 0;'}
   box-shadow: 0 0.3rem 0.4rem rgba(0, 0, 0, 25%);
-  margin-bottom: 5px;
   background-color: white;
-  cursor: pointer;
+  ${(props) => props.isModal && 'cursor: pointer;'}
   .user-info-container {
     width: 35%;
     word-break: break-all;
   }
 
   .title-container {
-    width: 50%;
+    width: 60%;
     font-size: 1.45rem;
-    font-weight: bold;
+    font-weight: 500;
     word-break: break-all;
   }
 
@@ -59,7 +59,16 @@ const StyledFeedHeader = styled.div`
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    width: 15%;
+    width: 10%;
     font-size: 2.2rem;
   }
+
+  /* @media only screen and (min-width: 768px) {
+    min-height: 70px;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    min-height: 80px;
+  } */
+  
 `;

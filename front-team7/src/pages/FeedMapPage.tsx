@@ -10,6 +10,8 @@ import { mapAtom } from "@/store/map";
 import ModalFrame from "@/components/Layout/ModalFrame/ModalFrame";
 import FeedDetail from "@/components/Layout/FeedDetail/FeedDetail";
 import { feedModalAtom } from "@/store/feedModal";
+import * as Api from '@/api/feeds';
+import Form from '@/components/Form/Form';
 
 interface CenterLatLng {
   lat: number;
@@ -30,7 +32,7 @@ interface FeedProps {
   review: Array<Review>;
   address: string;
   location: CenterLatLng;
-  createdAt: string,
+  createdAt: string;
   updatedAt: string;
 }
 
@@ -40,22 +42,34 @@ interface FeedDetail {
   description: string;
   review: Array<Review>;
   address: string;
-  createdAt: string,
+  createdAt: string;
   updatedAt: string;
 }
 
 interface FeedListProps extends Array<FeedProps> { }
 
 const FeedMapPage = () => {
+
   const { userId } = useParams();
   const [feedList, setFeedList] = useState<FeedListProps>([]);
-  const [_, setMapValue] = useRecoilState(mapAtom);
-  const [stateModal, SetStateModal] = useState(false);
+  const [_mapValue, setMapValue] = useRecoilState(mapAtom);
+  const [stateModal, setStateModal] = useState(false);
+  const [modalChildrenState, setModalChildrenState] = useState(false);
+
   const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
 
   useEffect(() => {
     // userId를 사용한 API Call -> feedList를 useState로 관리
-    setFeedList([
+    // async function getFeedList() {
+    //   const result: FeedProps = await Api.getUserFeedList(userId);
+    //   setFeedList([result]);
+
+    // }
+
+    // getFeedList();
+    // console.log(feedList);
+
+    const result = [
       {
         _id: '62cbebe2ab0326b696cbe421',
         userName: '김정현',
@@ -64,11 +78,11 @@ const FeedMapPage = () => {
         address: '제주 제주시 첨단로 242',
         location: {
           lat: 33.450705,
-          lng: 126.570677
+          lng: 126.570677,
         },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
+        review: [],
+        createdAt: '2022-07-11T09:21:26.597Z',
+        updatedAt: '2022-07-11T09:21:26.597Z',
       },
       {
         _id: '62cbebe2ab0326b696cbe422',
@@ -78,25 +92,25 @@ const FeedMapPage = () => {
         address: '제주 제주시 첨단로 242',
         location: {
           lat: 33.451393,
-          lng: 126.570738
+          lng: 126.570738,
         },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
+        review: [],
+        createdAt: '2022-07-11T09:21:26.597Z',
+        updatedAt: '2022-07-11T09:21:26.597Z',
       },
       {
-        "_id": "62cbeb96ab0326b696cbe41c",
-        "userName": "제주도사람",
-        "title": "🌾 텃밭 방문해봤습니다.",
-        "description": "카카오 텃밭에 들렸읍니다.",
-        "address": "제주 제주시 첨단로 242",
-        "location": {
-          "lat": 33.450936,
-          "lng": 126.569477
+        _id: '62cbeb96ab0326b696cbe41c',
+        userName: '제주도사람',
+        title: '🌾 텃밭 방문해봤습니다.',
+        description: '카카오 텃밭에 들렸읍니다.',
+        address: '제주 제주시 첨단로 242',
+        location: {
+          lat: 33.450936,
+          lng: 126.569477,
         },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
+        review: [],
+        createdAt: '2022-07-11T09:21:26.597Z',
+        updatedAt: '2022-07-11T09:21:26.597Z',
       },
       {
         _id: '62cbebe2ab0326b696cbe423',
@@ -106,12 +120,42 @@ const FeedMapPage = () => {
         address: '제주 제주시 첨단로 242',
         location: {
           lat: 33.450879,
-          lng: 126.569940
+          lng: 126.56994,
+        },
+        review: [],
+        createdAt: '2022-07-11T09:21:26.597Z',
+        updatedAt: '2022-07-11T09:21:26.597Z',
+      },
+      {
+        _id: '62cbebe2ab0326b696cbe420',
+        userName: '서울사람',
+        title: '서울역 방문기',
+        description: '서울역에 들렸읍니다.',
+        address: '서울 특별시 서울역',
+        location: {
+          lat: 37.55294316360036,
+          lng: 126.97289588774116,
         },
         "review": [],
         "createdAt": "2022-07-11T09:21:26.597Z",
         "updatedAt": "2022-07-11T09:21:26.597Z",
-      },
+      }
+      ,
+      {
+        _id: '62cbebe2ab0326b696cbe420',
+        userName: '서울사람',
+        title: '짠내투어 2 : 그의 서울역 방문기. 과연 살아남을 것인가',
+        description: '서울역에 들렸읍니다.',
+        address: '서울 특별시 서울역',
+        location: {
+          lat: 37.55294316360036,
+          lng: 126.97289588774116
+        },
+        "review": [],
+        "createdAt": "2022-07-11T09:21:26.597Z",
+        "updatedAt": "2022-07-11T09:21:26.597Z",
+      }
+      ,
       {
         _id: '62cbebe2ab0326b696cbe420',
         userName: '서울사람',
@@ -126,19 +170,58 @@ const FeedMapPage = () => {
         "createdAt": "2022-07-11T09:21:26.597Z",
         "updatedAt": "2022-07-11T09:21:26.597Z",
       }
-    ]);
+      ,
+      {
+        _id: '62cbebe2ab0326b696cbe420',
+        userName: '서울사람',
+        title: '서울역 방문기',
+        description: '서울역에 들렸읍니다.',
+        address: '서울 특별시 서울역',
+        location: {
+          lat: 37.55294316360036,
+          lng: 126.97289588774116
+        },
+        "review": [],
+        "createdAt": "2022-07-11T09:21:26.597Z",
+        "updatedAt": "2022-07-11T09:21:26.597Z",
+      }
+      ,
+      {
+        _id: '62cbebe2ab0326b696cbe420',
+        userName: '서울사람',
+        title: '서울역 방문기',
+        description: '서울역에 들렸읍니다.',
+        address: '서울 특별시 서울역',
+        location: {
+          lat: 37.55294316360036,
+          lng: 126.97289588774116
+        },
+        "review": [],
+        "createdAt": "2022-07-11T09:21:26.597Z",
+        "updatedAt": "2022-07-11T09:21:26.597Z",
+      }
+    ];
 
-    console.log('FeedMap Side Effect');
+    setFeedList(result);
+
+    if (result.length > 0) {
+      setMapValue((currMapValue) => ({
+        ...currMapValue,
+        centerLatLng: {
+          lat: result[0].location.lat,
+          lng: result[0].location.lng
+        },
+      }));
+    }
+
   }, []);
 
-
-
   const onClickModal = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(event);
-    console.log('click');
+    setModalChildrenState(false);
+    toggleModal();
   };
 
-  const onClickMapFeed = (event: React.MouseEvent<HTMLButtonElement>, item: FeedProps) => {
+  const onClickMapFeed = (item: FeedProps) => {
     const { userName, title, description, address, location, review, createdAt } = item;
     changeCenterLatLng(location);
     setFeedModalState((prev) => ({
@@ -148,8 +231,9 @@ const FeedMapPage = () => {
       description,
       address,
       review,
-      createdAt
+      createdAt,
     }));
+    setModalChildrenState(true);
     toggleModal();
   };
 
@@ -158,28 +242,26 @@ const FeedMapPage = () => {
       ...currMapValue,
       centerLatLng: {
         lat: newCenterLatLng.lat,
-        lng: newCenterLatLng.lng
+        lng: newCenterLatLng.lng,
       },
-      mapLevel: 1
+      mapLevel: 1,
     }));
   };
-
   const toggleModal = () => {
-    SetStateModal((prev) => !prev);
+    setStateModal((prev) => !prev);
   };
-
 
   return (
     <Main>
       <StyledWrapper>
-        <Map feedList={feedList} toggleModal={toggleModal} ></Map>
+        <Map feedList={feedList} toggleModal={onClickMapFeed} ></Map>
         <Button onClick={onClickModal}>
           <BsPlus />
         </Button>
         <StyledFeeds>
           {feedList.map((item, idx) => (
             <FeedHeader
-              onClickHandler={(event: any) => onClickMapFeed(event, item)}
+              onClickHandler={() => onClickMapFeed(item)}
               isFolded={true}
               key={idx}
               name={item.userName}
@@ -189,9 +271,20 @@ const FeedMapPage = () => {
         </StyledFeeds>
       </StyledWrapper>
       <ModalFrame handleModal={toggleModal} state={stateModal}>
-        <FeedDetail isModal={true} name={feedModalState.userName} title={feedModalState.title} desc={feedModalState.description}></FeedDetail>
+        {modalChildrenState ?
+          (
+            <FeedDetail
+              isModal={true}
+              name={feedModalState.userName}
+              title={feedModalState.title}
+              desc={feedModalState.description}
+            />
+          )
+          : (
+            <Form />
+          )}
       </ModalFrame>
-    </Main >
+    </Main>
   );
 };
 
@@ -207,7 +300,7 @@ const StyledWrapper = styled.div`
 const Button = styled.button`
   position: absolute;
   z-index: 4;
-  bottom: 20%;
+  bottom: 160px;
   right: 5%;
   margin-bottom: 5px;
   font-size: 4.5rem;
@@ -221,22 +314,50 @@ const Button = styled.button`
   justify-content: center;
   color: white;
   cursor: pointer;
+
+  @media only screen and (min-width: 768px) {
+    bottom: 5%;
+    width: 70px;
+    height: 70px;
+    font-size: 7rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    bottom: 5%;
+    width: 80px;
+    height: 80px;
+    font-size: 8rem;
+  }
 `;
 
 const StyledFeeds = styled.div`
   position: absolute;
-  max-height: 27%;
+  max-height: 160px;
   width: 90%;
   z-index: 3;
   bottom: 0;
   display: flex;
   flex-direction: column;
   overflow: scroll;
+  gap: 5px;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
   &::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
   }
+
+  @media only screen and (min-width: 768px) {
+    width: 350px;
+    height: 100%;
+    max-height: 68%;
+    right: 2%;
+    top: 2%;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    width: 400px;
+  }
+
 `;
 
 export default FeedMapPage;

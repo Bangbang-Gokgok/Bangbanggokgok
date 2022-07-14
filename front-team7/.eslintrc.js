@@ -30,13 +30,15 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': [
-      'warn',
+      'off',
       {
         additionalHooks: 'useRecoilCallback',
       },
     ],
+    '@typescript-eslint/no-unsafe-return': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
+    '@typescript-eslint/restrict-template-expressions': 'off',
   },
   env: {
     node: true,

@@ -1,5 +1,6 @@
 import { Main } from '@/components/Layout';
-import { ProfileTop, ProfileMid } from '@/features/user';
+import { ProfileTop, ProfileMid, ProfileBot } from '@/features/user';
+
 // import * as reviewApi from '@/api/review';
 // import { useEffect } from 'react';
 
@@ -48,9 +49,10 @@ const ProfilePage = () => {
   //   // deleteReview();
   // }, []);
   return (
-    <Main bg="#485461" backgroundImage="linear-gradient(315deg, #485461 0%, #28313b 74%)">
+    <Main bg="#282b37">
       <ProfileTop />
       <ProfileMid />
+      <ProfileBot />
     </Main>
   );
 };
