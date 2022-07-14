@@ -8,6 +8,11 @@ interface FeedDetailContainerProps {
   boxShadow: boolean;
 };
 
+interface CenterLatLng {
+  lat: number;
+  lng: number;
+}
+
 const StyledFeedDetailContainer = styled.div<FeedDetailContainerProps>`
   width: 330px;
   height: 280px;
@@ -140,13 +145,16 @@ const FeedDetail = ({
   image,
   title,
   desc,
-  isModal
-}: UserInfoProps & { title: string; } & { desc: string; } & { isModal: boolean; }) => {
+  isModal,
+  feedId,
+  feedUser,
+  feedLocation
+}: UserInfoProps & { title: string; } & { feedUser?: string; } & { feedLocation?: CenterLatLng; } & { feedId?: string; } & { desc: string; } & { isModal: boolean; }) => {
   let colorlist: Array<string> = ['lightgray', '#f5e6bf', '#bfccf5', '#bff5cc'];
 
   return (
     <StyledFeedDetailContainer boxShadow={isModal}>
-      <FeedHeader isFolded={isModal} name={name} image={image} title={title}></FeedHeader>
+      <FeedHeader feedId={feedId} feedLocation={feedLocation} feedUser={feedUser} isUser={false} isFolded={isModal} name={name} image={image} title={title}></FeedHeader>
       <StyledFeedDetailBody>
         {/* <StyledTitle>👍🏽 {title}</StyledTitle> */}
         <StyledDescription>{desc}</StyledDescription>

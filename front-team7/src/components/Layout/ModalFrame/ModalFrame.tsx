@@ -13,10 +13,11 @@ const StyledContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: modal-show-op 1.5s;
+  animation-name: modal-show-op;
+  animation-duration: 0.5s;
   @keyframes modal-show-op {
       from {
-        opacity: 0.6;
+        opacity: 0;
       }
       to {
         opacity: 1;

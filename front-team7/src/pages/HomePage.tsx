@@ -26,7 +26,9 @@ interface CenterLatLng {
 }
 
 interface FeedProps {
+  _id: string;
   username: string;
+  userId: string;
   title: string;
   description: string;
   address: string;
@@ -117,6 +119,7 @@ const HomePage = () => {
 
     // update();
     get();
+
   }, []);
   return (
     <Main
@@ -142,6 +145,9 @@ const HomePage = () => {
               isModal={false}
               key={`${feed.title}-${index}`}
               name={feed.username}
+              feedId={feed._id}
+              feedLocation={feed.location}
+              feedUser={feed.userId}
               image={unknownUser as string}
               title={feed.title}
               desc={feed.description}
