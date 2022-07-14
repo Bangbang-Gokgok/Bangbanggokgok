@@ -218,8 +218,7 @@ const Form = () => {
   // <추가과제>
   // 빈 값을 넣고 엔터를 쳤을 때 axios Error 처리 하기
   // 성공적으로 값을 추가한 뒤 값을 초기화해서 빈 값으로 바꾸기
-  // input 태그 말고 다른 태그에도 register 를 붙일 수 있는지? 그럴 수 없다면 css로 input을 예쁘게 바꾸기
-  // 여러 에러 발생 가능 => 에러 메세지 백엔드에서 구현되면, 프론트에서 보여주는 로직 추가하기
+  // 여러 에러 발생 가능 => 에러 메세지 백엔드에서 구현되면, 프론트에서 보여주는 로직 추가하기 (useForm의 에러 처리 검색해보기)
   return (
     <form onSubmit={handleSubmit(submitForm)}>
       <StyledFormContainer>
