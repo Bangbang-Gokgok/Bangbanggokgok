@@ -1,38 +1,76 @@
 import styled from 'styled-components';
-import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
+import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
 
 import { FaMapMarkedAlt } from 'react-icons/fa';
 import { UserInfo, UserInfoProps } from '@/components/UserInfo';
+import { NavLink } from 'react-router-dom';
+
+interface CenterLatLng {
+  lat: number;
+  lng: number;
+}
 
 export const FeedHeader = ({
   onClickHandler,
   isFolded,
+  isUser,
   name,
   image,
   title,
-}: UserInfoProps & { title: string } & { isFolded: boolean } & {
-  onClickHandler?: (event: any) => void;
-}) => {
+  feedId,
+  feedUser,
+  feedLocation,
+}: UserInfoProps & { title: string } & { feedId?: string } & { feedLocation?: CenterLatLng } & {
+  feedUser?: string;
+} & { isFolded: boolean } & { isUser: boolean } & { onClickHandler?: (event: any) => void }) => {
   return (
-    <StyledFeedHeader onClick={onClickHandler} isModal={isFolded}>
+    <StyledFeedHeader isModal={isFolded}>
       <span className="user-info-container">
         <UserInfo name={name} image={image} />
       </span>
-      <span className="title-container">{title}</span>
-
-      {!isFolded && (
-        <span
-          className="arrow-down"
-          onClick={() => {
-            console.log('지도 icon 클릭됨!');
-          }}
-        >
+      <span className="title-container" onClick={onClickHandler}>
+        {title}
+      </span>
+      {!isFolded ? (
+        <StyleNav to={`/feedmap/${feedUser}?lat=${feedLocation?.lat}&lng=${feedLocation?.lng}`}>
           <FaMapMarkedAlt />
-        </span>
+        </StyleNav>
+      ) : (
+        isUser && (
+          <>
+            <StyleEditIcon
+              onClick={(event) => {
+                console.log(feedId);
+              }}
+            />
+            <StyleDeleteIcon
+              onClick={(event) => {
+                console.log(feedId);
+              }}
+            />
+          </>
+        )
       )}
     </StyledFeedHeader>
   );
 };
+
+const StyleNav = styled(NavLink)`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 10%;
+  font-size: 2.2rem;
+  color: black;
+`;
+
+const StyleEditIcon = styled(AiFillEdit)`
+  font-size: 1.8rem;
+`;
+
+const StyleDeleteIcon = styled(AiFillDelete)`
+  font-size: 1.8rem;
+`;
 
 const StyledFeedHeader = styled.div<{ isModal: boolean }>`
   display: flex;
@@ -56,14 +94,6 @@ const StyledFeedHeader = styled.div<{ isModal: boolean }>`
     font-size: 1.45rem;
     font-weight: 500;
     word-break: break-all;
-  }
-
-  .arrow-down {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    width: 10%;
-    font-size: 2.2rem;
   }
 
   /* @media only screen and (min-width: 768px) {

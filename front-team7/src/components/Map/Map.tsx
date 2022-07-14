@@ -49,6 +49,7 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
   const mapValue = useRecoilValue(mapAtom);
   // const [_mapValue, setMapValue] = useRecoilState(mapAtom);
   const [_feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
+  const [mapState, setMapState] = useState(null);
   const mapContainer = useRef<HTMLDivElement>(null);
 
   const makePositionsContent = (feed: FeedProps) => {
@@ -170,13 +171,28 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
       // 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확대합니다
       map.setLevel(level, { anchor: cluster.getCenter() });
     });
+
+    setMapState(map);
   };
+
+  function panTo(map, location) {
+    if (!map) return;
+
+    // 이동할 위도 경도 위치를 생성합니다 
+    const moveLatLon = new kakao.maps.LatLng(location.lat, location.lng);
+
+    // 지도 중심을 부드럽게 이동시킵니다
+    // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+    map.panTo(moveLatLon);
+  }
 
   useEffect(() => {
     drawMap();
-    console.log('Map Side Effect');
+  }, [feedList]);
 
-  }, [mapValue, feedList]);
+  useEffect(() => {
+    panTo(mapState, mapValue.centerLatLng);
+  }, [mapValue]);
 
   return (
 

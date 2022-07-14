@@ -26,7 +26,9 @@ interface CenterLatLng {
 }
 
 interface FeedProps {
+  _id: string;
   userName: string;
+  userId: string;
   title: string;
   description: string;
   address: string;
@@ -40,9 +42,9 @@ interface FeedListProps extends Array<FeedProps> {}
 // 그떄는 MOCK_ITEMS 없애고, fetchMoreData에서 가져오는 부분 (axios.get) 구현하기
 
 const MOCK_ITEMS: FeedListProps = [
-  { username: '김지환', title: '👍🏽 홀로 여행기1', description: '설명!' },
-  { username: '김지환', title: '👍🏽 홀로 여행기2', description: '설명!' },
-  { username: '김지환', title: '👍🏽 홀로 여행기3', description: '설명!' },
+  { userName: '김지환', title: '👍🏽 홀로 여행기1', description: '설명!' },
+  { userName: '김지환', title: '👍🏽 홀로 여행기2', description: '설명!' },
+  { userName: '김지환', title: '👍🏽 홀로 여행기3', description: '설명!' },
 ];
 
 const HomePage = () => {
@@ -142,6 +144,9 @@ const HomePage = () => {
               isModal={false}
               key={`${feed.title}-${index}`}
               name={feed.userName}
+              feedId={feed._id}
+              feedLocation={feed.location}
+              feedUser={feed.userId}
               image={unknownUser as string}
               title={feed.title}
               desc={feed.description}
