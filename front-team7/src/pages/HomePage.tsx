@@ -26,15 +26,15 @@ interface CenterLatLng {
 }
 
 interface FeedProps {
-  username: string;
+  userName: string;
   title: string;
   description: string;
   address: string;
   location: CenterLatLng;
-  createAt: string;
+  createdAt: string;
 }
 
-interface FeedListProps extends Array<FeedProps> { }
+interface FeedListProps extends Array<FeedProps> {}
 
 // 추후에 feed의 get을 pagination 처리로 몇개씩만 가져올 수 있게끔 구현되면
 // 그떄는 MOCK_ITEMS 없애고, fetchMoreData에서 가져오는 부분 (axios.get) 구현하기
@@ -129,7 +129,7 @@ const HomePage = () => {
     >
       <StyledFeedListContainer>
         <InfiniteScroll
-          style={{ overflow: "visibility" }}
+          style={{ overflow: 'visibility' }}
           dataLength={feedList.length}
           next={fetchMoreData}
           hasMore={hasMore}
@@ -141,7 +141,7 @@ const HomePage = () => {
             <FeedDetail
               isModal={false}
               key={`${feed.title}-${index}`}
-              name={feed.username}
+              name={feed.userName}
               image={unknownUser as string}
               title={feed.title}
               desc={feed.description}

@@ -10,13 +10,16 @@ export const FeedHeader = ({
   name,
   image,
   title,
-}: UserInfoProps & { title: string; } & { isFolded: boolean; } & { onClickHandler?: (event: any) => void; }) => {
+}: UserInfoProps & { title: string } & { isFolded: boolean } & {
+  onClickHandler?: (event: any) => void;
+}) => {
   return (
     <StyledFeedHeader onClick={onClickHandler} isModal={isFolded}>
       <span className="user-info-container">
         <UserInfo name={name} image={image} />
       </span>
       <span className="title-container">{title}</span>
+
       {!isFolded && (
         <span
           className="arrow-down"
@@ -31,15 +34,15 @@ export const FeedHeader = ({
   );
 };
 
-const StyledFeedHeader = styled.div<{ isModal: boolean; }>`
+const StyledFeedHeader = styled.div<{ isModal: boolean }>`
   display: flex;
   align-items: center;
   gap: 8px;
   min-height: 60px;
   padding: 20px 10px;
-  border : 1px solid rgba(0, 0, 0, 15%);
-  
-  ${(props) => props.isModal ? 'border-radius: 10px;' : 'border-radius: 10px 10px 0 0;'}
+  border: 1px solid rgba(0, 0, 0, 15%);
+
+  ${(props) => (props.isModal ? 'border-radius: 10px;' : 'border-radius: 10px 10px 0 0;')}
   box-shadow: 0 0.3rem 0.4rem rgba(0, 0, 0, 25%);
   background-color: white;
   ${(props) => props.isModal && 'cursor: pointer;'}
@@ -70,5 +73,4 @@ const StyledFeedHeader = styled.div<{ isModal: boolean; }>`
   @media only screen and (min-width: 1024px) {
     min-height: 80px;
   } */
-  
 `;

@@ -1,15 +1,15 @@
-import { FeedHeader } from "@/components/FeedHeader";
-import { Main } from "@/components/Layout";
-import Map from "@/components/Map/Map";
-import { useEffect, useState } from "react";
-import { BsPlus } from "react-icons/bs";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
-import { useRecoilState } from "recoil";
-import { mapAtom } from "@/store/map";
-import ModalFrame from "@/components/Layout/ModalFrame/ModalFrame";
-import FeedDetail from "@/components/Layout/FeedDetail/FeedDetail";
-import { feedModalAtom } from "@/store/feedModal";
+import { FeedHeader } from '@/components/FeedHeader';
+import { Main } from '@/components/Layout';
+import Map from '@/components/Map/Map';
+import { useEffect, useState } from 'react';
+import { BsPlus } from 'react-icons/bs';
+import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import { useRecoilState } from 'recoil';
+import { mapAtom } from '@/store/map';
+import ModalFrame from '@/components/Layout/ModalFrame/ModalFrame';
+import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
+import { feedModalAtom } from '@/store/feedModal';
 import * as Api from '@/api/feeds';
 import Form from '@/components/Form/Form';
 
@@ -46,10 +46,9 @@ interface FeedDetail {
   updatedAt: string;
 }
 
-interface FeedListProps extends Array<FeedProps> { }
+interface FeedListProps extends Array<FeedProps> {}
 
 const FeedMapPage = () => {
-
   const { userId } = useParams();
   const [feedList, setFeedList] = useState<FeedListProps>([]);
   const [_mapValue, setMapValue] = useRecoilState(mapAtom);
@@ -136,11 +135,10 @@ const FeedMapPage = () => {
           lat: 37.55294316360036,
           lng: 126.97289588774116,
         },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
+        review: [],
+        createdAt: '2022-07-11T09:21:26.597Z',
+        updatedAt: '2022-07-11T09:21:26.597Z',
+      },
       {
         _id: '62cbebe2ab0326b696cbe420',
         userName: '서울사람',
@@ -149,13 +147,12 @@ const FeedMapPage = () => {
         address: '서울 특별시 서울역',
         location: {
           lat: 37.55294316360036,
-          lng: 126.97289588774116
+          lng: 126.97289588774116,
         },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
+        review: [],
+        createdAt: '2022-07-11T09:21:26.597Z',
+        updatedAt: '2022-07-11T09:21:26.597Z',
+      },
       {
         _id: '62cbebe2ab0326b696cbe420',
         userName: '서울사람',
@@ -164,13 +161,12 @@ const FeedMapPage = () => {
         address: '서울 특별시 서울역',
         location: {
           lat: 37.55294316360036,
-          lng: 126.97289588774116
+          lng: 126.97289588774116,
         },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
+        review: [],
+        createdAt: '2022-07-11T09:21:26.597Z',
+        updatedAt: '2022-07-11T09:21:26.597Z',
+      },
       {
         _id: '62cbebe2ab0326b696cbe420',
         userName: '서울사람',
@@ -179,13 +175,12 @@ const FeedMapPage = () => {
         address: '서울 특별시 서울역',
         location: {
           lat: 37.55294316360036,
-          lng: 126.97289588774116
+          lng: 126.97289588774116,
         },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
+        review: [],
+        createdAt: '2022-07-11T09:21:26.597Z',
+        updatedAt: '2022-07-11T09:21:26.597Z',
+      },
       {
         _id: '62cbebe2ab0326b696cbe420',
         userName: '서울사람',
@@ -194,12 +189,12 @@ const FeedMapPage = () => {
         address: '서울 특별시 서울역',
         location: {
           lat: 37.55294316360036,
-          lng: 126.97289588774116
+          lng: 126.97289588774116,
         },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
+        review: [],
+        createdAt: '2022-07-11T09:21:26.597Z',
+        updatedAt: '2022-07-11T09:21:26.597Z',
+      },
     ];
 
     setFeedList(result);
@@ -209,11 +204,10 @@ const FeedMapPage = () => {
         ...currMapValue,
         centerLatLng: {
           lat: result[0].location.lat,
-          lng: result[0].location.lng
+          lng: result[0].location.lng,
         },
       }));
     }
-
   }, []);
 
   const onClickModal = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -254,12 +248,12 @@ const FeedMapPage = () => {
   return (
     <Main>
       <StyledWrapper>
-        <Map feedList={feedList} toggleModal={onClickMapFeed} ></Map>
+        <Map feedList={feedList} toggleModal={onClickMapFeed}></Map>
         <Button onClick={onClickModal}>
           <BsPlus />
         </Button>
         <StyledFeeds>
-          {feedList.map((item, idx) => (
+          {feedList?.map((item, idx) => (
             <FeedHeader
               onClickHandler={() => onClickMapFeed(item)}
               isFolded={true}
@@ -271,18 +265,16 @@ const FeedMapPage = () => {
         </StyledFeeds>
       </StyledWrapper>
       <ModalFrame handleModal={toggleModal} state={stateModal}>
-        {modalChildrenState ?
-          (
-            <FeedDetail
-              isModal={true}
-              name={feedModalState.userName}
-              title={feedModalState.title}
-              desc={feedModalState.description}
-            />
-          )
-          : (
-            <Form />
-          )}
+        {modalChildrenState ? (
+          <FeedDetail
+            isModal={true}
+            name={feedModalState.userName}
+            title={feedModalState.title}
+            desc={feedModalState.description}
+          />
+        ) : (
+          <Form />
+        )}
       </ModalFrame>
     </Main>
   );
@@ -357,7 +349,6 @@ const StyledFeeds = styled.div`
   @media only screen and (min-width: 1024px) {
     width: 400px;
   }
-
 `;
 
 export default FeedMapPage;

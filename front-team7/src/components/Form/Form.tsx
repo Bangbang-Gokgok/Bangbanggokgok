@@ -6,6 +6,7 @@ import { ImRoad } from 'react-icons/im';
 import { FaAddressBook, FaMapMarkedAlt, FaMousePointer, FaSave } from 'react-icons/fa';
 import { MdPlace } from 'react-icons/md';
 import * as Api from '@/api/feeds';
+import { AiOutlineConsoleSql } from 'react-icons/ai';
 
 const StyledFormContainer = styled.div`
   min-width: 300px;
@@ -145,7 +146,7 @@ interface PlaceProps {
   y: number;
 }
 
-interface PlaceListProps extends Array<PlaceProps> { }
+interface PlaceListProps extends Array<PlaceProps> {}
 
 interface CenterLatLng {
   lat: number;
@@ -170,29 +171,76 @@ interface FeedProps {
   updatedAt: string;
 }
 
-interface FeedListProps extends Array<FeedProps> { }
+interface FeedListProps extends Array<FeedProps> {}
 
 const Form = () => {
-  const [feedList, setFeedList] = useState<FeedListProps>([]);
+  // const [feedList, setFeedList] = useState<FeedListProps>([]);
 
   const [placeInfoList, setPlaceInfoList] = useState<PlaceListProps>([]);
-  const { register, watch } = useForm();
+  const { register, watch, handleSubmit } = useForm();
 
-  const searchPlace = async () => {
-    const inputPlace = watch().place;
+  const searchPlace = async (e) => {
+    e.preventDefault();
+    const inputPlace = watch().searching;
+    // console.log('inputPlace : ', inputPlace);
     // console.log('process.env.KAKAO_SEARCH_REST_API_KEY : ', process.env.KAKAO_SEARCH_REST_API_KEY);
     // const searching = '합정 스타벅스';
-    const url = `https://dapi.kakao.com/v2/local/search/keyword.json?query=${inputPlace}`;
 
+    const url = `https://dapi.kakao.com/v2/local/search/keyword.json?query=${inputPlace}`;
     const res = await axios.get(url, {
       headers: {
         Authorization: `KakaoAK ${process.env.KAKAO_SEARCH_REST_API_KEY}`,
       },
     });
+    // console.log(res);
 
     const places: PlaceListProps = res.data.documents;
-    // console.log('places : ', places);
+    console.log('places : ', places);
     setPlaceInfoList(places);
+  };
+
+  const submitForm = async (data) => {
+    console.log('data : ', data);
+    // e.preventDefault();
+    // let title = watch().title;
+    // let description = watch().description;
+    // console.log('watch : ', watch());
+    // let location = { x, y };
+
+    // const sendData = { title, description, address, x, y };
+    // createFormData(sendData);
+    // alert('Feed create 완료되었습니다.');
+    // console.log('data : ', data);
+    const { title, description, address, image, location, searching } = data;
+
+    const dummy = {
+      title,
+      description,
+      address,
+
+      imageUrl: image[0],
+      location: {
+        lat: Number(y),
+        lng: Number(x),
+      },
+      // x: Number(x),
+      // y: Number(y),
+    };
+
+    const fd = new FormData();
+
+    fd.append('title', dummy.title);
+    fd.append('description', dummy.description);
+    fd.append('address', dummy.address);
+    fd.append('location', dummy.location);
+    fd.append('imageUrl', dummy.imageUrl);
+
+    try {
+      let res = await axios.post(`/api/feeds`, fd);
+      console.log('create Feed : ', res);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   async function createFormData(sendData) {
@@ -202,13 +250,12 @@ const Form = () => {
   }
 
   const postFormData = (address, x, y) => {
-    let userName = 'MOCK_user';
     let title = watch().title;
     let description = watch().description;
     let addressName = address;
     let location = { x, y };
 
-    const sendData = { userName, title, description, address: addressName, location };
+    const sendData = { title, description, address: addressName, location };
     createFormData(sendData);
     alert('Feed create 완료되었습니다.');
 
@@ -216,7 +263,7 @@ const Form = () => {
   };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit(submitForm)}>
       <StyledFormContainer>
         <StyledTitle>Feed 추가하기</StyledTitle>
         <StyledInputContainer>
@@ -228,18 +275,19 @@ const Form = () => {
           <StyledInput placeholder="description" {...register('description')}></StyledInput>
         </StyledInputContainer>
         <StyledInputContainer>
+          <StyledField>이미지</StyledField>
+          <input className="login-input" type="file" id="image" {...register('image')} />
+        </StyledInputContainer>
+        <StyledInputContainer>
           <StyledField>주소</StyledField>
-          <StyledInput
-            placeholder="장소 입력 후 엔터"
-            {...register('place')}
-            onKeyDown={(e) => {
-              console.log(e.code);
-              if (e.code === 'Enter') {
-                searchPlace();
-              }
+          <input className="login-input" type="text" id="searching" {...register('searching')} />
+          <button
+            onClick={(e) => {
+              searchPlace(e);
             }}
-          ></StyledInput>
-
+          >
+            검색
+          </button>
           {/* <StyledInput search placeholder="place" {...register('place')}></StyledInput>
           <button
             className="submitBtn"
@@ -263,7 +311,14 @@ const Form = () => {
               </StyledSearchInfoData>
               <StyledSearchInfoData>
                 <FaAddressBook className="address-icon"></FaAddressBook>
-                <span className="addressName">{place.address_name}</span>
+                <input
+                  className="addressName"
+                  value={place.address_name}
+                  {...register('address')}
+                />
+
+                <input className="x" value={place.x} {...register('x')} />
+                <input className="y" value={place.y} {...register('y')} />
               </StyledSearchInfoData>
               <StyledSearchInfoData>
                 <div className="map">
@@ -273,14 +328,17 @@ const Form = () => {
                       window.open(place.place_url);
                     }}
                   ></FaMapMarkedAlt>
-                  <FaSave
-                    className="select-icon"
-                    onClick={() => {
-                      if (confirm('Feed를 추가하시겠습니까?')) {
-                        postFormData(place.address_name, place.x, place.y);
-                      }
-                    }}
-                  ></FaSave>
+                  <button type="submit">
+                    추가
+                    {/* <FaSave
+                      className="select-icon"
+                      onClick={() => {
+                        if (confirm('Feed를 추가하시겠습니까?')) {
+                          postFormData(place.address_name, Number(place.x), Number(place.y));
+                        }
+                      }}
+                    ></FaSave> */}
+                  </button>
                 </div>
               </StyledSearchInfoData>
             </StyledSearchData>

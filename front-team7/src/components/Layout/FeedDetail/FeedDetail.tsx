@@ -6,7 +6,7 @@ import { UserInfoProps } from '@/components/UserInfo';
 
 interface FeedDetailContainerProps {
   boxShadow: boolean;
-};
+}
 
 const StyledFeedDetailContainer = styled.div<FeedDetailContainerProps>`
   width: 330px;
@@ -87,7 +87,7 @@ const StyledSlideList = styled.div`
   top: 0;
 `;
 
-const StyledSlide = styled.div<{ data: string; }>`
+const StyledSlide = styled.div<{ data: string }>`
   width: 120px;
   height: 100%;
   float: left;
@@ -98,7 +98,7 @@ const StyledSlide = styled.div<{ data: string; }>`
   transition: left 0.5s ease-out;
 `;
 
-const StyledBtn = styled.span<{ PrevOrNext: string; }>`
+const StyledBtn = styled.span<{ PrevOrNext: string }>`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -133,15 +133,15 @@ const StyledBtn = styled.span<{ PrevOrNext: string; }>`
 
 // handleSlider : 이미지 슬라이더 기능 (typescript)
 // 참고 : https://eunhee-programming.tistory.com/106
-const handleSlider = () => { };
+const handleSlider = () => {};
 
 const FeedDetail = ({
   name,
   image,
   title,
   desc,
-  isModal
-}: UserInfoProps & { title: string; } & { desc: string; } & { isModal: boolean; }) => {
+  isModal,
+}: UserInfoProps & { title: string } & { desc: string } & { isModal: boolean }) => {
   let colorlist: Array<string> = ['lightgray', '#f5e6bf', '#bfccf5', '#bff5cc'];
 
   return (
@@ -174,7 +174,11 @@ const FeedDetail = ({
           </StyledBtn>
         </StyledSlideShow>
       </StyledFeedDetailBody>
-      <StyledFeedDetailFooter></StyledFeedDetailFooter>
+      <StyledFeedDetailFooter>
+        <button>수정</button>
+        <span>공백</span>
+        <button>삭제</button>
+      </StyledFeedDetailFooter>
     </StyledFeedDetailContainer>
   );
 };
