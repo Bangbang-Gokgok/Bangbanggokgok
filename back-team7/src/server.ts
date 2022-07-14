@@ -3,17 +3,17 @@ import cors from 'cors';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
-import schedule from 'node-schedule';
+import { createClient } from 'redis';
+// import path from 'path';
 
 import 'dotenv/config';
 import { apiRouter, authRouter } from './routes';
 import { errorHandler, getUserFromJWT } from './middlewares';
 import { usePassport } from './passport';
-// import webSocket from './socket';
-// import path from 'path';
-// import { createClient } from 'redis';
+import { scheduler } from './node-schedule';
 
 usePassport();
+
 const app = express();
 app.use(cors());
 
@@ -36,15 +36,12 @@ app.use('/auth', authRouter);
 
 app.use(errorHandler);
 
+export const changed = new Set();
+
 const server = app.listen(PORT, () => {
   console.log(`server is running ${PORT}`);
-  schedule.scheduleJob('*/1 * * * *', function () {
-    console.log('test');
-  });
+  scheduler;
 });
-
-// // socket
-// webSocket(server);
 
 // app.use(express.static(path.join(__dirname, '/../frontend/build'))); // 리액트 정적 파일 제공
 
@@ -63,11 +60,11 @@ db.on('error', (error: Error) =>
   console.error(`\nMongoDB 연결에 실패하였습니다...\n ${DB_URL} \n  ${error}`)
 );
 
-// export const redisClient = createClient();
+export const redisClient = createClient();
 
-// redisClient.on('ready', (err) => console.log('정상적으로 Redis 서버에 연결되었습니다.'));
-// redisClient.on('error', (error: Error) =>
-//   console.error(`\nRedis 연결에 실패하였습니다...\n ${DB_URL} \n  ${error}`)
-// );
+redisClient.on('ready', (err) => console.log('정상적으로 Redis 서버에 연결되었습니다.'));
+redisClient.on('error', (error: Error) =>
+  console.error(`\nRedis 연결에 실패하였습니다...\n ${DB_URL} \n  ${error}`)
+);
 
-// redisClient.connect();
+redisClient.connect();
