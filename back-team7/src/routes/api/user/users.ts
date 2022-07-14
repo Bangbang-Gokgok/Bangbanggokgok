@@ -80,7 +80,8 @@ userRouter.put(
     try {
       if (req.user) {
         const _id: Types.ObjectId | string = req.user._id;
-        const update: Partial<UserInfo> = req.body;
+        const update = req.body; // any 처리 필요
+        update.location = JSON.parse(update.location);
         if (req.files) {
           const postImages = getPostImageList(
             req.files as {
