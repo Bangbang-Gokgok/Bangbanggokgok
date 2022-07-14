@@ -6,7 +6,7 @@ interface ReviewInfo {
   contents: string;
 }
 interface ReviewData extends ReviewInfo {
-  _id: Types.ObjectId;
+  _id: string;
 }
 class ReviewService {
   //review 추가
