@@ -3,6 +3,7 @@ import cors from 'cors';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
+import schedule from 'node-schedule';
 
 import 'dotenv/config';
 import { apiRouter, authRouter } from './routes';
@@ -35,7 +36,12 @@ app.use('/auth', authRouter);
 
 app.use(errorHandler);
 
-const server = app.listen(PORT, () => console.log(`server is running ${PORT}`));
+const server = app.listen(PORT, () => {
+  console.log(`server is running ${PORT}`);
+  schedule.scheduleJob('*/1 * * * *', function () {
+    console.log('test');
+  });
+});
 
 // // socket
 // webSocket(server);
@@ -65,9 +71,3 @@ db.on('error', (error: Error) =>
 // );
 
 // redisClient.connect();
-
-// app.get('/', async (req, res, next) => {
-//   redisClient.sAdd('test', '2');
-//   const value = await redisClient.sMembers('test');
-//   res.json(value);
-// });
