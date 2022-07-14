@@ -146,6 +146,7 @@ const HomePage = () => {
               key={`${feed.title}-${index}`}
               name={feed.username}
               feedId={feed._id}
+              feedLocation={feed.location}
               feedUser={feed.userId}
               image={unknownUser as string}
               title={feed.title}

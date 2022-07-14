@@ -5,6 +5,11 @@ import { FaMapMarkedAlt } from 'react-icons/fa';
 import { UserInfo, UserInfoProps } from '@/components/UserInfo';
 import { NavLink } from 'react-router-dom';
 
+interface CenterLatLng {
+  lat: number;
+  lng: number;
+}
+
 export const FeedHeader = ({
   onClickHandler,
   isFolded,
@@ -14,7 +19,8 @@ export const FeedHeader = ({
   title,
   feedId,
   feedUser,
-}: UserInfoProps & { title: string; } & { feedId?: string; } & { feedUser?: string; } & { isFolded: boolean; } & { isUser: boolean; } & { onClickHandler?: (event: any) => void; }) => {
+  feedLocation,
+}: UserInfoProps & { title: string; } & { feedId?: string; } & { feedLocation?: CenterLatLng; } & { feedUser?: string; } & { isFolded: boolean; } & { isUser: boolean; } & { onClickHandler?: (event: any) => void; }) => {
   return (
     <StyledFeedHeader isModal={isFolded}>
       <span className="user-info-container">
@@ -22,7 +28,7 @@ export const FeedHeader = ({
       </span>
       <span className="title-container" onClick={onClickHandler}>{title}</span>
       {!isFolded ? (
-        <StyleNav to={`/feedmap/${feedUser}?feedId=${feedId}`}>
+        <StyleNav to={`/feedmap/${feedUser}?lat=${feedLocation?.lat}&lng=${feedLocation?.lng}`}>
           <FaMapMarkedAlt />
         </StyleNav>
       ) : isUser && (<>

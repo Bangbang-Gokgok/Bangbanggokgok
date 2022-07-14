@@ -13,6 +13,8 @@ import { feedModalAtom } from "@/store/feedModal";
 import * as Api from '@/api/feeds';
 import Form from '@/components/Form/Form';
 import { userIdState } from "@/store";
+import queryString from 'query-string';
+import { number } from "yup/lib/locale";
 
 interface CenterLatLng {
   lat: number;
@@ -58,6 +60,8 @@ const FeedMapPage = () => {
   const [modalChildrenState, setModalChildrenState] = useState(false);
   const userIdAtom = useRecoilValue(userIdState);
   const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
+  const feedIdQueryString = queryString.parse(window.location.search);
+
 
 
   useEffect(() => {
@@ -66,7 +70,16 @@ const FeedMapPage = () => {
       const result = await Api.getUserFeedList(userId);
       setFeedList(result);
 
-      if (result.length > 0) {
+      if (Object.keys(feedIdQueryString).length > 0) {
+        setMapValue((currMapValue) => ({
+          ...currMapValue,
+          centerLatLng: {
+            lat: Number(feedIdQueryString.lat),
+            lng: Number(feedIdQueryString.lng)
+          },
+        }));
+
+      } else if (result.length > 0) {
         setMapValue((currMapValue) => ({
           ...currMapValue,
           centerLatLng: {
