@@ -260,13 +260,15 @@ const Form = () => {
               </StyledSearchInfoData>
               <StyledSearchInfoData>
                 <FaAddressBook className="address-icon"></FaAddressBook>
+                <span className="addressName">{place.address_name}</span>
                 <input
                   className="addressName"
+                  type="hidden"
                   value={place.address_name}
                   {...register('address')}
                 />
-                <input className="x" value={place.x} {...register('x')} />
-                <input className="y" value={place.y} {...register('y')} />
+                <input className="x" type="hidden" value={place.x} {...register('x')} />
+                <input className="y" type="hidden" value={place.y} {...register('y')} />
               </StyledSearchInfoData>
               <StyledSearchInfoData>
                 <div className="map">
