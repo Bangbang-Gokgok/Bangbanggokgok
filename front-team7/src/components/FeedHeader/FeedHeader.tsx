@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { MdOutlineKeyboardArrowDown } from 'react-icons/md';
+import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
 
 import { FaMapMarkedAlt } from 'react-icons/fa';
 import { UserInfo, UserInfoProps } from '@/components/UserInfo';
@@ -7,29 +7,50 @@ import { UserInfo, UserInfoProps } from '@/components/UserInfo';
 export const FeedHeader = ({
   onClickHandler,
   isFolded,
+  isUser,
   name,
   image,
   title,
-}: UserInfoProps & { title: string; } & { isFolded: boolean; } & { onClickHandler?: (event: any) => void; }) => {
+  feedId,
+}: UserInfoProps & { title: string; } & { feedId: string; } & { isFolded: boolean; } & { isUser: boolean; } & { onClickHandler?: (event: any) => void; }) => {
   return (
-    <StyledFeedHeader onClick={onClickHandler} isModal={isFolded}>
+    <StyledFeedHeader isModal={isFolded}>
       <span className="user-info-container">
         <UserInfo name={name} image={image} />
       </span>
-      <span className="title-container">{title}</span>
-      {!isFolded && (
+      <span className="title-container" onClick={onClickHandler}>{title}</span>
+      {!isFolded ? (
         <span
           className="arrow-down"
           onClick={() => {
             console.log('지도 icon 클릭됨!');
+            console.log(feedId);
+
           }}
         >
           <FaMapMarkedAlt />
         </span>
-      )}
+      ) : isUser && (<>
+        <StyleEditIcon onClick={(event) => {
+          console.log(feedId);
+        }} />
+        <StyleDeleteIcon onClick={(event) => {
+          console.log(feedId);
+        }}
+        />
+      </>)
+      }
     </StyledFeedHeader>
   );
 };
+
+const StyleEditIcon = styled(AiFillEdit)`
+  font-size: 1.8rem;
+`;
+
+const StyleDeleteIcon = styled(AiFillDelete)`
+  font-size: 1.8rem;
+`;
 
 const StyledFeedHeader = styled.div<{ isModal: boolean; }>`
   display: flex;

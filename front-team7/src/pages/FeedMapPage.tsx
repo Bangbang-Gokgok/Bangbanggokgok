@@ -5,13 +5,14 @@ import { useEffect, useState } from "react";
 import { BsPlus } from "react-icons/bs";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { mapAtom } from "@/store/map";
 import ModalFrame from "@/components/Layout/ModalFrame/ModalFrame";
 import FeedDetail from "@/components/Layout/FeedDetail/FeedDetail";
 import { feedModalAtom } from "@/store/feedModal";
 import * as Api from '@/api/feeds';
 import Form from '@/components/Form/Form';
+import { userIdState } from "@/store";
 
 interface CenterLatLng {
   lat: number;
@@ -55,6 +56,7 @@ const FeedMapPage = () => {
   const [_mapValue, setMapValue] = useRecoilState(mapAtom);
   const [stateModal, setStateModal] = useState(false);
   const [modalChildrenState, setModalChildrenState] = useState(false);
+  const userIdAtom = useRecoilValue(userIdState);
 
   const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
 
@@ -133,7 +135,9 @@ const FeedMapPage = () => {
             <FeedHeader
               onClickHandler={() => onClickMapFeed(item)}
               isFolded={true}
+              isUser={userIdAtom === userId}
               key={idx}
+              feedId={item._id}
               name={item.userName}
               title={item.title}
             />
