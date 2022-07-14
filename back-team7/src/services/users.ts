@@ -13,7 +13,7 @@ export interface UserInfo {
 }
 
 export interface UserData extends UserInfo {
-  _id: Types.ObjectId;
+  _id: string;
 }
 
 class UserService {

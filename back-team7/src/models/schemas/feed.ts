@@ -1,6 +1,5 @@
 import { Schema } from 'mongoose';
-//import { shortid } from 'shortid';
-const shortid = require('shortid');
+import shortid from 'shortid';
 
 const FeedSchema = new Schema(
   {
