@@ -190,8 +190,6 @@ const Form = () => {
       title,
       description,
       address,
-
-      imageUrl: image[0],
       location: {
         lat: Number(y),
         lng: Number(x),
@@ -204,7 +202,10 @@ const Form = () => {
     fd.append('description', dummy.description);
     fd.append('address', dummy.address);
     fd.append('location', JSON.stringify(dummy.location));
-    fd.append('imageUrl', dummy.imageUrl);
+
+    for (let i = 0; i < image.length; i++) {
+      fd.append('imageUrl', image[i]);
+    }
 
     try {
       let res = await axios.post(`/api/feeds`, fd);
@@ -230,7 +231,7 @@ const Form = () => {
         </StyledInputContainer>
         <StyledInputContainer>
           <StyledField>이미지</StyledField>
-          <input className="login-input" type="file" id="image" {...register('image')} />
+          <input className="login-input" type="file" id="image" multiple {...register('image')} />
         </StyledInputContainer>
         <StyledInputContainer>
           <StyledField>주소</StyledField>
