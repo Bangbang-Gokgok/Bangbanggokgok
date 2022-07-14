@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { GrClose } from 'react-icons/gr';
-
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 const StyledContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -28,13 +28,18 @@ const StyledModal = styled.div`
   justify-items: center;
   align-items: center;
   position: relative;
+  background-color: white;
   border-radius: 10px;
 `;
 
 const StyledClose = styled.div`
   position: absolute;
-  right: 15px;
-  top: 15px;
+  z-index: 101;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 7rem;
+  color: white;
   cursor: pointer;
 `;
 
@@ -60,11 +65,11 @@ const ModalFrame = ({ handleModal, state, children }: { handleModal: (e: React.M
     <StyledContainer>
       <StyledBackground onClick={e => handleModal(e)} />
       <StyledModal>
-        <StyledClose onClick={e => handleModal(e)}>
-          <GrClose></GrClose>
-        </StyledClose>
         {children}
       </StyledModal>
+      <StyledClose onClick={e => handleModal(e)}>
+        <AiOutlineCloseCircle />
+      </StyledClose>
     </StyledContainer>
   ) : (<></>);
 };

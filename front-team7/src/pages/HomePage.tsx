@@ -34,7 +34,7 @@ interface FeedProps {
   createAt: string;
 }
 
-interface FeedListProps extends Array<FeedProps> {}
+interface FeedListProps extends Array<FeedProps> { }
 
 // 추후에 feed의 get을 pagination 처리로 몇개씩만 가져올 수 있게끔 구현되면
 // 그떄는 MOCK_ITEMS 없애고, fetchMoreData에서 가져오는 부분 (axios.get) 구현하기
@@ -129,6 +129,7 @@ const HomePage = () => {
     >
       <StyledFeedListContainer>
         <InfiniteScroll
+          style={{ overflow: "visibility" }}
           dataLength={feedList.length}
           next={fetchMoreData}
           hasMore={hasMore}

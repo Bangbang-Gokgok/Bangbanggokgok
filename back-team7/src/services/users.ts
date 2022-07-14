@@ -7,7 +7,7 @@ export interface UserInfo {
   name: string;
   refreshToken?: string | undefined;
   profileImage?: string[] | undefined;
-  contactNumber?: number | undefined;
+  contactNumber?: string | undefined;
   location?: object | undefined;
   friends?: string[] | undefined;
 }
@@ -38,12 +38,11 @@ class UserService {
   async getUsers(): Promise<Partial<UserData>[]> {
     const users = await User.find({});
     const data = await users.map(({ _id, name, profileImage }) => ({ _id, name, profileImage }));
-    return users;
+    return data;
   }
 
   async getUserDataById(_id: Types.ObjectId | string): Promise<UserData> {
     const user = await User.findOne({ _id });
-
     // db에서 찾지 못한 경우, 에러 메시지 반환
     if (!user) {
       const error = new Error('해당 id의 사용자가 없습니다. 다시 한 번 확인해 주세요.');
