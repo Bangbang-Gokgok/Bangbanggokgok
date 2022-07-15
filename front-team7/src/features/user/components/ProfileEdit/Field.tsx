@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { type UseFormRegister } from 'react-hook-form';
 
 export interface RegisterProps {
-  profileImage?: FileList;
+  profileImage?: FileList | File;
   email?: string;
   name?: string;
   description?: string;
