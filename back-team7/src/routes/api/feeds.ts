@@ -41,11 +41,6 @@ feedRouter.get('/list', async (req: Request, res: Response, next: NextFunction) 
   try {
     // 전체 피드 목록을 얻음
     const feeds = await feedService.getFeed();
-    for (const feed of feeds) {
-      const userInfo = await userService.getUserDataById(feed.userId);
-      const userName = userInfo.name;
-      feed.userName = userName;
-    }
     res.status(200).json(feeds);
   } catch (error) {
     next(error);
@@ -86,11 +81,6 @@ feedRouter.get('/list/:userId', async (req: Request, res: Response, next: NextFu
     const userId = req.params.userId;
     // userName 값으로 검색
     const feedData = await feedService.getFeedByUserId(userId);
-    for (const feed of feedData) {
-      const userInfo = await userService.getUserDataById(feed.userId);
-      const userName = userInfo.name;
-      feed.userName = userName;
-    }
     res.status(200).json(feedData);
   } catch (error) {
     next(error);

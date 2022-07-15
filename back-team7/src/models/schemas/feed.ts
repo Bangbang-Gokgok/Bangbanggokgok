@@ -28,10 +28,6 @@ const FeedSchema = new Schema(
       type: Object,
       required: true,
     },
-    review: {
-      type: Array,
-      required: false,
-    },
     report: {
       type: Object,
       required: false,
