@@ -22,6 +22,7 @@ const FIELD_DATA: { kind: kindType; labelName: string; inputType: string }[] = [
 
 export const ProfileEditForm = () => {
   const currentUser = useRecoilValue(currentUserQuery);
+  const refreshCurrentUser = useRecoilRefresher_UNSTABLE(currentUserQuery);
   const navigate = useNavigate();
 
   const {
@@ -69,6 +70,8 @@ export const ProfileEditForm = () => {
 
     const user = await axios.put('/api/users/user', formData);
     console.log(user);
+
+    refreshCurrentUser();
 
     navigate('/profile');
   };
