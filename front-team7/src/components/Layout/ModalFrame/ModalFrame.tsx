@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { GrClose } from 'react-icons/gr';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 const StyledContainer = styled.div`
   width: 100%;
@@ -36,7 +35,7 @@ const StyledModal = styled.div`
 const StyledClose = styled.div`
   position: absolute;
   z-index: 101;
-  top: 80%;
+  bottom: 0;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 7rem;
