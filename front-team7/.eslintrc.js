@@ -19,7 +19,7 @@ module.exports = {
     'plugin:storybook/recommended',
   ],
   rules: {
-    'no-unused-vars': 'warn',
+    'no-unused-vars': 'off',
     'no-console': 'off',
     'no-plusplus': 'off',
     'import/first': 'off',
@@ -35,10 +35,11 @@ module.exports = {
         additionalHooks: 'useRecoilCallback',
       },
     ],
+    '@typescript-eslint/no-unused-vars': 'warn',
     '@typescript-eslint/no-unsafe-return': 'off',
-    '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/restrict-template-expressions': 'off',
+    '@typescript-eslint/no-misused-promises': 'off',
   },
   env: {
     node: true,

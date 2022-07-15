@@ -8,7 +8,7 @@ export interface UserResponse {
   _id: string;
   email: string;
   name: string;
-  profileImage?: string;
+  profileImage?: string[];
   contactNumber?: number;
   address?: string;
   location?: string;
@@ -29,8 +29,8 @@ export const userQuery = selectorFamily({
   key: 'UserQuery',
   get: (userId: UserIdStateType) => async () => {
     if (!userId) return;
+
     try {
-      console.log(userId);
       const user = await axios.get<never, UserResponse>(`/api/users/${userId}`);
       return user;
     } catch (e) {
@@ -58,6 +58,14 @@ export const userFeedsQuery = selectorFamily({
 export const currentUserQuery = selector({
   key: 'CurrentUserQuery',
   get: ({ get }) => get(userQuery(get(userIdState))),
+});
+
+export const userProfileImageQuery = selector({
+  key: 'UserProfileImageQuery',
+  get: ({ get }) => {
+    const user = get(currentUserQuery);
+    return user?.profileImage![0];
+  },
 });
 
 export const currentUserFeedsQuery = selector({
