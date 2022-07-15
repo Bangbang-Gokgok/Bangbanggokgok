@@ -81,6 +81,7 @@ userRouter.put(
       if (req.user) {
         const _id: Types.ObjectId | string = req.user._id;
         const update: Partial<UserInfo> = req.body;
+        console.log(req.files);
         if (req.files) {
           const postImages = getPostImageList(
             req.files as {
@@ -89,6 +90,7 @@ userRouter.put(
           );
           update.profileImage = postImages;
         }
+
         // 사용자 정보를 업데이트함.
         const updatedUser = await userService.setUser(_id, update);
 
