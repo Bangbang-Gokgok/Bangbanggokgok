@@ -80,8 +80,10 @@ userRouter.put(
     try {
       if (req.user) {
         const _id: Types.ObjectId | string = req.user._id;
+
         const update = req.body; // any 처리 필요
         update.location = JSON.parse(update.location);
+
         if (req.files) {
           const postImages = getPostImageList(
             req.files as {
@@ -90,6 +92,7 @@ userRouter.put(
           );
           update.profileImage = postImages;
         }
+
         // 사용자 정보를 업데이트함.
         const updatedUser = await userService.setUser(_id, update);
 

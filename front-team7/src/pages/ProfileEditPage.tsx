@@ -1,5 +1,5 @@
 import { Main } from '@/components/Layout';
-import { ProfileEditForm } from '@/features/user';
+import { ProfileEditForm } from '@/features/user/components';
 
 const ProfileEditPage = () => {
   return (
@@ -10,6 +10,8 @@ const ProfileEditPage = () => {
       justifyContent="center"
       alignItems="center"
       overflowY="visible"
+      width="100%"
+      height="100%"
     >
       <ProfileEditForm />
     </Main>

@@ -3,15 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import pinImg from '@/assets/images/general-marker.png';
 import centerPinImg from '@/assets/images/point-marker.png';
-import { useRecoilValue, useRecoilState } from "recoil";
-import { mapAtom } from "@/store/map";
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { mapAtom } from '@/store/map';
 import { feedModalAtom } from '@/store/feedModal';
-
-declare global {
-  interface Window {
-    kakao?: any;
-  }
-}
 
 interface MapContainer {
   width: string;
@@ -42,11 +36,17 @@ interface FeedProps {
   updatedAt: string;
 }
 
-interface FeedListProps extends Array<FeedProps> { }
+interface FeedListProps extends Array<FeedProps> {}
 
 const { kakao } = window;
 
-const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: (item: FeedProps) => void; }) => {
+const Map = ({
+  feedList,
+  toggleModal,
+}: {
+  feedList: FeedListProps;
+  toggleModal: (item: FeedProps) => void;
+}) => {
   const mapValue = useRecoilValue(mapAtom);
   // const [_mapValue, setMapValue] = useRecoilState(mapAtom);
   const [_feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
@@ -55,7 +55,8 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
 
   const makePositionsContent = (feed: FeedProps) => {
     const content = document.createElement('div');
-    content.style.cssText = 'display: flex; flex-direction: column; background-color:white; gap:3px; border: 1px solid white; border-radius:10px; padding:10px; box-shadow: 3px 3px 3px grey;';
+    content.style.cssText =
+      'display: flex; flex-direction: column; background-color:white; gap:3px; border: 1px solid white; border-radius:10px; padding:10px; box-shadow: 3px 3px 3px grey;';
     const title = document.createElement('span');
     title.style.cssText = 'font-size: 16px; font-weight: bold; cursor: pointer;';
     title.innerHTML = feed.title;
@@ -68,20 +69,18 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
     reviewLength.style.cssText = 'font-size: 4px;';
     reviewLength.innerHTML = `${feed.review.length}개의 리뷰`;
 
-
     const closeButton = document.createElement('button');
     closeButton.className = 'close-btn';
-    closeButton.style.cssText = 'font-size: 12px; cursor: pointer; border: none; border-radius: 10px; font-weight: 400; text-align: center; padding:3px';
+    closeButton.style.cssText =
+      'font-size: 12px; cursor: pointer; border: none; border-radius: 10px; font-weight: 400; text-align: center; padding:3px';
     closeButton.innerHTML = '닫기';
 
     title.addEventListener('click', () => toggleModal(feed));
-
 
     content.appendChild(title);
     content.appendChild(address);
     content.appendChild(reviewLength);
     content.appendChild(closeButton);
-
 
     return content;
   };
@@ -132,7 +131,8 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
         map: map, // 마커를 표시할 지도
         position: position.latlng, // 마커의 위치
         image:
-          mapValue.centerLatLng.lat === position.latlng.Ma && mapValue.centerLatLng.lng === position.latlng.La
+          mapValue.centerLatLng.lat === position.latlng.Ma &&
+          mapValue.centerLatLng.lng === position.latlng.La
             ? centerMarkerImage
             : markerImage,
       });
@@ -146,7 +146,9 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
       // 마커에 mouseover 이벤트와 mouseout 이벤트, click 이벤트를 등록합니다
       // 이벤트 리스너로는 클로저를 만들어 등록합니다
       kakao.maps.event.addListener(marker, 'click', makeOverListener(customOverlay));
-      position.content.querySelector('.close-btn')?.addEventListener('click', closeOverlay(customOverlay));
+      position.content
+        .querySelector('.close-btn')
+        ?.addEventListener('click', closeOverlay(customOverlay));
       return marker;
     });
 
@@ -165,7 +167,6 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
 
     clusterer.addMarkers(markers);
     kakao.maps.event.addListener(clusterer, 'clusterclick', function (cluster) {
-
       // 현재 지도 레벨에서 1레벨 확대한 레벨
       var level = map.getLevel() - 3;
 
@@ -189,20 +190,23 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
 
   useEffect(() => {
     drawMap();
+<<<<<<< HEAD
+    console.log('Map Side Effect');
+  }, [mapValue, feedList]);
+=======
   }, [feedList]);
 
   useEffect(() => {
     panTo(mapState, mapValue.centerLatLng);
   }, [mapValue]);
+>>>>>>> f880b6f9a58235036fd3159c4c635c964c7f3a58
 
   return (
-
     <StyledMapContainer
       width={mapValue.mapSize.width}
       height={mapValue.mapSize.height}
       ref={mapContainer}
     ></StyledMapContainer>
-
   );
 };
 
@@ -211,7 +215,5 @@ const StyledMapContainer = styled.div<MapContainer>`
   height: ${(props) => props.height};
   border-radius: 10px;
 `;
-
-
 
 export default Map;

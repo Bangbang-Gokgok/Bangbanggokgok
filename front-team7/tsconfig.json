@@ -18,7 +18,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+    "types": ["kakao.maps.d.ts"]
   },
   "include": ["src/**/*", "declarations.d.ts"],
   "exclude": ["node_modules"]
