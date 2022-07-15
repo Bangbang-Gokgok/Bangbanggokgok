@@ -105,6 +105,11 @@ feedRouter.delete('/:_id', async (req: Request, res: Response, next: NextFunctio
   try {
     const _id = req.params._id;
     //피드 삭제
+    //Redis 좋아요 data 삭제
+    const reaction = 'like';
+    const key = `feeds:${_id}:${reaction}`;
+    await redisClient.del(key);
+    //mongoDB data 삭제
     const deleteResult = await feedService.deleteFeedData(_id);
     res.status(200).json(deleteResult);
   } catch (error) {
