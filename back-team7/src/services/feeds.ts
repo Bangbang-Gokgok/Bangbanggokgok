@@ -13,7 +13,7 @@ interface FeedInfo {
   description: string;
   address: string;
   location: newLocation;
-  like?: string[] | undefined;
+  likes?: string[] | undefined;
   imageUrl?: string[] | undefined;
 }
 interface FeedData extends FeedInfo {
