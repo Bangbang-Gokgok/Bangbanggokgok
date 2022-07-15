@@ -3,9 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import pinImg from '@/assets/images/general-marker.png';
 import centerPinImg from '@/assets/images/point-marker.png';
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { mapAtom } from "@/store/map";
-import { feedModalAtom } from '@/store/feedModal';
 
 declare global {
   interface Window {
@@ -48,8 +47,6 @@ const { kakao } = window;
 
 const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: (item: FeedProps) => void; }) => {
   const mapValue = useRecoilValue(mapAtom);
-  // const [_mapValue, setMapValue] = useRecoilState(mapAtom);
-  const [_feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
   const [mapState, setMapState] = useState(null);
   const mapContainer = useRef<HTMLDivElement>(null);
 
@@ -189,11 +186,14 @@ const Map = ({ feedList, toggleModal }: { feedList: FeedListProps, toggleModal: 
 
   useEffect(() => {
     drawMap();
-  }, [feedList]);
-
-  useEffect(() => {
     panTo(mapState, mapValue.centerLatLng);
-  }, [mapValue]);
+    console.log('Side Effect');
+
+  }, [feedList, mapValue]);
+
+  // useEffect(() => {
+
+  // }, [mapValue]);
 
   return (
 
