@@ -20,7 +20,6 @@ enum ModalState {
   CREATE = 'CREATE',
   EDIT = 'EDIT',
   FEED = 'FEED',
-  work = '일하는중'
 };
 
 interface CenterLatLng {
@@ -106,19 +105,14 @@ const FeedMapPage = () => {
   };
 
   const onClickMapFeed = (item: FeedProps) => {
-    const { userName, title, description, address, location, review, createdAt } = item;
-    changeCenterLatLng(location);
+    changeCenterLatLng(item.location);
     setFeedModalState((prev) => ({
       ...prev,
-      userName,
-      title,
-      description,
-      address,
-      review,
-      createdAt,
+      ...item
     }));
     setModalChildrenState(ModalState.FEED);
     toggleModal();
+
   };
 
   const changeCenterLatLng = (newCenterLatLng: CenterLatLng) => {
@@ -138,11 +132,11 @@ const FeedMapPage = () => {
 
   const switchModalChildrenState = (modalChildrenState: string) => {
     switch (modalChildrenState) {
-      case 'CREATE':
+      case ModalState.CREATE:
         return <Form />;
-      case 'EDIT':
-        return; //<EditForm/>;
-      case 'FEED':
+      case ModalState.EDIT:
+        return <Form feed={feedModalState} />;
+      case ModalState.FEED:
         return <FeedDetail
           isModal={true}
           name={feedModalState.userName}
@@ -153,8 +147,12 @@ const FeedMapPage = () => {
   };
 
   const onClickEditFeedModal = (item: FeedProps) => {
-    console.log(item);
-
+    setFeedModalState((prev) => ({
+      ...prev,
+      ...item
+    }));
+    setModalChildrenState(ModalState.EDIT);
+    toggleModal();
   };
 
   const onClickDeleteFeed = async (feedId: string) => {
@@ -173,9 +171,6 @@ const FeedMapPage = () => {
     <Main>
       <StyledWrapper>
         <Map feedList={feedList} toggleModal={onClickMapFeed}></Map>
-        {/* <StyleUserInfoContainer>
-          <UserInfo name={currentUser?.name || ''} image={currentUser?.profileImage ? currentUser.profileImage[0] : unknownUser}></UserInfo>
-        </StyleUserInfoContainer> */}
         {(userIdAtom === userId) &&
           <Button onClick={onClickModal}>
             <BsPlus />
@@ -237,7 +232,7 @@ const Button = styled.button`
     font-size: 7rem;
   }
 
-  @media only screen and (min-width: 1024px) {
+  @media only screen and (min-width: 1024px) { 
     bottom: 5%;
     width: 80px;
     height: 80px;
@@ -273,15 +268,5 @@ const StyledFeeds = styled.div`
     width: 400px;
   }
 `;
-
-// const StyleUserInfoContainer = styled.div`
-//   position: absolute;
-//   z-index: 3;
-//   background-color: white;
-//   padding: 10px 15px;
-//   border-radius: 20px;
-//   top: 5%;
-//   left: 5%;
-// `;
 
 export default FeedMapPage;
