@@ -73,16 +73,18 @@ feedRouter.get('/:_id/like', async (req: Request, res: Response, next: NextFunct
       const feedId = req.params._id;
       const userId = req.user._id;
       const resource = 'likes';
-      const key = `feeds:${feedId}:${resource}`;
-      changed.add(key);
-      const newUser = await redisClient.sAdd(key, `${userId}`);
+      const key = `feeds:${resource}:${feedId}`;
+      // changed.add(key);
 
-      if (!newUser) {
-        redisClient.sRem(key, `${userId}`);
-      }
+      // const newUser = await redisClient.hSetNX(key, `${userId}`, 'true');
 
-      const like = await redisClient.sCard(key);
-      res.status(200).json(like);
+      // if (!newUser) {
+      //   redisClient.hDel(key, `${userId}`);
+      // }
+
+      // const likes = await redisClient.hLen(key);
+      // res.status(200).json(likes);
+      res.json();
     } else {
       const error = new Error('user 정보가 없습니다.');
       error.name = 'NotFound';
