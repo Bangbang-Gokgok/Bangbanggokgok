@@ -83,8 +83,7 @@ userRouter.put(
 
         const update = req.body; // any 처리 필요
         update.location = JSON.parse(update.location);
-
-        if (req.files) {
+        if (req.files!.length) {
           const postImages = getPostImageList(
             req.files as {
               [fieldname: string]: Express.Multer.File[];
@@ -92,7 +91,6 @@ userRouter.put(
           );
           update.profileImage = postImages;
         }
-
         // 사용자 정보를 업데이트함.
         const updatedUser = await userService.setUser(_id, update);
 
