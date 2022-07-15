@@ -1,6 +1,6 @@
-import { useEffect, type MouseEvent } from 'react';
+import { type MouseEvent } from 'react';
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilRefresher_UNSTABLE } from 'recoil';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -54,8 +54,8 @@ export const ProfileEditForm = () => {
   };
 
   const submitProfileEditForm: SubmitHandler<RegisterProps> = async (data) => {
-    const newProfileImage = data.profileImage ? data.profileImage[0] : undefined;
-    data.profileImage = newProfileImage;
+    const profileImage = data.profileImage && (data.profileImage[0] as File);
+    delete data.profileImage;
 
     console.log(data);
 
@@ -63,8 +63,9 @@ export const ProfileEditForm = () => {
 
     const formData = new FormData();
 
-    for (const [key, value] of Object.entries(data)) formData.append(key, value);
+    for (const [key, value] of Object.entries(data)) formData.append(key, value as string | Blob);
     formData.append('location', JSON.stringify(location));
+    if (profileImage) formData.append('profileImage', profileImage);
 
     const user = await axios.put('/api/users/user', formData);
     console.log(user);
