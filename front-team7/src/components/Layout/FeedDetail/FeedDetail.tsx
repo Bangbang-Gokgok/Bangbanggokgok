@@ -6,7 +6,7 @@ import { UserInfoProps } from '@/components/UserInfo';
 
 interface FeedDetailContainerProps {
   boxShadow: boolean;
-};
+}
 
 interface CenterLatLng {
   lat: number;
@@ -93,6 +93,7 @@ const StyledSlideList = styled.div`
 `;
 
 const StyledSlide = styled.img`
+
   width: 120px;
   height: 100%;
   float: left;
@@ -150,11 +151,19 @@ const FeedDetail = ({
   feedImg,
   feedLocation
 }: UserInfoProps & { title: string; } & { feedImg?: Array<string>; } & { feedUser?: string; } & { feedLocation?: CenterLatLng; } & { feedId?: string; } & { desc: string; } & { isModal: boolean; }) => {
-  let colorlist: Array<string> = ['lightgray', '#f5e6bf', '#bfccf5', '#bff5cc'];
 
   return (
     <StyledFeedDetailContainer boxShadow={isModal}>
-      <FeedHeader feedId={feedId} feedLocation={feedLocation} feedUser={feedUser} isUser={false} isFolded={isModal} name={name} image={image} title={title}></FeedHeader>
+      <FeedHeader
+        feedId={feedId}
+        feedLocation={feedLocation}
+        feedUser={feedUser}
+        isUser={false}
+        isFolded={isModal}
+        name={name}
+        image={image}
+        title={title}
+      ></FeedHeader>
       <StyledFeedDetailBody>
         {/* <StyledTitle>👍🏽 {title}</StyledTitle> */}
         <StyledDescription>{desc}</StyledDescription>
