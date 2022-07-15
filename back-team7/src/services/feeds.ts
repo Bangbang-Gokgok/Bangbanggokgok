@@ -1,7 +1,6 @@
 import { Feed } from '../models';
 import { Types } from 'mongoose';
 import { Schema } from 'mongoose';
-import { upload } from '../middlewares';
 
 interface newLocation {
   lat: number;
@@ -9,6 +8,7 @@ interface newLocation {
 }
 interface FeedInfo {
   userId: string | Types.ObjectId;
+  userName?: string | undefined;
   title: string;
   description: string;
   address: string;
@@ -27,6 +27,7 @@ class FeedService {
   //전체 feed 조회
   async getFeed(): Promise<FeedData[]> {
     const feeds = await Feed.find({});
+
     return feeds;
   }
   //특정 feed 조회
