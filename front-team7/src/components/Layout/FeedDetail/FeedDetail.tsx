@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
 import { FeedHeader } from '@/components/FeedHeader/FeedHeader';
 import { UserInfoProps } from '@/components/UserInfo';
+import Carousel from 'react-material-ui-carousel';
 
 interface FeedDetailContainerProps {
   boxShadow: boolean;
@@ -15,9 +16,10 @@ interface CenterLatLng {
 
 const StyledFeedDetailContainer = styled.div<FeedDetailContainerProps>`
   width: 330px;
-  height: 280px;
+  // height: 280px;
   background-color: white;
   display: flex;
+  // position: absolute;
   flex-direction: column;
   border-radius: 10px;
   box-shadow: ${(props) => (props.boxShadow ? '' : '5px 5px 5px #c2c2c2')};
@@ -25,12 +27,12 @@ const StyledFeedDetailContainer = styled.div<FeedDetailContainerProps>`
 
   @media only screen and (min-width: 768px) {
     width: 450px;
-    height: 400px;
+    // height: 400px;
   }
 
   @media only screen and (min-width: 1024px) {
     width: 600px;
-    height: 500px;
+    // height: 500px;
   }
 `;
 const StyledFeedDetailHeader = styled.div`
@@ -41,9 +43,10 @@ const StyledFeedDetailHeader = styled.div`
 `;
 const StyledFeedDetailBody = styled.div`
   width: 100%;
-  height: 250px;
+  height: 400px;
+  position: relative;
   padding: 8px;
-  background-color: white;
+  // background-color: yellow;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -55,18 +58,12 @@ const StyledFeedDetailFooter = styled.div`
   background-color: #d9d9d9;
   border-radius: 0px 0px 10px 10px;
 `;
-const StyledTitle = styled.div`
+
+const StyledFeedDetailDescription = styled.div`
   width: 100%;
-  height: 20px;
-  margin-bottom: 8px;
-  font-size: 2rem;
-  line-height: 20px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-`;
-const StyledDescription = styled.div`
-  width: 100%;
+
+  // position: relative;
+  background-color: red;
   margin: 8px 0;
   font-size: 1.2rem;
   font-weight: 400;
@@ -76,69 +73,46 @@ const StyledDescription = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 `;
-const StyledSlideShow = styled.div`
+const StyledFeedDetailSlide = styled.div`
   width: 100%;
-  height: 110px;
-  margin: 5px auto;
+  height: 100%;
   position: relative;
-  overflow: hidden;
-`;
+  background-color: green;
 
-const StyledSlideList = styled.div`
-  width: 1000px;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-`;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-const StyledSlide = styled.img`
-
-  width: 120px;
-  height: 100%;
-  float: left;
-  border-radius: 20px;
-  border: none;
-  margin-right: 15px;
-  transition: left 0.5s ease-out;
-`;
-
-const StyledBtn = styled.span<{ PrevOrNext: string; }>`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  text-align: center;
-  border-radius: 50%;
-  cursor: pointer;
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
-  font-weight: 500;
-  color: white;
-  font-size: 1.5rem;
-  border-radius: 50%;
-  background-color: gray;
-  opacity: 0.6;
-
-  :hover {
-    opacity: 1;
+  .carousel {
+    width: 100%;
+    position: relative;
+    height: 100%;
+    background-color: black;
   }
-  ${(props) => {
-    if (props.PrevOrNext === 'prev') {
-      return css`
-        left: 2%;
-      `;
-    } else if (props.PrevOrNext === 'next') {
-      return css`
-        right: 2%;
-      `;
-    }
-  }}
 `;
 
-// handleSlider : 이미지 슬라이더 기능 (typescript)
-// 참고 : https://eunhee-programming.tistory.com/106
-const handleSlider = () => { };
+// const StyledSlide = styled.img<{ src: string }>`
+//   position: absolute;
+//   width: 100%;
+//   height: 100%;
+//   background-color: yellow;
+// `;
+
+const StyledSlide = styled.div<{ src: string }>`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-size: contain;
+  background-image: url(${(props) => props.src});
+`;
+
+const StyledFeedDetailInfo = styled.div`
+  width: 100%;
+  padding: 10px 0 5px 0;
+  display: flex;
+
+  justify-content: space-between;
+`;
 
 const FeedDetail = ({
   name,
@@ -149,9 +123,10 @@ const FeedDetail = ({
   feedId,
   feedUser,
   feedImg,
-  feedLocation
-}: UserInfoProps & { title: string; } & { feedImg?: Array<string>; } & { feedUser?: string; } & { feedLocation?: CenterLatLng; } & { feedId?: string; } & { desc: string; } & { isModal: boolean; }) => {
-
+  feedLocation,
+}: UserInfoProps & { title: string } & { feedImg?: Array<string> } & { feedUser?: string } & {
+  feedLocation?: CenterLatLng;
+} & { feedId?: string } & { desc: string } & { isModal: boolean }) => {
   return (
     <StyledFeedDetailContainer boxShadow={isModal}>
       <FeedHeader
@@ -166,30 +141,18 @@ const FeedDetail = ({
       ></FeedHeader>
       <StyledFeedDetailBody>
         {/* <StyledTitle>👍🏽 {title}</StyledTitle> */}
-        <StyledDescription>{desc}</StyledDescription>
-        <StyledSlideShow>
-          <StyledSlideList>
+        <StyledFeedDetailDescription>{desc}</StyledFeedDetailDescription>
+        <StyledFeedDetailSlide>
+          <Carousel className={'carousel'} indicators={false} navButtonsAlwaysVisible={true}>
             {feedImg?.map((item, index) => (
               <StyledSlide key={index} src={item}></StyledSlide>
             ))}
-          </StyledSlideList>
-          <StyledBtn
-            PrevOrNext={'prev'}
-            onClick={() => {
-              handleSlider;
-            }}
-          >
-            <GrFormPrevious></GrFormPrevious>
-          </StyledBtn>
-          <StyledBtn
-            PrevOrNext={'next'}
-            onClick={() => {
-              handleSlider;
-            }}
-          >
-            <GrFormNext></GrFormNext>
-          </StyledBtn>
-        </StyledSlideShow>
+          </Carousel>
+        </StyledFeedDetailSlide>
+        <StyledFeedDetailInfo>
+          <div>Like 10개</div>
+          <div>댓글 10개</div>
+        </StyledFeedDetailInfo>
       </StyledFeedDetailBody>
       <StyledFeedDetailFooter></StyledFeedDetailFooter>
     </StyledFeedDetailContainer>
