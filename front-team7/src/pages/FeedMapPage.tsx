@@ -15,6 +15,14 @@ import Form from '@/components/Form/Form';
 import { userIdState } from '@/store';
 import queryString from 'query-string';
 
+
+enum ModalState {
+  CREATE = 'CREATE',
+  EDIT = 'EDIT',
+  FEED = 'FEED',
+  work = '일하는중'
+};
+
 interface CenterLatLng {
   lat: number;
   lng: number;
@@ -56,7 +64,7 @@ const FeedMapPage = () => {
   const [feedList, setFeedList] = useState<FeedListProps>([]);
   const [_mapValue, setMapValue] = useRecoilState(mapAtom);
   const [stateModal, setStateModal] = useState(false);
-  const [modalChildrenState, setModalChildrenState] = useState(false);
+  const [modalChildrenState, setModalChildrenState] = useState('');
   const userIdAtom = useRecoilValue(userIdState);
   const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
   const feedIdQueryString = queryString.parse(window.location.search);
@@ -65,7 +73,6 @@ const FeedMapPage = () => {
     // userId를 사용한 API Call -> feedList를 useState로 관리
     async function getFeedList() {
       const result = await Api.getUserFeedList(userId);
-      console.log(result);
 
       setFeedList(result);
 
@@ -88,19 +95,13 @@ const FeedMapPage = () => {
       }
     }
 
-    // async function deleteFeed(feedId) {
-    //   const result = await Api.deleteOneFeed(feedId);
-    //   console.log(result);
 
-    // }
-
-    // deleteFeed("hvT7xS5ut");
 
     getFeedList();
   }, []);
 
   const onClickModal = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setModalChildrenState(false);
+    setModalChildrenState(ModalState.CREATE);
     toggleModal();
   };
 
@@ -116,7 +117,7 @@ const FeedMapPage = () => {
       review,
       createdAt,
     }));
-    setModalChildrenState(true);
+    setModalChildrenState(ModalState.FEED);
     toggleModal();
   };
 
@@ -130,14 +131,51 @@ const FeedMapPage = () => {
       mapLevel: 1,
     }));
   };
+
   const toggleModal = () => {
     setStateModal((prev) => !prev);
   };
+
+  const switchModalChildrenState = (modalChildrenState: string) => {
+    switch (modalChildrenState) {
+      case 'CREATE':
+        return <Form />;
+      case 'EDIT':
+        return; //<EditForm/>;
+      case 'FEED':
+        return <FeedDetail
+          isModal={true}
+          name={feedModalState.userName}
+          title={feedModalState.title}
+          desc={feedModalState.description}
+        />;
+    }
+  };
+
+  const onClickEditFeedModal = (item: FeedProps) => {
+    console.log(item);
+
+  };
+
+  const onClickDeleteFeed = async (feedId: string) => {
+
+    if (!window.confirm('피드를 정말로 삭제하시겠습니까 ?')) return;
+
+    const result = await Api.deleteOneFeed(feedId);
+
+    if (result.result === 'success') alert('피드가 삭제되었습니다.'); // re-rendering 구현
+
+  };
+
+
 
   return (
     <Main>
       <StyledWrapper>
         <Map feedList={feedList} toggleModal={onClickMapFeed}></Map>
+        {/* <StyleUserInfoContainer>
+          <UserInfo name={currentUser?.name || ''} image={currentUser?.profileImage ? currentUser.profileImage[0] : unknownUser}></UserInfo>
+        </StyleUserInfoContainer> */}
         {(userIdAtom === userId) &&
           <Button onClick={onClickModal}>
             <BsPlus />
@@ -146,7 +184,9 @@ const FeedMapPage = () => {
         <StyledFeeds>
           {feedList?.map((item, idx) => (
             <FeedHeader
-              onClickHandler={() => onClickMapFeed(item)}
+              onClickFeedModal={() => onClickMapFeed(item)}
+              onClickEditFeedModal={() => onClickEditFeedModal(item)}
+              onClickDeleteFeed={() => onClickDeleteFeed(item._id)}
               isFolded={true}
               isUser={userIdAtom === userId}
               key={idx}
@@ -158,16 +198,7 @@ const FeedMapPage = () => {
         </StyledFeeds>
       </StyledWrapper>
       <ModalFrame handleModal={toggleModal} state={stateModal}>
-        {modalChildrenState ? (
-          <FeedDetail
-            isModal={true}
-            name={feedModalState.userName}
-            title={feedModalState.title}
-            desc={feedModalState.description}
-          />
-        ) : (
-          <Form />
-        )}
+        {switchModalChildrenState(modalChildrenState)}
       </ModalFrame>
     </Main>
   );
@@ -242,5 +273,15 @@ const StyledFeeds = styled.div`
     width: 400px;
   }
 `;
+
+// const StyleUserInfoContainer = styled.div`
+//   position: absolute;
+//   z-index: 3;
+//   background-color: white;
+//   padding: 10px 15px;
+//   border-radius: 20px;
+//   top: 5%;
+//   left: 5%;
+// `;
 
 export default FeedMapPage;
