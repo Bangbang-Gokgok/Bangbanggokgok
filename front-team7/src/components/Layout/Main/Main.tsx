@@ -43,10 +43,6 @@ Main.defaultProps = {
 };
 
 const StyledMain = styled.main<MainProps>`
-  // width: 100%;
-  // height: 100%;
-  // min-width: 100vw;
-  // min-height: 100vh;
   width: 100vw;
   height: 100vh;
   overflow-y: auto;
@@ -54,8 +50,8 @@ const StyledMain = styled.main<MainProps>`
   padding-bottom: ${({ footer }) => (footer ? '70px' : '0')};
 
   ${system({
-    gap: true,
-  })}
+  gap: true,
+})}
 
   ${space}
   ${layout}

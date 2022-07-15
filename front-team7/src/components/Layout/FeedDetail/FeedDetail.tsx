@@ -92,18 +92,18 @@ const StyledSlideList = styled.div`
   top: 0;
 `;
 
-const StyledSlide = styled.div<{ data: string }>`
+const StyledSlide = styled.img`
+
   width: 120px;
   height: 100%;
   float: left;
   border-radius: 20px;
   border: none;
-  background-color: ${(props) => props.data};
   margin-right: 15px;
   transition: left 0.5s ease-out;
 `;
 
-const StyledBtn = styled.span<{ PrevOrNext: string }>`
+const StyledBtn = styled.span<{ PrevOrNext: string; }>`
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -138,7 +138,7 @@ const StyledBtn = styled.span<{ PrevOrNext: string }>`
 
 // handleSlider : 이미지 슬라이더 기능 (typescript)
 // 참고 : https://eunhee-programming.tistory.com/106
-const handleSlider = () => {};
+const handleSlider = () => { };
 
 const FeedDetail = ({
   name,
@@ -148,11 +148,9 @@ const FeedDetail = ({
   isModal,
   feedId,
   feedUser,
-  feedLocation,
-}: UserInfoProps & { title: string } & { feedUser?: string } & { feedLocation?: CenterLatLng } & {
-  feedId?: string;
-} & { desc: string } & { isModal: boolean }) => {
-  let colorlist: Array<string> = ['lightgray', '#f5e6bf', '#bfccf5', '#bff5cc'];
+  feedImg,
+  feedLocation
+}: UserInfoProps & { title: string; } & { feedImg?: Array<string>; } & { feedUser?: string; } & { feedLocation?: CenterLatLng; } & { feedId?: string; } & { desc: string; } & { isModal: boolean; }) => {
 
   return (
     <StyledFeedDetailContainer boxShadow={isModal}>
@@ -171,8 +169,8 @@ const FeedDetail = ({
         <StyledDescription>{desc}</StyledDescription>
         <StyledSlideShow>
           <StyledSlideList>
-            {colorlist.map((color, index) => (
-              <StyledSlide key={index} data={color}></StyledSlide>
+            {feedImg?.map((item, index) => (
+              <StyledSlide key={index} src={item}></StyledSlide>
             ))}
           </StyledSlideList>
           <StyledBtn

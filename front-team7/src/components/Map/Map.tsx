@@ -34,10 +34,11 @@ interface FeedProps {
   userName: string;
   title: string;
   description: string;
+  imageUrl: Array<string>;
   review: Array<Review>;
   address: string;
   location: CenterLatLng;
-  createdAt: string,
+  createdAt: string;
   updatedAt: string;
 }
 
