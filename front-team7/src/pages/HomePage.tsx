@@ -30,6 +30,7 @@ interface FeedProps {
   username: string;
   userId: string;
   title: string;
+  imageUrl: Array<string>;
   description: string;
   address: string;
   location: CenterLatLng;
@@ -148,6 +149,7 @@ const HomePage = () => {
               feedId={feed._id}
               feedLocation={feed.location}
               feedUser={feed.userId}
+              feedImg={feed.imageUrl}
               image={unknownUser as string}
               title={feed.title}
               desc={feed.description}

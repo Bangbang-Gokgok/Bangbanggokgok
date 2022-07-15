@@ -92,13 +92,12 @@ const StyledSlideList = styled.div`
   top: 0;
 `;
 
-const StyledSlide = styled.div<{ data: string; }>`
+const StyledSlide = styled.img`
   width: 120px;
   height: 100%;
   float: left;
   border-radius: 20px;
   border: none;
-  background-color: ${(props) => props.data};
   margin-right: 15px;
   transition: left 0.5s ease-out;
 `;
@@ -148,8 +147,9 @@ const FeedDetail = ({
   isModal,
   feedId,
   feedUser,
+  feedImg,
   feedLocation
-}: UserInfoProps & { title: string; } & { feedUser?: string; } & { feedLocation?: CenterLatLng; } & { feedId?: string; } & { desc: string; } & { isModal: boolean; }) => {
+}: UserInfoProps & { title: string; } & { feedImg?: Array<string>; } & { feedUser?: string; } & { feedLocation?: CenterLatLng; } & { feedId?: string; } & { desc: string; } & { isModal: boolean; }) => {
   let colorlist: Array<string> = ['lightgray', '#f5e6bf', '#bfccf5', '#bff5cc'];
 
   return (
@@ -160,8 +160,8 @@ const FeedDetail = ({
         <StyledDescription>{desc}</StyledDescription>
         <StyledSlideShow>
           <StyledSlideList>
-            {colorlist.map((color, index) => (
-              <StyledSlide key={index} data={color}></StyledSlide>
+            {feedImg?.map((item, index) => (
+              <StyledSlide key={index} src={item}></StyledSlide>
             ))}
           </StyledSlideList>
           <StyledBtn

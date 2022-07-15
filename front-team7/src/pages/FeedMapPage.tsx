@@ -14,7 +14,6 @@ import * as Api from '@/api/feeds';
 import Form from '@/components/Form/Form';
 import { userIdState } from "@/store";
 import queryString from 'query-string';
-import { number } from "yup/lib/locale";
 
 interface CenterLatLng {
   lat: number;
@@ -32,6 +31,7 @@ interface FeedProps {
   userName: string;
   title: string;
   description: string;
+  imageUrl: Array<string>;
   review: Array<Review>;
   address: string;
   location: CenterLatLng;
@@ -68,6 +68,8 @@ const FeedMapPage = () => {
     // userId를 사용한 API Call -> feedList를 useState로 관리
     async function getFeedList() {
       const result = await Api.getUserFeedList(userId);
+      console.log(result);
+
       setFeedList(result);
 
       if (Object.keys(feedIdQueryString).length > 0) {
