@@ -9,7 +9,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { mapAtom } from '@/store/map';
 import ModalFrame from '@/components/Layout/ModalFrame/ModalFrame';
 import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
-import { feedModalAtom } from '@/store/feedModal';
+import { currentFeedAtom } from '@/store/currentFeed';
 import * as Api from '@/api/feeds';
 import Form from '@/components/Form/Form';
 import { userIdState } from '@/store';
@@ -65,7 +65,7 @@ const FeedMapPage = () => {
   const [stateModal, setStateModal] = useState(false);
   const [modalChildrenState, setModalChildrenState] = useState('');
   const userIdAtom = useRecoilValue(userIdState);
-  const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
+  const [currentFeedState, setCurrentFeedState] = useRecoilState(currentFeedAtom);
   const feedIdQueryString = queryString.parse(window.location.search);
 
   useEffect(() => {
@@ -106,7 +106,7 @@ const FeedMapPage = () => {
 
   const onClickMapFeed = (item: FeedProps) => {
     changeCenterLatLng(item.location);
-    setFeedModalState((prev) => ({
+    setCurrentFeedState((prev) => ({
       ...prev,
       ...item
     }));
@@ -135,19 +135,19 @@ const FeedMapPage = () => {
       case ModalState.CREATE:
         return <Form />;
       case ModalState.EDIT:
-        return <Form feed={feedModalState} />;
+        return <Form feed={currentFeedState} />;
       case ModalState.FEED:
         return <FeedDetail
           isModal={true}
-          name={feedModalState.userName}
-          title={feedModalState.title}
-          desc={feedModalState.description}
+          name={currentFeedState.userName}
+          title={currentFeedState.title}
+          desc={currentFeedState.description}
         />;
     }
   };
 
   const onClickEditFeedModal = (item: FeedProps) => {
-    setFeedModalState((prev) => ({
+    setCurrentFeedState((prev) => ({
       ...prev,
       ...item
     }));
