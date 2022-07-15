@@ -138,9 +138,11 @@ const FeedMapPage = () => {
     <Main>
       <StyledWrapper>
         <Map feedList={feedList} toggleModal={onClickMapFeed}></Map>
-        <Button onClick={onClickModal}>
-          <BsPlus />
-        </Button>
+        {(userIdAtom === userId) &&
+          <Button onClick={onClickModal}>
+            <BsPlus />
+          </Button>
+        }
         <StyledFeeds>
           {feedList?.map((item, idx) => (
             <FeedHeader
@@ -185,7 +187,6 @@ const Button = styled.button`
   z-index: 4;
   bottom: 160px;
   right: 5%;
-  margin-bottom: 5px;
   font-size: 4.5rem;
   width: 56px;
   height: 56px;
