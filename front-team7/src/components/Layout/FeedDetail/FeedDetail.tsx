@@ -85,8 +85,9 @@ const StyledFeedDetailSlide = styled.div`
 
   .carousel {
     width: 100%;
-    position: relative;
     height: 100%;
+    position: relative;
+    height: 300px;
     background-color: black;
   }
 `;
@@ -102,7 +103,7 @@ const StyledSlide = styled.div<{ src: string }>`
   width: 100%;
   height: 100%;
   position: absolute;
-  background-size: contain;
+  background-size: cover;
   background-image: url(${(props) => props.src});
 `;
 
@@ -110,7 +111,6 @@ const StyledFeedDetailInfo = styled.div`
   width: 100%;
   padding: 10px 0 5px 0;
   display: flex;
-
   justify-content: space-between;
 `;
 
