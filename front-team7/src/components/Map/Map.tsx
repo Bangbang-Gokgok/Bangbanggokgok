@@ -180,7 +180,7 @@ const Map = ({
   function panTo(map, location) {
     if (!map) return;
 
-    // 이동할 위도 경도 위치를 생성합니다 
+    // 이동할 위도 경도 위치를 생성합니다
     const moveLatLon = new kakao.maps.LatLng(location.lat, location.lng);
 
     // 지도 중심을 부드럽게 이동시킵니다
@@ -190,16 +190,11 @@ const Map = ({
 
   useEffect(() => {
     drawMap();
-<<<<<<< HEAD
-    console.log('Map Side Effect');
-  }, [mapValue, feedList]);
-=======
   }, [feedList]);
 
   useEffect(() => {
     panTo(mapState, mapValue.centerLatLng);
   }, [mapValue]);
->>>>>>> f880b6f9a58235036fd3159c4c635c964c7f3a58
 
   return (
     <StyledMapContainer
