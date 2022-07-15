@@ -1,20 +1,20 @@
-import { FeedHeader } from "@/components/FeedHeader";
-import { Main } from "@/components/Layout";
-import Map from "@/components/Map/Map";
-import { useEffect, useState } from "react";
-import { BsPlus } from "react-icons/bs";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { mapAtom } from "@/store/map";
-import ModalFrame from "@/components/Layout/ModalFrame/ModalFrame";
-import FeedDetail from "@/components/Layout/FeedDetail/FeedDetail";
-import { feedModalAtom } from "@/store/feedModal";
+import { FeedHeader } from '@/components/FeedHeader';
+import { Main } from '@/components/Layout';
+import Map from '@/components/Map/Map';
+import { useEffect, useState } from 'react';
+import { BsPlus } from 'react-icons/bs';
+import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { mapAtom } from '@/store/map';
+import ModalFrame from '@/components/Layout/ModalFrame/ModalFrame';
+import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
+import { feedModalAtom } from '@/store/feedModal';
 import * as Api from '@/api/feeds';
 import Form from '@/components/Form/Form';
-import { userIdState } from "@/store";
+import { userIdState } from '@/store';
 import queryString from 'query-string';
-import { number } from "yup/lib/locale";
+import { number } from 'yup/lib/locale';
 
 interface CenterLatLng {
   lat: number;
@@ -49,10 +49,9 @@ interface FeedDetail {
   updatedAt: string;
 }
 
-interface FeedListProps extends Array<FeedProps> { }
+interface FeedListProps extends Array<FeedProps> {}
 
 const FeedMapPage = () => {
-
   const { userId } = useParams();
   const [feedList, setFeedList] = useState<FeedListProps>([]);
   const [_mapValue, setMapValue] = useRecoilState(mapAtom);
@@ -61,8 +60,6 @@ const FeedMapPage = () => {
   const userIdAtom = useRecoilValue(userIdState);
   const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
   const feedIdQueryString = queryString.parse(window.location.search);
-
-
 
   useEffect(() => {
     // userId를 사용한 API Call -> feedList를 useState로 관리
@@ -75,16 +72,15 @@ const FeedMapPage = () => {
           ...currMapValue,
           centerLatLng: {
             lat: Number(feedIdQueryString.lat),
-            lng: Number(feedIdQueryString.lng)
+            lng: Number(feedIdQueryString.lng),
           },
         }));
-
       } else if (result.length > 0) {
         setMapValue((currMapValue) => ({
           ...currMapValue,
           centerLatLng: {
             lat: result[0].location.lat,
-            lng: result[0].location.lng
+            lng: result[0].location.lng,
           },
         }));
       }
@@ -139,12 +135,12 @@ const FeedMapPage = () => {
   return (
     <Main>
       <StyledWrapper>
-        <Map feedList={feedList} toggleModal={onClickMapFeed} ></Map>
+        <Map feedList={feedList} toggleModal={onClickMapFeed}></Map>
         <Button onClick={onClickModal}>
           <BsPlus />
         </Button>
         <StyledFeeds>
-          {feedList.map((item, idx) => (
+          {feedList?.map((item, idx) => (
             <FeedHeader
               onClickHandler={() => onClickMapFeed(item)}
               isFolded={true}
@@ -158,18 +154,16 @@ const FeedMapPage = () => {
         </StyledFeeds>
       </StyledWrapper>
       <ModalFrame handleModal={toggleModal} state={stateModal}>
-        {modalChildrenState ?
-          (
-            <FeedDetail
-              isModal={true}
-              name={feedModalState.userName}
-              title={feedModalState.title}
-              desc={feedModalState.description}
-            />
-          )
-          : (
-            <Form />
-          )}
+        {modalChildrenState ? (
+          <FeedDetail
+            isModal={true}
+            name={feedModalState.userName}
+            title={feedModalState.title}
+            desc={feedModalState.description}
+          />
+        ) : (
+          <Form />
+        )}
       </ModalFrame>
     </Main>
   );
@@ -244,7 +238,6 @@ const StyledFeeds = styled.div`
   @media only screen and (min-width: 1024px) {
     width: 400px;
   }
-
 `;
 
 export default FeedMapPage;

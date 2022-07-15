@@ -20,38 +20,48 @@ export const FeedHeader = ({
   feedId,
   feedUser,
   feedLocation,
-}: UserInfoProps & { title: string; } & { feedId?: string; } & { feedLocation?: CenterLatLng; } & { feedUser?: string; } & { isFolded: boolean; } & { isUser: boolean; } & { onClickHandler?: (event: any) => void; }) => {
+}: UserInfoProps & { title: string } & { feedId?: string } & { feedLocation?: CenterLatLng } & {
+  feedUser?: string;
+} & { isFolded: boolean } & { isUser: boolean } & { onClickHandler?: (event: any) => void }) => {
   return (
     <StyledFeedHeader isModal={isFolded}>
       <span className="user-info-container">
         <UserInfo name={name} image={image} />
       </span>
-      <span className="title-container" onClick={onClickHandler}>{title}</span>
+      <span className="title-container" onClick={onClickHandler}>
+        {title}
+      </span>
       {!isFolded ? (
         <StyleNav to={`/feedmap/${feedUser}?lat=${feedLocation?.lat}&lng=${feedLocation?.lng}`}>
           <FaMapMarkedAlt />
         </StyleNav>
-      ) : isUser && (<>
-        <StyleEditIcon onClick={(event) => {
-          console.log(feedId);
-        }} />
-        <StyleDeleteIcon onClick={(event) => {
-          console.log(feedId);
-        }}
-        />
-      </>)
-      }
+      ) : (
+        isUser && (
+          <>
+            <StyleEditIcon
+              onClick={(event) => {
+                console.log(feedId);
+              }}
+            />
+            <StyleDeleteIcon
+              onClick={(event) => {
+                console.log(feedId);
+              }}
+            />
+          </>
+        )
+      )}
     </StyledFeedHeader>
   );
 };
 
 const StyleNav = styled(NavLink)`
   display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    width: 10%;
-    font-size: 2.2rem;
-    color: black
+  justify-content: flex-end;
+  align-items: center;
+  width: 10%;
+  font-size: 2.2rem;
+  color: black;
 `;
 
 const StyleEditIcon = styled(AiFillEdit)`
@@ -62,15 +72,15 @@ const StyleDeleteIcon = styled(AiFillDelete)`
   font-size: 1.8rem;
 `;
 
-const StyledFeedHeader = styled.div<{ isModal: boolean; }>`
+const StyledFeedHeader = styled.div<{ isModal: boolean }>`
   display: flex;
   align-items: center;
   gap: 8px;
   min-height: 60px;
   padding: 20px 10px;
-  border : 1px solid rgba(0, 0, 0, 15%);
-  
-  ${(props) => props.isModal ? 'border-radius: 10px;' : 'border-radius: 10px 10px 0 0;'}
+  border: 1px solid rgba(0, 0, 0, 15%);
+
+  ${(props) => (props.isModal ? 'border-radius: 10px;' : 'border-radius: 10px 10px 0 0;')}
   box-shadow: 0 0.3rem 0.4rem rgba(0, 0, 0, 25%);
   background-color: white;
   ${(props) => props.isModal && 'cursor: pointer;'}
@@ -93,5 +103,4 @@ const StyledFeedHeader = styled.div<{ isModal: boolean; }>`
   @media only screen and (min-width: 1024px) {
     min-height: 80px;
   } */
-  
 `;

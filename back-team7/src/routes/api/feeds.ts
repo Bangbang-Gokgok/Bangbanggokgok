@@ -8,7 +8,7 @@ const feedRouter = Router();
 
 feedRouter.post(
   '/',
-  upload.array('imageUrl'),
+  upload.array('imageUrl', 5),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (req.user) {
