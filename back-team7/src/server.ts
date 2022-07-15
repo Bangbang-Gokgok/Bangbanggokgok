@@ -60,7 +60,7 @@ db.on('error', (error: Error) =>
   console.error(`\nMongoDB 연결에 실패하였습니다...\n ${DB_URL} \n  ${error}`)
 );
 
-export const redisClient = createClient();
+export const redisClient = createClient({ url: process.env.REDIS_URL });
 
 redisClient.on('ready', (err) => console.log('정상적으로 Redis 서버에 연결되었습니다.'));
 redisClient.on('error', (error: Error) =>
