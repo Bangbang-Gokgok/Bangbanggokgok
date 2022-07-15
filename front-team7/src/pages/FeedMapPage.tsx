@@ -1,17 +1,19 @@
-import { FeedHeader } from "@/components/FeedHeader";
-import { Main } from "@/components/Layout";
-import Map from "@/components/Map/Map";
-import { useEffect, useState } from "react";
-import { BsPlus } from "react-icons/bs";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
-import { useRecoilState } from "recoil";
-import { mapAtom } from "@/store/map";
-import ModalFrame from "@/components/Layout/ModalFrame/ModalFrame";
-import FeedDetail from "@/components/Layout/FeedDetail/FeedDetail";
-import { feedModalAtom } from "@/store/feedModal";
+import { FeedHeader } from '@/components/FeedHeader';
+import { Main } from '@/components/Layout';
+import Map from '@/components/Map/Map';
+import { useEffect, useState } from 'react';
+import { BsPlus } from 'react-icons/bs';
+import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { mapAtom } from '@/store/map';
+import ModalFrame from '@/components/Layout/ModalFrame/ModalFrame';
+import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
+import { feedModalAtom } from '@/store/feedModal';
 import * as Api from '@/api/feeds';
 import Form from '@/components/Form/Form';
+import { userIdState } from '@/store';
+import queryString from 'query-string';
 
 interface CenterLatLng {
   lat: number;
@@ -29,6 +31,7 @@ interface FeedProps {
   userName: string;
   title: string;
   description: string;
+  imageUrl: Array<string>;
   review: Array<Review>;
   address: string;
   location: CenterLatLng;
@@ -49,171 +52,51 @@ interface FeedDetail {
 interface FeedListProps extends Array<FeedProps> { }
 
 const FeedMapPage = () => {
-
   const { userId } = useParams();
   const [feedList, setFeedList] = useState<FeedListProps>([]);
   const [_mapValue, setMapValue] = useRecoilState(mapAtom);
   const [stateModal, setStateModal] = useState(false);
   const [modalChildrenState, setModalChildrenState] = useState(false);
-
+  const userIdAtom = useRecoilValue(userIdState);
   const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
+  const feedIdQueryString = queryString.parse(window.location.search);
 
   useEffect(() => {
     // userId를 사용한 API Call -> feedList를 useState로 관리
-    // async function getFeedList() {
-    //   const result: FeedProps = await Api.getUserFeedList(userId);
-    //   setFeedList([result]);
+    async function getFeedList() {
+      const result = await Api.getUserFeedList(userId);
+      console.log(result);
+
+      setFeedList(result);
+
+      if (Object.keys(feedIdQueryString).length > 0) {
+        setMapValue((currMapValue) => ({
+          ...currMapValue,
+          centerLatLng: {
+            lat: Number(feedIdQueryString.lat),
+            lng: Number(feedIdQueryString.lng),
+          },
+        }));
+      } else if (result.length > 0) {
+        setMapValue((currMapValue) => ({
+          ...currMapValue,
+          centerLatLng: {
+            lat: result[0].location.lat,
+            lng: result[0].location.lng,
+          },
+        }));
+      }
+    }
+
+    // async function deleteFeed(feedId) {
+    //   const result = await Api.deleteOneFeed(feedId);
+    //   console.log(result);
 
     // }
 
-    // getFeedList();
-    // console.log(feedList);
+    // deleteFeed("hvT7xS5ut");
 
-    const result = [
-      {
-        _id: '62cbebe2ab0326b696cbe421',
-        userName: '김정현',
-        title: '👍🏽 카카오에 방문해봤습니다.',
-        description: '카카오 본사에 들렸읍니다.',
-        address: '제주 제주시 첨단로 242',
-        location: {
-          lat: 33.450705,
-          lng: 126.570677,
-        },
-        review: [],
-        createdAt: '2022-07-11T09:21:26.597Z',
-        updatedAt: '2022-07-11T09:21:26.597Z',
-      },
-      {
-        _id: '62cbebe2ab0326b696cbe422',
-        userName: '김정',
-        title: '근린공원이네요',
-        description: '카카오 근린공원에 들렸읍니다.',
-        address: '제주 제주시 첨단로 242',
-        location: {
-          lat: 33.451393,
-          lng: 126.570738,
-        },
-        review: [],
-        createdAt: '2022-07-11T09:21:26.597Z',
-        updatedAt: '2022-07-11T09:21:26.597Z',
-      },
-      {
-        _id: '62cbeb96ab0326b696cbe41c',
-        userName: '제주도사람',
-        title: '🌾 텃밭 방문해봤습니다.',
-        description: '카카오 텃밭에 들렸읍니다.',
-        address: '제주 제주시 첨단로 242',
-        location: {
-          lat: 33.450936,
-          lng: 126.569477,
-        },
-        review: [],
-        createdAt: '2022-07-11T09:21:26.597Z',
-        updatedAt: '2022-07-11T09:21:26.597Z',
-      },
-      {
-        _id: '62cbebe2ab0326b696cbe423',
-        userName: '그냥아저씨',
-        title: '제주도 카카오',
-        description: '아저씨가 카카오에',
-        address: '제주 제주시 첨단로 242',
-        location: {
-          lat: 33.450879,
-          lng: 126.56994,
-        },
-        review: [],
-        createdAt: '2022-07-11T09:21:26.597Z',
-        updatedAt: '2022-07-11T09:21:26.597Z',
-      },
-      {
-        _id: '62cbebe2ab0326b696cbe420',
-        userName: '서울사람',
-        title: '서울역 방문기',
-        description: '서울역에 들렸읍니다.',
-        address: '서울 특별시 서울역',
-        location: {
-          lat: 37.55294316360036,
-          lng: 126.97289588774116,
-        },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
-      {
-        _id: '62cbebe2ab0326b696cbe420',
-        userName: '서울사람',
-        title: '짠내투어 2 : 그의 서울역 방문기. 과연 살아남을 것인가',
-        description: '서울역에 들렸읍니다.',
-        address: '서울 특별시 서울역',
-        location: {
-          lat: 37.55294316360036,
-          lng: 126.97289588774116
-        },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
-      {
-        _id: '62cbebe2ab0326b696cbe420',
-        userName: '서울사람',
-        title: '서울역 방문기',
-        description: '서울역에 들렸읍니다.',
-        address: '서울 특별시 서울역',
-        location: {
-          lat: 37.55294316360036,
-          lng: 126.97289588774116
-        },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
-      {
-        _id: '62cbebe2ab0326b696cbe420',
-        userName: '서울사람',
-        title: '서울역 방문기',
-        description: '서울역에 들렸읍니다.',
-        address: '서울 특별시 서울역',
-        location: {
-          lat: 37.55294316360036,
-          lng: 126.97289588774116
-        },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-      ,
-      {
-        _id: '62cbebe2ab0326b696cbe420',
-        userName: '서울사람',
-        title: '서울역 방문기',
-        description: '서울역에 들렸읍니다.',
-        address: '서울 특별시 서울역',
-        location: {
-          lat: 37.55294316360036,
-          lng: 126.97289588774116
-        },
-        "review": [],
-        "createdAt": "2022-07-11T09:21:26.597Z",
-        "updatedAt": "2022-07-11T09:21:26.597Z",
-      }
-    ];
-
-    setFeedList(result);
-
-    if (result.length > 0) {
-      setMapValue((currMapValue) => ({
-        ...currMapValue,
-        centerLatLng: {
-          lat: result[0].location.lat,
-          lng: result[0].location.lng
-        },
-      }));
-    }
-
+    getFeedList();
   }, []);
 
   const onClickModal = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -254,16 +137,18 @@ const FeedMapPage = () => {
   return (
     <Main>
       <StyledWrapper>
-        <Map feedList={feedList} toggleModal={onClickMapFeed} ></Map>
+        <Map feedList={feedList} toggleModal={onClickMapFeed}></Map>
         <Button onClick={onClickModal}>
           <BsPlus />
         </Button>
         <StyledFeeds>
-          {feedList.map((item, idx) => (
+          {feedList?.map((item, idx) => (
             <FeedHeader
               onClickHandler={() => onClickMapFeed(item)}
               isFolded={true}
+              isUser={userIdAtom === userId}
               key={idx}
+              feedId={item._id}
               name={item.userName}
               title={item.title}
             />
@@ -271,18 +156,16 @@ const FeedMapPage = () => {
         </StyledFeeds>
       </StyledWrapper>
       <ModalFrame handleModal={toggleModal} state={stateModal}>
-        {modalChildrenState ?
-          (
-            <FeedDetail
-              isModal={true}
-              name={feedModalState.userName}
-              title={feedModalState.title}
-              desc={feedModalState.description}
-            />
-          )
-          : (
-            <Form />
-          )}
+        {modalChildrenState ? (
+          <FeedDetail
+            isModal={true}
+            name={feedModalState.userName}
+            title={feedModalState.title}
+            desc={feedModalState.description}
+          />
+        ) : (
+          <Form />
+        )}
       </ModalFrame>
     </Main>
   );
@@ -357,7 +240,6 @@ const StyledFeeds = styled.div`
   @media only screen and (min-width: 1024px) {
     width: 400px;
   }
-
 `;
 
 export default FeedMapPage;

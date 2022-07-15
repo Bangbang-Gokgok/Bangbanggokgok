@@ -1,6 +1,5 @@
 import { Schema } from 'mongoose';
 import shortid from 'shortid';
-
 const UserSchema = new Schema(
   {
     _id: {

@@ -1,6 +1,5 @@
 import { Schema } from 'mongoose';
-//import { shortid } from 'shortid';
-const shortid = require('shortid');
+import shortid from 'shortid';
 
 const FeedSchema = new Schema(
   {
@@ -28,6 +27,10 @@ const FeedSchema = new Schema(
     location: {
       type: Object,
       required: true,
+    },
+    like: {
+      type: Array,
+      required: false,
     },
     review: {
       type: Array,

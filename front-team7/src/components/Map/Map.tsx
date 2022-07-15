@@ -28,6 +28,7 @@ interface FeedProps {
   userName: string;
   title: string;
   description: string;
+  imageUrl: Array<string>;
   review: Array<Review>;
   address: string;
   location: CenterLatLng;
@@ -49,6 +50,7 @@ const Map = ({
   const mapValue = useRecoilValue(mapAtom);
   // const [_mapValue, setMapValue] = useRecoilState(mapAtom);
   const [_feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
+  const [mapState, setMapState] = useState(null);
   const mapContainer = useRef<HTMLDivElement>(null);
 
   const makePositionsContent = (feed: FeedProps) => {
@@ -171,12 +173,33 @@ const Map = ({
       // 지도를 클릭된 클러스터의 마커의 위치를 기준으로 확대합니다
       map.setLevel(level, { anchor: cluster.getCenter() });
     });
+
+    setMapState(map);
   };
+
+  function panTo(map, location) {
+    if (!map) return;
+
+    // 이동할 위도 경도 위치를 생성합니다 
+    const moveLatLon = new kakao.maps.LatLng(location.lat, location.lng);
+
+    // 지도 중심을 부드럽게 이동시킵니다
+    // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+    map.panTo(moveLatLon);
+  }
 
   useEffect(() => {
     drawMap();
+<<<<<<< HEAD
     console.log('Map Side Effect');
   }, [mapValue, feedList]);
+=======
+  }, [feedList]);
+
+  useEffect(() => {
+    panTo(mapState, mapValue.centerLatLng);
+  }, [mapValue]);
+>>>>>>> f880b6f9a58235036fd3159c4c635c964c7f3a58
 
   return (
     <StyledMapContainer

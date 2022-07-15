@@ -1,7 +1,6 @@
 import { Feed } from '../models';
 import { Types } from 'mongoose';
 import { Schema } from 'mongoose';
-import { upload } from '../middlewares';
 
 interface newLocation {
   lat: number;
@@ -9,14 +8,16 @@ interface newLocation {
 }
 interface FeedInfo {
   userId: string | Types.ObjectId;
+  userName?: string | undefined;
   title: string;
   description: string;
   address: string;
   location: newLocation;
+  like?: string[] | undefined;
   imageUrl?: string[] | undefined;
 }
 interface FeedData extends FeedInfo {
-  _id: Types.ObjectId;
+  _id: string;
 }
 class FeedService {
   //feed 추가
@@ -27,6 +28,7 @@ class FeedService {
   //전체 feed 조회
   async getFeed(): Promise<FeedData[]> {
     const feeds = await Feed.find({});
+
     return feeds;
   }
   //특정 feed 조회
@@ -41,9 +43,9 @@ class FeedService {
     return feed;
   }
   //유저_id로 feed 조회
-  async getFeedByUserId(userId: string | Types.ObjectId): Promise<FeedData> {
+  async getFeedByUserId(userId: string | Types.ObjectId): Promise<FeedData[]> {
     // 우선 해당 상품이 db에 존재하는지 확인
-    const feed = await Feed.findOne({ userId });
+    const feed = await Feed.find({ userId });
     if (!feed) {
       const error = new Error('해당 피드가 존재하지 않습니다. 다시 확인해 주세요.');
       error.name = 'NotFound';

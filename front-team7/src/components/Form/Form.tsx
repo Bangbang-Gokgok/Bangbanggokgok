@@ -6,6 +6,7 @@ import { ImRoad } from 'react-icons/im';
 import { FaAddressBook, FaMapMarkedAlt, FaMousePointer, FaSave } from 'react-icons/fa';
 import { MdPlace } from 'react-icons/md';
 import * as Api from '@/api/feeds';
+import { AiOutlineConsoleSql } from 'react-icons/ai';
 
 const StyledFormContainer = styled.div`
   min-width: 300px;
@@ -130,6 +131,7 @@ const StyledSearchInfoData = styled.div`
   }
 `;
 
+// 나중에 인터페이스 통잎해서 한 파일에 정리하기!
 interface PlaceProps {
   address_name: 'string';
   category_group_code: 'string';
@@ -145,7 +147,7 @@ interface PlaceProps {
   y: number;
 }
 
-interface PlaceListProps extends Array<PlaceProps> { }
+interface PlaceListProps extends Array<PlaceProps> {}
 
 interface CenterLatLng {
   lat: number;
@@ -158,32 +160,16 @@ interface Review {
   timestamp: Date;
 }
 
-interface FeedProps {
-  _id: string;
-  userName: string;
-  title: string;
-  description: string;
-  review: Array<Review>;
-  address: string;
-  location: CenterLatLng;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface FeedListProps extends Array<FeedProps> { }
-
 const Form = () => {
-  const [feedList, setFeedList] = useState<FeedListProps>([]);
-
   const [placeInfoList, setPlaceInfoList] = useState<PlaceListProps>([]);
-  const { register, watch } = useForm();
+  const { register, watch, handleSubmit } = useForm();
 
-  const searchPlace = async () => {
-    const inputPlace = watch().place;
-    // console.log('process.env.KAKAO_SEARCH_REST_API_KEY : ', process.env.KAKAO_SEARCH_REST_API_KEY);
-    // const searching = '합정 스타벅스';
-    const url = `https://dapi.kakao.com/v2/local/search/keyword.json?query=${inputPlace}`;
+  // 검색어에 대한 장소 조회하기
+  const searchPlace = async (e) => {
+    e.preventDefault();
+    const searching = watch().searching;
 
+    const url = `https://dapi.kakao.com/v2/local/search/keyword.json?query=${searching}`;
     const res = await axios.get(url, {
       headers: {
         Authorization: `KakaoAK ${process.env.KAKAO_SEARCH_REST_API_KEY}`,
@@ -191,32 +177,50 @@ const Form = () => {
     });
 
     const places: PlaceListProps = res.data.documents;
-    // console.log('places : ', places);
+    // console.log('조회해온 장소들 : ', places);
     setPlaceInfoList(places);
   };
 
-  async function createFormData(sendData) {
-    console.log('sendData : ', sendData);
-    const result: FeedListProps = await Api.createOneFeed(sendData);
-    console.log('create Feed : ', result);
-  }
+  const submitForm = async (data) => {
+    if (!confirm('Feed를 추가하시겠습니까?')) return;
 
-  const postFormData = (address, x, y) => {
-    let userName = 'MOCK_user';
-    let title = watch().title;
-    let description = watch().description;
-    let addressName = address;
-    let location = { x, y };
+    const { title, description, address, image, x, y, searching } = data;
 
-    const sendData = { userName, title, description, address: addressName, location };
-    createFormData(sendData);
-    alert('Feed create 완료되었습니다.');
+    const dummy = {
+      title,
+      description,
+      address,
+      location: {
+        lat: Number(y),
+        lng: Number(x),
+      },
+    };
 
-    // image도 추가하고, create 성공 이후에 입력칸 전부 비우는 코드 필요
+    const fd = new FormData();
+
+    fd.append('title', dummy.title);
+    fd.append('description', dummy.description);
+    fd.append('address', dummy.address);
+    fd.append('location', JSON.stringify(dummy.location));
+
+    for (let i = 0; i < image.length; i++) {
+      fd.append('imageUrl', image[i]);
+    }
+
+    try {
+      let res = await axios.post(`/api/feeds`, fd);
+      alert('성공적으로 추가되었습니다.');
+      console.log('create Feed : ', res);
+    } catch (err) {
+      console.log(err);
+    }
   };
-
+  // <추가과제>
+  // 빈 값을 넣고 엔터를 쳤을 때 axios Error 처리 하기
+  // 성공적으로 값을 추가한 뒤 값을 초기화해서 빈 값으로 바꾸기
+  // 여러 에러 발생 가능 => 에러 메세지 백엔드에서 구현되면, 프론트에서 보여주는 로직 추가하기 (useForm의 에러 처리 검색해보기)
   return (
-    <form>
+    <form onSubmit={handleSubmit(submitForm)}>
       <StyledFormContainer>
         <StyledTitle>Feed 추가하기</StyledTitle>
         <StyledInputContainer>
@@ -228,27 +232,19 @@ const Form = () => {
           <StyledInput placeholder="description" {...register('description')}></StyledInput>
         </StyledInputContainer>
         <StyledInputContainer>
+          <StyledField>이미지</StyledField>
+          <input className="login-input" type="file" id="image" multiple {...register('image')} />
+        </StyledInputContainer>
+        <StyledInputContainer>
           <StyledField>주소</StyledField>
-          <StyledInput
-            placeholder="장소 입력 후 엔터"
-            {...register('place')}
-            onKeyDown={(e) => {
-              console.log(e.code);
-              if (e.code === 'Enter') {
-                searchPlace();
-              }
-            }}
-          ></StyledInput>
-
-          {/* <StyledInput search placeholder="place" {...register('place')}></StyledInput>
+          <input className="login-input" type="text" id="searching" {...register('searching')} />
           <button
-            className="submitBtn"
             onClick={(e) => {
               searchPlace(e);
             }}
           >
-            제출
-          </button> */}
+            검색
+          </button>
         </StyledInputContainer>
         <StyledSearchContainer>
           {placeInfoList?.map((place, index) => (
@@ -264,6 +260,14 @@ const Form = () => {
               <StyledSearchInfoData>
                 <FaAddressBook className="address-icon"></FaAddressBook>
                 <span className="addressName">{place.address_name}</span>
+                <input
+                  className="addressName"
+                  type="hidden"
+                  value={place.address_name}
+                  {...register('address')}
+                />
+                <input className="x" type="hidden" value={place.x} {...register('x')} />
+                <input className="y" type="hidden" value={place.y} {...register('y')} />
               </StyledSearchInfoData>
               <StyledSearchInfoData>
                 <div className="map">
@@ -273,14 +277,7 @@ const Form = () => {
                       window.open(place.place_url);
                     }}
                   ></FaMapMarkedAlt>
-                  <FaSave
-                    className="select-icon"
-                    onClick={() => {
-                      if (confirm('Feed를 추가하시겠습니까?')) {
-                        postFormData(place.address_name, place.x, place.y);
-                      }
-                    }}
-                  ></FaSave>
+                  <button type="submit">추가</button>
                 </div>
               </StyledSearchInfoData>
             </StyledSearchData>
