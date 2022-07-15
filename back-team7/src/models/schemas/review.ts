@@ -14,6 +14,11 @@ const ReviewSchema = new Schema(
       type: String,
       required: true,
     },
+    feedId: {
+      type: String,
+      ref: 'feeds',
+      required: true,
+    },
   },
   {
     collection: 'reviews',

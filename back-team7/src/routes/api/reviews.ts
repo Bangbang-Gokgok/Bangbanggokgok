@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { reviewService } from '../../services';
+import { feedService, reviewService } from '../../services';
 
 const reviewRouter = Router();
 
