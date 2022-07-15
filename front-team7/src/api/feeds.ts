@@ -56,7 +56,7 @@ export const deleteOneFeed = async (id) => {
 
 export const getUserFeedList = async (userId) => {
   try {
-    let res = await axios.get(`/api/feeds/${userId}`);
+    let res = await axios.get(`/api/feeds/list/${userId}`);
     // console.log('deleted res.data : ', res.data);
     return res.data;
   } catch (err) {

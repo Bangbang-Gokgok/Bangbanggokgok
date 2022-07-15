@@ -6,7 +6,12 @@ import { UserInfoProps } from '@/components/UserInfo';
 
 interface FeedDetailContainerProps {
   boxShadow: boolean;
-};
+}
+
+interface CenterLatLng {
+  lat: number;
+  lng: number;
+}
 
 const StyledFeedDetailContainer = styled.div<FeedDetailContainerProps>`
   width: 330px;
@@ -87,13 +92,13 @@ const StyledSlideList = styled.div`
   top: 0;
 `;
 
-const StyledSlide = styled.div<{ data: string; }>`
+const StyledSlide = styled.img`
+
   width: 120px;
   height: 100%;
   float: left;
   border-radius: 20px;
   border: none;
-  background-color: ${(props) => props.data};
   margin-right: 15px;
   transition: left 0.5s ease-out;
 `;
@@ -140,20 +145,32 @@ const FeedDetail = ({
   image,
   title,
   desc,
-  isModal
-}: UserInfoProps & { title: string; } & { desc: string; } & { isModal: boolean; }) => {
-  let colorlist: Array<string> = ['lightgray', '#f5e6bf', '#bfccf5', '#bff5cc'];
+  isModal,
+  feedId,
+  feedUser,
+  feedImg,
+  feedLocation
+}: UserInfoProps & { title: string; } & { feedImg?: Array<string>; } & { feedUser?: string; } & { feedLocation?: CenterLatLng; } & { feedId?: string; } & { desc: string; } & { isModal: boolean; }) => {
 
   return (
     <StyledFeedDetailContainer boxShadow={isModal}>
-      <FeedHeader isFolded={isModal} name={name} image={image} title={title}></FeedHeader>
+      <FeedHeader
+        feedId={feedId}
+        feedLocation={feedLocation}
+        feedUser={feedUser}
+        isUser={false}
+        isFolded={isModal}
+        name={name}
+        image={image}
+        title={title}
+      ></FeedHeader>
       <StyledFeedDetailBody>
         {/* <StyledTitle>👍🏽 {title}</StyledTitle> */}
         <StyledDescription>{desc}</StyledDescription>
         <StyledSlideShow>
           <StyledSlideList>
-            {colorlist.map((color, index) => (
-              <StyledSlide key={index} data={color}></StyledSlide>
+            {feedImg?.map((item, index) => (
+              <StyledSlide key={index} src={item}></StyledSlide>
             ))}
           </StyledSlideList>
           <StyledBtn
