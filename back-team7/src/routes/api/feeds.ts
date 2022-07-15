@@ -58,21 +58,30 @@ feedRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction) 
   }
 });
 
+//좋아요 API(테스트용으로 GET, PUT으로 변경할 것)
 feedRouter.get('/:_id/like', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const feedId = req.params._id;
-    const userId = req.user!._id;
-    const reaction = 'like';
-    const key = `feeds:${feedId}:${reaction}`;
-    changed.add(key);
-    const newUser = await redisClient.sAdd(key, `${userId}`);
+    if (req.user) {
+      const feedId = req.params._id;
+      const userId = req.user._id;
+      const resource = 'likes';
+      const key = `feeds:${resource}:${feedId}`;
+      // changed.add(key);
 
-    if (!newUser) {
-      redisClient.sRem(key, `${userId}`);
+      // const newUser = await redisClient.hSetNX(key, `${userId}`, 'true');
+
+      // if (!newUser) {
+      //   redisClient.hDel(key, `${userId}`);
+      // }
+
+      // const likes = await redisClient.hLen(key);
+      // res.status(200).json(likes);
+      res.json();
+    } else {
+      const error = new Error('user 정보가 없습니다.');
+      error.name = 'NotFound';
+      throw error;
     }
-
-    const like = await redisClient.sCard(key);
-    res.status(200).json(like);
   } catch (error) {
     next(error);
   }
@@ -108,8 +117,8 @@ feedRouter.delete('/:_id', async (req: Request, res: Response, next: NextFunctio
     const _id = req.params._id;
     //피드 삭제
     //Redis 좋아요 data 삭제
-    const reaction = 'like';
-    const key = `feeds:${_id}:${reaction}`;
+    const resource = 'likes';
+    const key = `feeds:${_id}:${resource}`;
     await redisClient.del(key);
     //mongoDB data 삭제
     const deleteResult = await feedService.deleteFeedData(_id);

@@ -28,7 +28,7 @@ const FeedSchema = new Schema(
       type: Object,
       required: true,
     },
-    like: {
+    likes: {
       type: Array,
       required: false,
     },
