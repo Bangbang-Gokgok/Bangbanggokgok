@@ -61,7 +61,7 @@ const FeedDetail = ({
   const [hasMore, setHasMore] = useState<boolean>(true);
 
   const fetchMoreData = () => {
-    alert('fetchMoreData 함수 실행!');
+    // alert('fetchMoreData 함수 실행!');
     console.log('reviewList.length : ', reviewList.length);
     if (reviewList.length >= 15) {
       setHasMore(false);
