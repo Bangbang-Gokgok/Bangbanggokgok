@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { type MouseEvent } from 'react';
+import { useEffect, type MouseEvent } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { useForm, type SubmitHandler } from 'react-hook-form';
@@ -56,23 +55,21 @@ export const ProfileEditForm = () => {
 
   const submitProfileEditForm: SubmitHandler<RegisterProps> = async (data) => {
     const newProfileImage = data.profileImage ? data.profileImage[0] : undefined;
-    const newData = { ...data, profileImage: newProfileImage };
+    data.profileImage = newProfileImage;
 
-    if (!newData.profileImage) delete newData.profileImage;
+    console.log(data);
 
-    console.log(newData);
-
-    const location = await getLocation(newData.address);
+    const location = await getLocation(data.address);
 
     const formData = new FormData();
 
-    for (const [key, value] of Object.entries(newData)) formData.append(key, value);
+    for (const [key, value] of Object.entries(data)) formData.append(key, value);
     formData.append('location', JSON.stringify(location));
 
     const user = await axios.put('/api/users/user', formData);
     console.log(user);
 
-    // navigate('/profile');
+    navigate('/profile');
   };
 
   return (
