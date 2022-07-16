@@ -51,11 +51,11 @@ reviewRouter.get('/list/:feedId', async (req: Request, res: Response, next: Next
     next(error);
   }
 });
-reviewRouter.get('/list/:userName', async (req: Request, res: Response, next: NextFunction) => {
+reviewRouter.get('/list/:userId', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userName = req.params.userName;
-    // _id 값으로 검색
-    const reviewData = await reviewService.getReviewByUserName(userName);
+    const userId = req.params.userId;
+    // userId 값으로 검색
+    const reviewData = await reviewService.getReviewByUserId(userId);
 
     res.status(200).json(reviewData);
   } catch (error) {
