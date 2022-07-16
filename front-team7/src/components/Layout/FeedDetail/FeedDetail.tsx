@@ -4,11 +4,12 @@ import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
 import { FeedHeader } from '@/components/FeedHeader/FeedHeader';
 import { UserInfoProps } from '@/components/UserInfo';
 import Carousel from 'react-material-ui-carousel';
-import { useEffect, useState } from 'react';
-import { Button, Comment, Form, Header } from 'semantic-ui-react';
+import { useEffect, useState, useRef } from 'react';
+import { Button, Comment, Form, Header, TextArea } from 'semantic-ui-react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Loading from '@/components/Loading/Loading';
-
+import * as ReviewApi from '@/api/review';
+import { BsArrowReturnRight } from 'react-icons/bs';
 interface FeedDetailContainerProps {
   boxShadow: boolean;
 }
@@ -19,27 +20,36 @@ interface CenterLatLng {
 }
 
 interface ReviewProps {
+  userId: string;
   userName: string;
   contents: string;
-  createdAt: string;
+  feedId: string;
+  createdAt?: string;
 }
 
 interface ReviewListProps extends Array<ReviewProps> {}
 
 const REVIEW_MOCK: ReviewListProps = [
   {
+    userId: 'bCJcG23WB',
     userName: 'Kim Ji Hwan11111',
     contents: '정말 멋있는 댓글이군요!1111',
+    feedId: 'xcgv3L5Uc',
+
     createdAt: 'Today at 5:42PM Today at 5:42PM Today at 5:42PM',
   },
   {
+    userId: 'bCJcG23WB',
     userName: 'Kim Ji Hwan222222',
     contents: '정말 멋있는 댓글이군요!2222222',
+    feedId: 'xcgv3L5Uc',
     createdAt: 'Today at 5:42PM Today at 5:42PM Today at 5:42PM',
   },
   {
+    userId: 'bCJcG23WB',
     userName: 'Kim Ji Hwan333333',
     contents: '정말 멋있는 댓글이군요!3333',
+    feedId: 'xcgv3L5Uc',
     createdAt: 'Today at 5:42PM Today at 5:42PM Today at 5:42PM',
   },
 ];
@@ -50,18 +60,47 @@ const FeedDetail = ({
   title,
   desc,
   isModal,
+  userId,
   feedId,
   feedUser,
   feedImg,
   feedLocation,
-}: UserInfoProps & { title: string } & { feedImg?: Array<string> } & { feedUser?: string } & {
+}: UserInfoProps & { userId: string } & { title: string } & { feedImg?: Array<string> } & {
+  feedUser?: string;
+} & {
   feedLocation?: CenterLatLng;
 } & { feedId?: string } & { desc: string } & { isModal: boolean }) => {
   const [reviewList, setReviewList] = useState<ReviewListProps>(REVIEW_MOCK);
   const [hasMore, setHasMore] = useState<boolean>(true);
+  const [textarea, setTextarea] = useState<string>('');
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [updatedReview, setUpdatedReview] = useState<string>('');
+  const [clickedReview, setClickedReview] = useState<string>('');
 
-  const fetchMoreData = () => {
+  useEffect(() => {
+    get();
+  }, []);
+
+  async function get() {
+    // console.log('reviewList.length : ', reviewList.length);
+
+    // const getReviewList: ReviewListProps = await ReviewApi.getAllReviews();
+    // const getReviewByReviewID: ReviewListProps = await ReviewApi.getOneReviewByReviewID('q3BN51RU-');
+    // const getReviewByUserID: ReviewListProps = await ReviewApi.getReviewsByUserID('lGl0AOVlG');
+    // console.log('getReviewList : ', getReviewList);
+    // console.log('getReviewByReviewID : ', getReviewByReviewID);
+    // console.log('getReviewByFeedID : ', getReviewByFeedID);
+
+    // 해당 피드에 저장된 댓글들만 가져오기
+    const getReviewByFeedID: ReviewListProps = await ReviewApi.getReviewsByFeedID(feedId);
+    console.log('feedId, getReviewByFeedID : ', feedId, getReviewByFeedID);
+    setReviewList(getReviewByFeedID);
+  }
+
+  const fetchMoreData = async () => {
     // alert('fetchMoreData 함수 실행!');
+
+    // 페이지네이션 처리된 이후에 이 코드 부분 리팩토링하기
     console.log('reviewList.length : ', reviewList.length);
     if (reviewList.length >= 15) {
       setHasMore(false);
@@ -73,16 +112,74 @@ const FeedDetail = ({
     }, 1000);
   };
 
-  // useEffect(() => {
-  //   function get() {
-  //     console.log('reviewList.length : ', reviewList.length);
+  const textAreaContent = useRef<any>();
 
-  //     // const result: ReviewListProps = await Api.getAllFeeds();
-  //     const result = reviewList.concat(REVIEW_MOCK);
-  //     setReviewList(result);
-  //   }
-  //   get();
-  // }, []);
+  const onChange = (e) => {
+    const textarea = e.target.value;
+    // console.log(e.target.value);
+    setTextarea(textarea);
+  };
+
+  const onChangeReview = (e) => {
+    const changedReview = e.target.value;
+    // console.log('changedReview : ', changedReview);
+    setUpdatedReview(changedReview);
+  };
+
+  const createReview = async () => {
+    if (!confirm('댓글을 등록하시겠습니까?')) return;
+
+    const review: ReviewProps = {
+      userName: name,
+      contents: textAreaContent.current?.ref.current.value,
+      feedId,
+    };
+    console.log('review 등록! ', review);
+
+    try {
+      const createdReview = await ReviewApi.createOneReview(review);
+      alert('성공적으로 댓글이 등록되었습니다!');
+      console.log('createdReview : ', createdReview);
+    } catch (err) {
+      alert('Error 발생 ');
+      console.log(err);
+    }
+    get();
+  };
+
+  const updateReview = async (review_id, updatedContent) => {
+    const updatedData = { contents: updatedContent };
+    if (!confirm('이 수정내용을 반영하시겠습니까?')) return;
+    try {
+      const res = await ReviewApi.updateOneReview(review_id, updatedData);
+      alert('댓글이 수정되었습니다!');
+      console.log('updatedReview : ', res);
+
+      // setReviewList((prev) => [...prev, createdReview]);
+      // console.log('reviewList : ', reviewList);
+    } catch (err) {
+      alert('Error 발생 ');
+      console.log(err);
+    }
+    setIsEdit((prev) => !prev);
+    get();
+  };
+
+  const deleteReview = async (review_id) => {
+    if (!confirm('이 댓글을 삭제하시겠습니까?')) return;
+    try {
+      const res = await ReviewApi.deleteOneReview(review_id);
+      alert('댓글이 삭제되었습니다!');
+      console.log('deletedReview : ', res);
+
+      // setReviewList((prev) => [...prev, createdReview]);
+      // console.log('reviewList : ', reviewList);
+    } catch (err) {
+      alert('Error 발생 ');
+      console.log(err);
+    }
+    get();
+  };
 
   return (
     <StyledFeedDetailContainer boxShadow={isModal}>
@@ -108,7 +205,7 @@ const FeedDetail = ({
         </StyledFeedDetailSlide>
         <StyledFeedDetailInfo>
           <div>Like 10개</div>
-          <div>댓글 10개</div>
+          <div>댓글 {reviewList.length}개</div>
         </StyledFeedDetailInfo>
       </StyledFeedDetailBody>
       <StyledFeedDetailReview>
@@ -144,15 +241,67 @@ const FeedDetail = ({
                         <div>{review.createdAt}</div>
                       </Comment.Metadata>
                     </div>
-                    <Comment.Text className={'text'}>{review.contents}</Comment.Text>
-                    {/* <Comment.Actions>
-                <Comment.Action>Reply</Comment.Action>
-              </Comment.Actions> */}
+                    {isEdit && review._id === clickedReview ? (
+                      <input type="text" placeholder={review.contents} onChange={onChangeReview} />
+                    ) : (
+                      <Comment.Text className={'text'}>{review.contents}</Comment.Text>
+                    )}
                   </Comment.Content>
+                  {review.userId === userId ? (
+                    <div>
+                      {isEdit && review._id === clickedReview ? (
+                        <Button
+                          content="반영"
+                          labelPosition="left"
+                          primary
+                          onClick={() => {
+                            updateReview(review._id, updatedReview);
+                          }}
+                        />
+                      ) : (
+                        <Button
+                          content="수정"
+                          labelPosition="left"
+                          primary
+                          onClick={() => {
+                            setIsEdit((prev) => !prev);
+                            setClickedReview(review._id);
+                          }}
+                        />
+                      )}
+
+                      <Button
+                        content="삭제"
+                        labelPosition="left"
+                        primary
+                        onClick={() => {
+                          deleteReview(review._id);
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <></>
+                  )}
                 </Comment>
               ))}
             </InfiniteScroll>
           </StyledCommentBody>
+          <TextArea
+            ref={textAreaContent}
+            onChange={onChange}
+            value={textarea}
+            style={{ width: 120 }}
+            placeholder="댓글 작성..."
+          />
+          <Button
+            content="댓글 달기"
+            labelPosition="left"
+            icon="edit"
+            primary
+            onClick={() => {
+              createReview();
+            }}
+          />
         </Comment.Group>
       </StyledFeedDetailReview>
     </StyledFeedDetailContainer>

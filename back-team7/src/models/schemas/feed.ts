@@ -36,10 +36,6 @@ const FeedSchema = new Schema(
       type: Array,
       required: false,
     },
-    review: {
-      type: Array,
-      required: false,
-    },
     report: {
       type: Object,
       required: false,

@@ -22,9 +22,28 @@ export const getAllReviews = async () => {
   }
 };
 
-export const getOneReview = async (id) => {
+export const getOneReviewByReviewID = async (reviewId) => {
   try {
-    let res = await axios.get(`/api/reviews/${id}`);
+    let res = await axios.get(`/api/reviews/${reviewId}`);
+    // console.log('res.data : ', res.data);
+    return res.data;
+  } catch (err) {
+    return err;
+  }
+};
+export const getReviewsByFeedID = async (feedId) => {
+  try {
+    let res = await axios.get(`/api/reviews/list/feed/${feedId}`);
+    // console.log('res.data : ', res.data);
+    return res.data;
+  } catch (err) {
+    return err;
+  }
+};
+
+export const getReviewsByUserID = async (userId) => {
+  try {
+    let res = await axios.get(`/api/reviews/list/user/${userId}`);
     // console.log('res.data : ', res.data);
     return res.data;
   } catch (err) {
@@ -33,6 +52,7 @@ export const getOneReview = async (id) => {
 };
 
 export const updateOneReview = async (id, sendData) => {
+  console.log('JSON.stringify(sendData) : ', JSON.stringify(sendData));
   try {
     let res = await axios.put(`/api/reviews/${id}`, JSON.stringify(sendData), {
       headers: { 'Content-Type': `application/json` },
