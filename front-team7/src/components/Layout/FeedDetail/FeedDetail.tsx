@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
 import { FeedHeader } from '@/components/FeedHeader/FeedHeader';
 import { UserInfoProps } from '@/components/UserInfo';
@@ -9,7 +9,7 @@ import { Button, Comment, Form, Header, TextArea } from 'semantic-ui-react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Loading from '@/components/Loading/Loading';
 import * as ReviewApi from '@/api/review';
-import { BsArrowReturnRight } from 'react-icons/bs';
+import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
 interface FeedDetailContainerProps {
   boxShadow: boolean;
 }
@@ -76,6 +76,7 @@ const FeedDetail = ({
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [updatedReview, setUpdatedReview] = useState<string>('');
   const [clickedReview, setClickedReview] = useState<string>('');
+  const [dropDownVisible, setDropDownVisible] = useState<boolean>(false);
 
   useEffect(() => {
     get();
@@ -124,6 +125,10 @@ const FeedDetail = ({
     const changedReview = e.target.value;
     // console.log('changedReview : ', changedReview);
     setUpdatedReview(changedReview);
+  };
+
+  const toggleDropDownVisible = () => {
+    setDropDownVisible((prev) => !prev);
   };
 
   const createReview = async () => {
@@ -205,105 +210,130 @@ const FeedDetail = ({
         </StyledFeedDetailSlide>
         <StyledFeedDetailInfo>
           <div>Like 10개</div>
-          <div>댓글 {reviewList.length}개</div>
+          <div>
+            댓글 {reviewList.length}개
+            {dropDownVisible ? (
+              <MdArrowDropUp
+                className="dropBtn"
+                onClick={() => {
+                  toggleDropDownVisible();
+                }}
+              ></MdArrowDropUp>
+            ) : (
+              <MdArrowDropDown
+                className="dropBtn"
+                onClick={() => {
+                  toggleDropDownVisible();
+                }}
+              ></MdArrowDropDown>
+            )}
+          </div>
         </StyledFeedDetailInfo>
       </StyledFeedDetailBody>
-      <StyledFeedDetailReview>
-        <Comment.Group>
-          <Header as="h4" dividing>
-            Comments
-          </Header>
+      {dropDownVisible ? (
+        <StyledFeedDetailReview>
+          <Comment.Group className="commentGroup">
+            <Header as="h4" dividing>
+              Comments
+            </Header>
 
-          {/* 여기다가 scrollableTarget을 걸면 안되나? 왜 한참 더 내려가야 fetchMoreData 가 실행되는지 알아내기! */}
-          <StyledCommentBody id="main-styled">
-            <InfiniteScroll
-              style={{ overflow: 'visibility' }}
-              dataLength={reviewList.length}
-              next={fetchMoreData}
-              hasMore={hasMore}
-              endMessage={<span>"Loading end!"</span>}
-              loader={<span>"Loading ..."</span>}
-              scrollableTarget="main-styled"
-            >
-              {reviewList?.map((review, index) => (
-                // <Comment key={index} className={'comment'}>
-                <Comment key={index}>
-                  <Comment.Avatar
-                    src="https://react.semantic-ui.com/images/avatar/small/matt.jpg"
-                    alt="User"
-                  />
-                  <Comment.Content className={'content'}>
-                    <div className={'content-info'}>
-                      <Comment.Author as="a" className={'author'}>
-                        {review.userName}
-                      </Comment.Author>
-                      <Comment.Metadata className={'metaData'}>
-                        <div>{review.createdAt}</div>
-                      </Comment.Metadata>
-                    </div>
-                    {isEdit && review._id === clickedReview ? (
-                      <input type="text" placeholder={review.contents} onChange={onChangeReview} />
-                    ) : (
-                      <Comment.Text className={'text'}>{review.contents}</Comment.Text>
-                    )}
-                  </Comment.Content>
-                  {review.userId === userId ? (
-                    <div>
+            {/* 여기다가 scrollableTarget을 걸면 안되나? 왜 한참 더 내려가야 fetchMoreData 가 실행되는지 알아내기! */}
+            <StyledCommentBody id="main-styled">
+              <InfiniteScroll
+                style={{ overflow: 'visibility' }}
+                dataLength={reviewList.length}
+                next={fetchMoreData}
+                hasMore={hasMore}
+                endMessage={<span>"Loading end!"</span>}
+                loader={<span>"Loading ..."</span>}
+                scrollableTarget="main-styled"
+              >
+                {reviewList?.map((review, index) => (
+                  // <Comment key={index} className={'comment'}>
+                  <Comment key={index}>
+                    <Comment.Avatar
+                      src="https://react.semantic-ui.com/images/avatar/small/matt.jpg"
+                      alt="User"
+                    />
+                    <Comment.Content className={'content'}>
+                      <div className={'content-info'}>
+                        <Comment.Author as="a" className={'author'}>
+                          {review.userName}
+                        </Comment.Author>
+                        <Comment.Metadata className={'metaData'}>
+                          <div>{review.createdAt}</div>
+                        </Comment.Metadata>
+                      </div>
                       {isEdit && review._id === clickedReview ? (
-                        <Button
-                          content="반영"
-                          labelPosition="left"
-                          primary
-                          onClick={() => {
-                            updateReview(review._id, updatedReview);
-                          }}
+                        <input
+                          type="text"
+                          placeholder={review.contents}
+                          onChange={onChangeReview}
                         />
                       ) : (
+                        <Comment.Text className={'text'}>{review.contents}</Comment.Text>
+                      )}
+                    </Comment.Content>
+                    {review.userId === userId ? (
+                      <div>
+                        {isEdit && review._id === clickedReview ? (
+                          <Button
+                            content="반영"
+                            labelPosition="left"
+                            primary
+                            onClick={() => {
+                              updateReview(review._id, updatedReview);
+                            }}
+                          />
+                        ) : (
+                          <Button
+                            content="수정"
+                            labelPosition="left"
+                            primary
+                            onClick={() => {
+                              setIsEdit((prev) => !prev);
+                              setClickedReview(review._id);
+                            }}
+                          />
+                        )}
+
                         <Button
-                          content="수정"
+                          content="삭제"
                           labelPosition="left"
                           primary
                           onClick={() => {
-                            setIsEdit((prev) => !prev);
-                            setClickedReview(review._id);
+                            deleteReview(review._id);
                           }}
                         />
-                      )}
-
-                      <Button
-                        content="삭제"
-                        labelPosition="left"
-                        primary
-                        onClick={() => {
-                          deleteReview(review._id);
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                </Comment>
-              ))}
-            </InfiniteScroll>
-          </StyledCommentBody>
-          <TextArea
-            ref={textAreaContent}
-            onChange={onChange}
-            value={textarea}
-            style={{ width: 120 }}
-            placeholder="댓글 작성..."
-          />
-          <Button
-            content="댓글 달기"
-            labelPosition="left"
-            icon="edit"
-            primary
-            onClick={() => {
-              createReview();
-            }}
-          />
-        </Comment.Group>
-      </StyledFeedDetailReview>
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </Comment>
+                ))}
+              </InfiniteScroll>
+            </StyledCommentBody>
+            <TextArea
+              ref={textAreaContent}
+              onChange={onChange}
+              value={textarea}
+              style={{ width: 120 }}
+              placeholder="댓글 작성..."
+            />
+            <Button
+              content="댓글 달기"
+              labelPosition="left"
+              icon="edit"
+              primary
+              onClick={() => {
+                createReview();
+              }}
+            />
+          </Comment.Group>
+        </StyledFeedDetailReview>
+      ) : (
+        <></>
+      )}
     </StyledFeedDetailContainer>
   );
 };
@@ -340,6 +370,7 @@ const StyledFeedDetailBody = styled.div`
   height: 400px;
   position: relative;
   padding: 8px;
+
   // background-color: yellow;
   display: flex;
   flex-direction: column;
@@ -400,61 +431,80 @@ const StyledFeedDetailInfo = styled.div`
   padding: 10px 0 5px 0;
   display: flex;
   justify-content: space-between;
+
+  .dropBtn {
+    font-size: 2.5rem;
+    cursor: pointer;
+  }
 `;
 
+const dropAnimation = keyframes`
+0% {
+  transform : translateY(-300px);
+  display : none;
+}
+100% {
+  transform : translateY(0);
+  // display : block;
+}
+`;
 const StyledFeedDetailReview = styled.div`
   width: 100%;
   height: 300px;
   background-color: #d9d9d9;
   border-radius: 0px 0px 10px 10px;
 
-  .comment {
-    font-size: 1.4rem;
-    display: flex;
-    gap: 10px;
-    background-color: red;
-    position: relative;
-    padding: 10px;
-    white-space: nowrap;
-    overflow: hidden;
+  animation: ${dropAnimation} 1s alternate;
 
-    .content {
+  .commentGroup {
+    .comment {
+      font-size: 1.4rem;
       display: flex;
-      flex-direction: column;
-      background-color: yellow;
-      gap: 5px;
+      gap: 10px;
+      background-color: red;
+      position: relative;
+      padding: 10px;
+      white-space: nowrap;
+      overflow: hidden;
 
-      .content-info {
+      .content {
         display: flex;
-        background-color: lightgray;
-        height: 1.6em;
-        line-height: 1.6rem;
+        flex-direction: column;
+        background-color: yellow;
+        gap: 5px;
 
-        .author {
-          width: 70px; // 반응형 처리 필요함
+        .content-info {
+          display: flex;
+          background-color: lightgray;
+          height: 1.6em;
+          line-height: 1.6rem;
+
+          .author {
+            width: 70px; // 반응형 처리 필요함
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-right: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .metaData {
+            width: 120px; // 반응형 처리 필요함
+            color: rgba(0, 0, 0, 0.4);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+
+        .text {
+          width: 200px; // 반응형 처리 필요함. 퍼센트로 해도 되고!
+
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
           font-size: 1.6rem;
-          font-weight: 600;
-          margin-right: 15px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
         }
-        .metaData {
-          width: 120px; // 반응형 처리 필요함
-          color: rgba(0, 0, 0, 0.4);
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-      }
-
-      .text {
-        width: 200px; // 반응형 처리 필요함. 퍼센트로 해도 되고!
-
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        font-size: 1.6rem;
       }
     }
   }
