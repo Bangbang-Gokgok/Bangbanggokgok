@@ -29,13 +29,13 @@ export const ProfileTop = () => {
           <div className="profile-info">
             <span className="profile-info-title">게시글</span>
             <span className="profile-info-number">
-              {currentUserFeeds!.length > 0 ? currentUserFeeds!.length : 0}
+              {currentUserFeeds?.length > 0 ? currentUserFeeds!.length : 0}
             </span>
           </div>
           <div className="profile-info">
             <span className="profile-info-title">친구</span>
             <span className="profile-info-number">
-              {currentUser!.friends.length > 0 ? currentUser!.friends.length : 0}
+              {currentUser!.friends?.length > 0 ? currentUser!.friends.length : 0}
             </span>
           </div>
         </div>
