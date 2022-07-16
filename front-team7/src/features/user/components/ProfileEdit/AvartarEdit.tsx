@@ -17,7 +17,7 @@ interface AvartarEditProps {
 }
 
 export const AvartarEdit = ({ control, register }: AvartarEditProps) => {
-  const [showDropdownMenu, setShowDropdownMenu] = useState<boolean>(false);
+  const [isOpenDropdownMenu, setIsOpenDropdownMenu] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const userProfileImage = useRecoilValue(userProfileImageQuery);
   const profileImage = useWatch({ control, name: 'profileImage' });
@@ -25,7 +25,7 @@ export const AvartarEdit = ({ control, register }: AvartarEditProps) => {
   useEffect(() => {
     if (!profileImage) return;
 
-    const imageUrl = URL.createObjectURL(profileImage[0]);
+    const imageUrl = URL.createObjectURL(profileImage[0] as Blob);
 
     setImagePreview(imageUrl);
 
@@ -34,7 +34,7 @@ export const AvartarEdit = ({ control, register }: AvartarEditProps) => {
 
   function toggleDropdownMenu(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    setShowDropdownMenu(!showDropdownMenu);
+    setIsOpenDropdownMenu(!isOpenDropdownMenu);
   }
 
   return (
@@ -45,7 +45,9 @@ export const AvartarEdit = ({ control, register }: AvartarEditProps) => {
           <Icon kind="circle" size="sm" element={<MdOutlineModeEditOutline />} />
         </span>
       </button>
-      {showDropdownMenu && <AvartarEditDropdown register={register} />}
+      {isOpenDropdownMenu && (
+        <AvartarEditDropdown register={register} toggleDropdownMenu={toggleDropdownMenu} />
+      )}
     </StyledAvartarEdit>
   );
 };

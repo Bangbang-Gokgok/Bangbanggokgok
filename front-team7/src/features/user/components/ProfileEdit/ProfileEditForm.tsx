@@ -1,13 +1,13 @@
 import { type MouseEvent } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue, useRecoilRefresher_UNSTABLE } from 'recoil';
-import { useForm, type SubmitHandler } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { axios } from '@/lib';
 import { currentUserQuery } from '@/store';
-import { useDaumAddress, useKakaoGeocoder } from '@/features/user/api';
+import { useDaumAddress, getLocation } from '@/features/user/api';
 import { profileEditSchema } from '@/features/user/schemas';
 
 import { AvartarEdit, Field, type kindType, type RegisterProps } from '@/features/user/components';
@@ -29,10 +29,9 @@ export const ProfileEditForm = () => {
     register,
     handleSubmit,
     control,
-    getValues,
     setValue,
     formState: { errors },
-  } = useForm({
+  } = useForm<RegisterProps>({
     defaultValues: {
       profileImage: undefined,
       email: currentUser?.email,
@@ -43,24 +42,29 @@ export const ProfileEditForm = () => {
     },
   });
 
+  const address = useWatch({ control, name: 'address' });
+
   const openDaumAddress = useDaumAddress((addressValue: string) =>
     setValue('address', addressValue)
   );
 
-  const getLocation = useKakaoGeocoder();
-
-  const onAddressPopUpHandler = async (e: MouseEvent<HTMLButtonElement>) => {
+  async function onAddressPopUpHandler(e: MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     await openDaumAddress();
-  };
+  }
 
-  const submitProfileEditForm: SubmitHandler<RegisterProps> = async (data) => {
+  function onAdressDeleteHandler(e: MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    setValue('address', '');
+  }
+
+  async function submitProfileEditForm(data: RegisterProps) {
     const profileImage = data.profileImage && (data.profileImage[0] as File);
+    const location = await getLocation(data.address!);
+
     delete data.profileImage;
 
     console.log(data);
-
-    const location = await getLocation(data.address);
 
     const formData = new FormData();
 
@@ -74,7 +78,7 @@ export const ProfileEditForm = () => {
     refreshCurrentUser();
 
     navigate('/profile');
-  };
+  }
 
   return (
     <StyledForm onSubmit={handleSubmit(submitProfileEditForm)}>
@@ -92,19 +96,30 @@ export const ProfileEditForm = () => {
               errorMessage={errors[field.kind]?.message}
             />
             {field.kind === 'address' && (
-              <button
-                className="address-button"
-                type="button"
-                onClick={(e) => onAddressPopUpHandler(e)}
-              >
-                주소 찾기
-              </button>
+              <div className="address-btn-container">
+                <button
+                  className="address-find-btn"
+                  type="button"
+                  onClick={(e) => onAddressPopUpHandler(e)}
+                >
+                  주소 찾기
+                </button>
+                {address && (
+                  <button
+                    className="address-delete-btn"
+                    type="button"
+                    onClick={(e) => onAdressDeleteHandler(e)}
+                  >
+                    주소 삭제
+                  </button>
+                )}
+              </div>
             )}
           </li>
         ))}
       </ul>
 
-      <div>
+      <div className="profile-btn-container">
         <button className="profile-edit-btn" type="submit">
           수정하기
         </button>
@@ -142,23 +157,46 @@ const StyledForm = styled.form`
     height: 100%;
   }
 
-  .address-button {
+  .address-btn-container {
+    margin-top: 10px;
+
+    button {
+      margin-right: 7px;
+      border: none;
+      border-radius: 3px;
+      padding: 6px 12px;
+      color: whitesmoke;
+    }
+
+    .address-find-btn {
+      background-color: #5050bd;
+    }
+
+    .address-delete-btn {
+      background-color: #c54d4d;
+    }
   }
 
-  .profile-edit-btn {
-    width: 100%;
-    cursor: pointer;
-    color: white;
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: #343434;
-    background-color: #ddcb51;
-    padding: 8px 15px;
-    transition: background-color 0.3s;
-    border: none;
+  .profile-btn-container {
+    display: flex;
+    justify-content: center;
 
-    :hover {
-      background-color: #e9d767;
+    .profile-edit-btn {
+      font-size: 1.6rem;
+      cursor: pointer;
+      min-width: 132px;
+      color: #343434;
+      font-size: 1.6rem;
+      font-weight: bold;
+      border-radius: 3px;
+      background-color: #ddcb51;
+      padding: 10px 16px;
+      transition: background-color 0.3s;
+      border: none;
+
+      :hover {
+        background-color: #e9d767;
+      }
     }
   }
 `;
