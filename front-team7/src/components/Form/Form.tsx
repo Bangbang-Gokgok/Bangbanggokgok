@@ -31,8 +31,8 @@ interface PlaceProps {
 
 const initSelectedAddressState = {
   address: '',
-  lat: '',
-  lng: ''
+  lat: 0,
+  lng: 0
 };
 interface PlaceListProps extends Array<PlaceProps> { }
 
@@ -44,15 +44,15 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
   const { register, watch, handleSubmit, reset } = useForm();
   const currentFeedState = useRecoilValue(currentFeedAtom);
 
-
-  // if (isEdit) {
-  //   setSelectedAddressState({
-  //     address: currentFeedState.address,
-  //     lat: '' + currentFeedState.location.lat,
-  //     lng: '' + currentFeedState.location.lng,
-  //   });
-  // };
-
+  useEffect(() => {
+    if (isEdit) {
+      setSelectedAddressState({
+        address: currentFeedState.address,
+        lat: currentFeedState.location.lat,
+        lng: currentFeedState.location.lng,
+      });
+    };
+  }, []);
 
   // 검색어에 대한 장소 조회하기
   const searchPlace = async (e) => {
@@ -87,8 +87,8 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
       description,
       address: selectedAddressState.address,
       location: {
-        lat: Number(selectedAddressState.lat),
-        lng: Number(selectedAddressState.lng),
+        lat: selectedAddressState.lat,
+        lng: selectedAddressState.lng,
       },
     };
 
@@ -120,7 +120,7 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
 
   };
 
-  const handleAddressState = (address: string, lat, lng) => {
+  const handleAddressState = (address: string, lat: number, lng: number) => {
     setSelectedAddressState((prev) => {
       return {
         ...prev,
@@ -185,7 +185,7 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
                     </StyledFiExternalLink>
                     <StyledSearchInfoHeader>
                       <StyledSearchInfoTitle
-                        onClick={() => handleAddressState(place.address_name, place.y, place.x)}
+                        onClick={() => handleAddressState(place.address_name, Number(place.y), Number(place.x))}
                       >
                         {place.place_name}
                       </StyledSearchInfoTitle>
