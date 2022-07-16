@@ -11,14 +11,29 @@ import Loading from '@/components/Loading/Loading';
 
 const StyledFeedListContainer = styled.div`
   width: 100%;
-  // height: 100vh;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 30px 0;
 
-  // padding: 30px 0;
-  // gap: 30px;
+  .grid-group {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 30px;
+    // column-gap: 30px;
+    @media only screen and (min-width: 1024px) {
+      // display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      row-gap: 30px;
+      column-gap: 30px;
+    }
+
+    .grid-item {
+      margin-bottom: 30px;
+    }
+  }
 `;
 
 interface CenterLatLng {
@@ -58,7 +73,7 @@ const HomePage = () => {
 
   const fetchMoreData = () => {
     console.log('feedList.length : ', feedList.length);
-    if (feedList.length >= 40) {
+    if (feedList.length >= 10) {
       setHasMore(false);
       return;
     }
@@ -149,21 +164,24 @@ const HomePage = () => {
           loader={<Loading text={'Loading...'}></Loading>}
           scrollableTarget="main-styled"
         >
-          {feedList?.map((feed, index) => (
-            <FeedDetail
-              isModal={false}
-              key={`${feed.title}-${index}`}
-              name={feed.userName}
-              userId={myUserId}
-              feedId={feed._id}
-              feedLocation={feed.location}
-              feedUser={feed.userId}
-              feedImg={feed.imageUrl}
-              image={unknownUser as string}
-              title={feed.title}
-              desc={feed.description}
-            ></FeedDetail>
-          ))}
+          <div className="grid-group">
+            {feedList?.map((feed, index) => (
+              <FeedDetail
+                className="grid-item"
+                isModal={false}
+                key={`${feed.title}-${index}`}
+                name={feed.userName}
+                userId={myUserId}
+                feedId={feed._id}
+                feedLocation={feed.location}
+                feedUser={feed.userId}
+                feedImg={feed.imageUrl}
+                image={unknownUser as string}
+                title={feed.title}
+                desc={feed.description}
+              ></FeedDetail>
+            ))}
+          </div>
         </InfiniteScroll>
       </StyledFeedListContainer>
     </Main>
