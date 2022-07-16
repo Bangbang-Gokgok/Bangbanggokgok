@@ -1,6 +1,6 @@
 import { User } from '../models';
 import { Types } from 'mongoose';
-
+import mongodb = require('mongodb');
 export interface UserInfo {
   authority: string;
   email: string;
@@ -75,6 +75,10 @@ class UserService {
       throw error;
     }
     return updatedUser;
+  }
+
+  async friendsBulkUpdate(writes: Array<mongodb.AnyBulkWriteOperation>) {
+    User.bulkWrite(writes);
   }
 
   async deleteUserData(_id: Types.ObjectId | string): Promise<{ result: string }> {
