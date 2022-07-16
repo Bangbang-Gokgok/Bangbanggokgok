@@ -67,7 +67,7 @@ reviewRouter.put('/:_id', async (req: Request, res: Response, next: NextFunction
   try {
     const _id = req.params._id;
     const update = req.body;
-    console.log('_id, update : ', _id, update);
+
     // 리뷰를 업데이트함.
     const updatedReview = await reviewService.setReview(_id, update);
 
