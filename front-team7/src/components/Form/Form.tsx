@@ -6,6 +6,7 @@ import { ImRoad } from 'react-icons/im';
 import { FaAddressBook, FaMapMarkedAlt, FaMousePointer, FaSave } from 'react-icons/fa';
 import { MdPlace } from 'react-icons/md';
 import * as Api from '@/api/feeds';
+import * as UserApi from '@/api/users';
 import { AiOutlineConsoleSql } from 'react-icons/ai';
 
 const StyledFormContainer = styled.div`
@@ -181,12 +182,17 @@ const Form = () => {
     setPlaceInfoList(places);
   };
 
+  // Feed CREATE
   const submitForm = async (data) => {
     if (!confirm('Feed를 추가하시겠습니까?')) return;
 
     const { title, description, address, image, x, y, searching } = data;
 
+    const myInfo = await UserApi.getMyUserInfo();
+    const userName = myInfo.name;
+
     const dummy = {
+      userName,
       title,
       description,
       address,
@@ -198,6 +204,7 @@ const Form = () => {
 
     const fd = new FormData();
 
+    fd.append('userName', dummy.userName);
     fd.append('title', dummy.title);
     fd.append('description', dummy.description);
     fd.append('address', dummy.address);

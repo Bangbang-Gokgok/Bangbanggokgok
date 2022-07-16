@@ -90,8 +90,10 @@ feedRouter.get('/:_id/like', async (req: Request, res: Response, next: NextFunct
 feedRouter.get('/list/:userId', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.params.userId;
-    // userName 값으로 검색
+
+    // userId 값으로 검색
     const feedData = await feedService.getFeedByUserId(userId);
+
     res.status(200).json(feedData);
   } catch (error) {
     next(error);

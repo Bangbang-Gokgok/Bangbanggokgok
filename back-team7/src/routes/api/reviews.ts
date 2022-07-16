@@ -40,7 +40,7 @@ reviewRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction
   }
 });
 
-reviewRouter.get('/list/:feedId', async (req: Request, res: Response, next: NextFunction) => {
+reviewRouter.get('/list/feed/:feedId', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const feedId = req.params.feedId;
     // _id 값으로 검색
@@ -51,12 +51,12 @@ reviewRouter.get('/list/:feedId', async (req: Request, res: Response, next: Next
     next(error);
   }
 });
-reviewRouter.get('/list/:userId', async (req: Request, res: Response, next: NextFunction) => {
+reviewRouter.get('/list/user/:userId', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.params.userId;
     // userId 값으로 검색
     const reviewData = await reviewService.getReviewByUserId(userId);
-
+    console.log('reviewData : ', reviewData);
     res.status(200).json(reviewData);
   } catch (error) {
     next(error);
@@ -67,7 +67,7 @@ reviewRouter.put('/:_id', async (req: Request, res: Response, next: NextFunction
   try {
     const _id = req.params._id;
     const update = req.body;
-
+    console.log('_id, update : ', _id, update);
     // 리뷰를 업데이트함.
     const updatedReview = await reviewService.setReview(_id, update);
 

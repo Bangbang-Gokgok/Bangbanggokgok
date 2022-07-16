@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
 import unknownUser from '@/assets/images/unknown-user.png';
 import * as Api from '@/api/feeds';
+import * as UserApi from '@/api/users';
 // import { UserInfoProps } from '@/components/UserInfo';
 import { useEffect, useState, CSSProperties } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -53,6 +54,7 @@ const HomePage = () => {
   // let title = '👍🏽 홀로 여행기';
   const [feedList, setFeedList] = useState<FeedListProps>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
+  const [myUserId, setMyUserId] = useState<string>();
 
   const fetchMoreData = () => {
     console.log('feedList.length : ', feedList.length);
@@ -103,6 +105,12 @@ const HomePage = () => {
       const result: FeedListProps = await Api.getAllFeeds();
       setFeedList(result);
     }
+
+    async function getMyUserId() {
+      const myInfo = await UserApi.getMyUserInfo();
+      setMyUserId(myInfo._id);
+      console.log('myUserId : ', myUserId);
+    }
     // create 구현
     // async function create() {
     //   console.log('sendData : ', sendData);
@@ -120,6 +128,7 @@ const HomePage = () => {
 
     // update();
     get();
+    getMyUserId();
   }, []);
   return (
     <Main
@@ -145,6 +154,7 @@ const HomePage = () => {
               isModal={false}
               key={`${feed.title}-${index}`}
               name={feed.userName}
+              userId={myUserId}
               feedId={feed._id}
               feedLocation={feed.location}
               feedUser={feed.userId}
