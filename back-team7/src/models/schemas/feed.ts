@@ -12,6 +12,10 @@ const FeedSchema = new Schema(
       ref: 'users',
       required: true,
     },
+    userName: {
+      type: String,
+      required: true,
+    },
     title: {
       type: String,
       required: true,
@@ -28,11 +32,7 @@ const FeedSchema = new Schema(
       type: Object,
       required: true,
     },
-    like: {
-      type: Array,
-      required: false,
-    },
-    review: {
+    likes: {
       type: Array,
       required: false,
     },

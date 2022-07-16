@@ -67,7 +67,7 @@ const Map = ({
 
     const reviewLength = document.createElement('span');
     reviewLength.style.cssText = 'font-size: 4px;';
-    reviewLength.innerHTML = `${feed.review.length}개의 리뷰`;
+    reviewLength.innerHTML = `${feed.review?.length}개의 리뷰`;
 
     const closeButton = document.createElement('button');
     closeButton.className = 'close-btn';
