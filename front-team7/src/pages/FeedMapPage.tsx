@@ -1,90 +1,123 @@
-import { FeedHeader } from "@/components/FeedHeader";
-import { Main } from "@/components/Layout";
-import Map from "@/components/Map/Map";
-import { useEffect, useState } from "react";
-import { BsPlus } from "react-icons/bs";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
-import { useRecoilState } from "recoil";
-import { mapAtom } from "@/store/map";
+import { FeedHeader } from '@/components/FeedHeader';
+import { Main } from '@/components/Layout';
+import Map from '@/components/Map/Map';
+import { useEffect, useState } from 'react';
+import { BsPlus } from 'react-icons/bs';
+import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { mapAtom } from '@/store/map';
+import ModalFrame from '@/components/Layout/ModalFrame/ModalFrame';
+import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
+import { feedModalAtom } from '@/store/feedModal';
+import * as Api from '@/api/feeds';
+import Form from '@/components/Form/Form';
+import { userIdState } from '@/store';
+import queryString from 'query-string';
 
 interface CenterLatLng {
   lat: number;
   lng: number;
 }
 
+interface Review {
+  userName: string;
+  contents: string;
+  timestamp: Date;
+}
+
+interface FeedProps {
+  _id: string;
+  userName: string;
+  title: string;
+  description: string;
+  imageUrl: Array<string>;
+  review: Array<Review>;
+  address: string;
+  location: CenterLatLng;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface FeedDetail {
+  userName: string;
+  title: string;
+  description: string;
+  review: Array<Review>;
+  address: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface FeedListProps extends Array<FeedProps> { }
+
 const FeedMapPage = () => {
   const { userId } = useParams();
+  const [feedList, setFeedList] = useState<FeedListProps>([]);
+  const [_mapValue, setMapValue] = useRecoilState(mapAtom);
+  const [stateModal, setStateModal] = useState(false);
+  const [modalChildrenState, setModalChildrenState] = useState(false);
+  const userIdAtom = useRecoilValue(userIdState);
+  const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
+  const feedIdQueryString = queryString.parse(window.location.search);
 
-  const [_, setMapValue] = useRecoilState(mapAtom);
+  useEffect(() => {
+    // userId를 사용한 API Call -> feedList를 useState로 관리
+    async function getFeedList() {
+      const result = await Api.getUserFeedList(userId);
+      console.log(result);
 
+      setFeedList(result);
 
-  const feedList = [
-    {
-      username: '김정현',
-      title: '👍🏽 카카오에 방문해봤습니다.',
-      description: '카카오 본사에 들렸읍니다.',
-      address: '제주 제주시 첨단로 242',
-      location: {
-        lat: 33.450705,
-        lng: 126.570677
-      },
-      createAt: '2022-07-01'
-    },
-    {
-      username: '김정',
-      title: '근린공원이네요',
-      description: '카카오 근린공원에 들렸읍니다.',
-      address: '제주 제주시 첨단로 242',
-      location: {
-        lat: 33.451393,
-        lng: 126.570738
-      },
-      createAt: '2022-06-27'
-    },
-    {
-      username: '제주도사람',
-      title: '🌾 텃밭 방문해봤습니다.',
-      description: '카카오 텃밭에 들렸읍니다.',
-      address: '제주 제주시 첨단로 242',
-      location: {
-        lat: 33.450936,
-        lng: 126.569477
-      },
-      createAt: '2022-06-15'
-    },
-    {
-      username: '그냥아저씨',
-      title: '제주도 카카오',
-      description: '아저씨가 카카오에',
-      address: '제주 제주시 첨단로 242',
-      location: {
-        lat: 33.450879,
-        lng: 126.569940
-      },
-      createAt: '2022-06-10'
-    },
-    {
-      username: '서울사람',
-      title: '서울역 방문기',
-      description: '서울역에 들렸읍니다.',
-      address: '서울 특별시 서울역',
-      location: {
-        lat: 37.55294316360036,
-        lng: 126.97289588774116
-      },
-      createAt: '2022-05-25'
+      if (Object.keys(feedIdQueryString).length > 0) {
+        setMapValue((currMapValue) => ({
+          ...currMapValue,
+          centerLatLng: {
+            lat: Number(feedIdQueryString.lat),
+            lng: Number(feedIdQueryString.lng),
+          },
+        }));
+      } else if (result.length > 0) {
+        setMapValue((currMapValue) => ({
+          ...currMapValue,
+          centerLatLng: {
+            lat: result[0].location.lat,
+            lng: result[0].location.lng,
+          },
+        }));
+      }
     }
-  ];
+
+    // async function deleteFeed(feedId) {
+    //   const result = await Api.deleteOneFeed(feedId);
+    //   console.log(result);
+
+    // }
+
+    // deleteFeed("hvT7xS5ut");
+
+    getFeedList();
+  }, []);
 
   const onClickModal = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(event);
-    console.log('click');
+    setModalChildrenState(false);
+    toggleModal();
   };
 
-  const onClickMapFeed = (newCenterLatLng: CenterLatLng) => {
-    changeCenterLatLng(newCenterLatLng);
-    getFeedInfo();
+  const onClickMapFeed = (item: FeedProps) => {
+    const { userName, title, description, address, location, review, createdAt } = item;
+    changeCenterLatLng(location);
+    setFeedModalState((prev) => ({
+      ...prev,
+      userName,
+      title,
+      description,
+      address,
+      review,
+      createdAt,
+    }));
+    setModalChildrenState(true);
+    toggleModal();
   };
 
   const changeCenterLatLng = (newCenterLatLng: CenterLatLng) => {
@@ -92,39 +125,51 @@ const FeedMapPage = () => {
       ...currMapValue,
       centerLatLng: {
         lat: newCenterLatLng.lat,
-        lng: newCenterLatLng.lng
+        lng: newCenterLatLng.lng,
       },
-      mapLevel: 1
+      mapLevel: 1,
     }));
   };
-
-  const getFeedInfo = () => {
-    console.log('피드 조회');
+  const toggleModal = () => {
+    setStateModal((prev) => !prev);
   };
 
   return (
     <Main>
       <StyledWrapper>
-        <Map feedList={feedList} ></Map>
+        <Map feedList={feedList} toggleModal={onClickMapFeed}></Map>
         <Button onClick={onClickModal}>
           <BsPlus />
         </Button>
         <StyledFeeds>
-          {feedList.map((item, idx) => (
+          {feedList?.map((item, idx) => (
             <FeedHeader
-              onClickHandler={() => onClickMapFeed(item.location)}
+              onClickHandler={() => onClickMapFeed(item)}
               isFolded={true}
+              isUser={userIdAtom === userId}
               key={idx}
-              name={item.username}
+              feedId={item._id}
+              name={item.userName}
               title={item.title}
             />
           ))}
         </StyledFeeds>
       </StyledWrapper>
-    </Main >
+      <ModalFrame handleModal={toggleModal} state={stateModal}>
+        {modalChildrenState ? (
+          <FeedDetail
+            isModal={true}
+            name={feedModalState.userName}
+            title={feedModalState.title}
+            desc={feedModalState.description}
+          />
+        ) : (
+          <Form />
+        )}
+      </ModalFrame>
+    </Main>
   );
 };
-
 
 const StyledWrapper = styled.div`
   position: relative;
@@ -138,7 +183,7 @@ const StyledWrapper = styled.div`
 const Button = styled.button`
   position: absolute;
   z-index: 4;
-  bottom: 20%;
+  bottom: 160px;
   right: 5%;
   margin-bottom: 5px;
   font-size: 4.5rem;
@@ -152,21 +197,48 @@ const Button = styled.button`
   justify-content: center;
   color: white;
   cursor: pointer;
+
+  @media only screen and (min-width: 768px) {
+    bottom: 5%;
+    width: 70px;
+    height: 70px;
+    font-size: 7rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    bottom: 5%;
+    width: 80px;
+    height: 80px;
+    font-size: 8rem;
+  }
 `;
 
 const StyledFeeds = styled.div`
   position: absolute;
-  max-height: 27%;
+  max-height: 160px;
   width: 90%;
   z-index: 3;
   bottom: 0;
   display: flex;
   flex-direction: column;
   overflow: scroll;
+  gap: 5px;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
   &::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
+  }
+
+  @media only screen and (min-width: 768px) {
+    width: 350px;
+    height: 100%;
+    max-height: 68%;
+    right: 2%;
+    top: 2%;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    width: 400px;
   }
 `;
 

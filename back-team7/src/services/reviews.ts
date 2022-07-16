@@ -2,11 +2,13 @@ import { Review } from '../models';
 import { Types } from 'mongoose';
 
 interface ReviewInfo {
+  userId: string | Types.ObjectId;
+  feedId: string;
   userName: string;
   contents: string;
 }
 interface ReviewData extends ReviewInfo {
-  _id: Types.ObjectId;
+  _id: string;
 }
 class ReviewService {
   //review 추가
@@ -23,6 +25,17 @@ class ReviewService {
   async getReviewById(_id: string): Promise<ReviewData> {
     // 우선 해당 상품이 db에 존재하는지 확인
     const review = await Review.findOne({ _id });
+    if (!review) {
+      const error = new Error('해당 리뷰가 존재하지 않습니다. 다시 확인해 주세요.');
+      error.name = 'NotFound';
+      throw error;
+    }
+    return review;
+  }
+
+  async getReviewByFeedId(feedId: string): Promise<ReviewData[]> {
+    // 우선 해당 상품이 db에 존재하는지 확인
+    const review = await Review.find({ feedId });
     if (!review) {
       const error = new Error('해당 리뷰가 존재하지 않습니다. 다시 확인해 주세요.');
       error.name = 'NotFound';

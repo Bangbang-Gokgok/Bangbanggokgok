@@ -1,6 +1,17 @@
 import { Schema } from 'mongoose';
+import shortid from 'shortid';
+
 const FeedSchema = new Schema(
   {
+    _id: {
+      type: String,
+      default: shortid.generate,
+    },
+    userId: {
+      type: String,
+      ref: 'users',
+      required: true,
+    },
     userName: {
       type: String,
       required: true,
@@ -21,6 +32,10 @@ const FeedSchema = new Schema(
       type: Object,
       required: true,
     },
+    likes: {
+      type: Array,
+      required: false,
+    },
     review: {
       type: Array,
       required: false,
@@ -30,7 +45,7 @@ const FeedSchema = new Schema(
       required: false,
     },
     imageUrl: {
-      type: String,
+      type: [String],
       required: false,
     },
   },

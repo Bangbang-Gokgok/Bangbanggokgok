@@ -17,8 +17,6 @@ async function findOrCreateUser(email: string, name: string) {
   const created = await User.create({
     name,
     email,
-    password: 'kakao-oauth', //나중에 random password로 바꾸고 비밀번호를 찾고싶으면
-    //비밀번호 분실 로직은 사용하여 찾을 수 있게 하자....
   });
 
   return created;
@@ -27,15 +25,15 @@ async function findOrCreateUser(email: string, name: string) {
 export const kakao = new KakaoStrategy(
   config,
   async (accessToken: string, refreshToken: string, profile: any, done: any) => {
-    const name = profile._json.properties.nickname;
     const email = profile._json.kakao_account.email;
+    const name = profile._json.properties.nickname;
     try {
-      const user = await findOrCreateUser(name!, email!);
+      const { _id, authority } = await findOrCreateUser(email!, name!);
       done(null, {
-        _id: user._id,
-        authority: user.authority,
-        email: user.email,
-        name: user.name,
+        _id,
+        authority,
+        email,
+        name,
       });
     } catch (e: any) {
       done(e, undefined);

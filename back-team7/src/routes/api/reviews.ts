@@ -1,14 +1,18 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { reviewService } from '../../services';
-
+import { feedService, reviewService } from '../../services';
+import { Types } from 'mongoose';
 const reviewRouter = Router();
 
 reviewRouter.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const reviewInfo = req.body;
-    // 위 데이터를 사용자 db에 추가하기
-    const newReview = await reviewService.addReview(reviewInfo);
-    res.status(201).json(newReview);
+    if (req.user) {
+      const _id: Types.ObjectId | string = req.user._id;
+      const reviewInfo = req.body;
+      // 위 데이터를 사용자 db에 추가하기
+      reviewInfo.userId = _id;
+      const newReview = await reviewService.addReview(reviewInfo);
+      res.status(201).json(newReview);
+    }
   } catch (error) {
     next(error);
   }
@@ -29,6 +33,18 @@ reviewRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction
     const _id = req.params._id;
     // _id 값으로 검색
     const reviewData = await reviewService.getReviewById(_id);
+
+    res.status(200).json(reviewData);
+  } catch (error) {
+    next(error);
+  }
+});
+
+reviewRouter.get('/list/:feedId', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const feedId = req.params.feedId;
+    // _id 값으로 검색
+    const reviewData = await reviewService.getReviewByFeedId(feedId);
 
     res.status(200).json(reviewData);
   } catch (error) {

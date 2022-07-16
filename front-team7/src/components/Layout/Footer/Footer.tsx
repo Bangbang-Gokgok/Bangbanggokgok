@@ -2,10 +2,12 @@ import styled from 'styled-components';
 import { FaHome, FaMapMarkedAlt, FaSearch, FaUserAlt } from 'react-icons/fa';
 
 import { FooterIcon } from './FooterIcon';
+import { useRecoilValue } from 'recoil';
+import { userIdState } from '@/store';
 
 export const Footer = () => {
 
-  const userId = 'userId';
+  const userId = useRecoilValue(userIdState);
 
   return (
     <StyledFooter>

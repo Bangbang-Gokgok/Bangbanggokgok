@@ -23,11 +23,13 @@ module.exports = {
   },
   plugins: [
     new ReactRefreshWebpackPlugin(),
-    // new webpack.DefinePlugin({
-    //   // 'process.env.name': JSON.stringify('변수'), //env 변수 만들기
-    //   'process.env.SERVER_PORT': JSON.stringify(process.env.SERVER_PORT),
-    // }),
+    new webpack.DefinePlugin({
+      // 'process.env.name': JSON.stringify('변수'), //env 변수 만들기
+      'process.env.KAKAO_SEARCH_REST_API_KEY': JSON.stringify(
+        process.env.KAKAO_SEARCH_REST_API_KEY
+      ),
+    }),
 
-    // new webpack.EnvironmentPlugin(['SERVER_PORT']),
+    new webpack.EnvironmentPlugin(['KAKAO_SEARCH_REST_API_KEY']),
   ],
 };
