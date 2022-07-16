@@ -133,9 +133,9 @@ const FeedMapPage = () => {
   const switchModalChildrenState = (modalChildrenState: string) => {
     switch (modalChildrenState) {
       case ModalState.CREATE:
-        return <Form />;
+        return <Form isEdit={false} />;
       case ModalState.EDIT:
-        return <Form feed={currentFeedState} />;
+        return <Form isEdit={true} />;
       case ModalState.FEED:
         return <FeedDetail
           isModal={true}
