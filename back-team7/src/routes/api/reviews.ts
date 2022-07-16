@@ -36,6 +36,18 @@ reviewRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction
   }
 });
 
+reviewRouter.get('/list/:feedId', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const feedId = req.params.feedId;
+    // _id 값으로 검색
+    const reviewData = await reviewService.getReviewByFeedId(feedId);
+
+    res.status(200).json(reviewData);
+  } catch (error) {
+    next(error);
+  }
+});
+
 reviewRouter.put('/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const _id = req.params._id;
