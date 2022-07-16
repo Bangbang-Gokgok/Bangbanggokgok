@@ -6,12 +6,22 @@ const ReviewSchema = new Schema(
       type: String,
       default: shortid.generate,
     },
+    userId: {
+      type: String,
+      ref: 'users',
+      required: true,
+    },
     userName: {
       type: String,
       required: true,
     },
     contents: {
       type: String,
+      required: true,
+    },
+    feedId: {
+      type: String,
+      ref: 'feeds',
       required: true,
     },
   },

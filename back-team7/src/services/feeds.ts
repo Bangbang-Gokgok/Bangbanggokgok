@@ -8,12 +8,12 @@ interface newLocation {
 }
 interface FeedInfo {
   userId: string | Types.ObjectId;
-  userName?: string | undefined;
+  userName: string;
   title: string;
   description: string;
   address: string;
   location: newLocation;
-  like?: string[] | undefined;
+  likes?: string[] | undefined;
   imageUrl?: string[] | undefined;
 }
 interface FeedData extends FeedInfo {

@@ -10,6 +10,8 @@ import { FaSearchLocation } from 'react-icons/fa';
 import { FcAddImage, FcSearch } from 'react-icons/fc';
 import { useRecoilValue } from 'recoil';
 import { currentFeedAtom } from '@/store/currentFeed';
+import * as UserApi from '@/api/users';
+
 
 const StyledModalForm = styled.div`
   width: 330px;
@@ -18,6 +20,7 @@ const StyledModalForm = styled.div`
   border-radius: 10px;
   background-color: white;
 `;
+
 
 const StyledFormContainer = styled.div`
   width: 100%;
@@ -161,24 +164,21 @@ const StyledSearchContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 15px;
+  margin-top: 10px;
 `;
 
 const StyledSearchData = styled.div`
-  width: 85%;
-  height: 100px;
-  line-height: 80px;
+  width: 80%;
   padding: 15px;
-  margin: 20px 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  border: 1px solid gray;
+  gap: 5px;
+  border-radius: 20px;
   background-color: whitesmoke;
-  // cursor: pointer;
+  box-shadow: 5px 5px 5px #c2c2c2;
+  
 
-  // :hover {
-  //   border: 2px solid black;
-  // }
 `;
 
 const StyledSearchInfoData = styled.div`
@@ -190,12 +190,12 @@ const StyledSearchInfoData = styled.div`
   // padding: 5px 8px;
 
   .placeName {
-    font-weight: 600;
+    font-weight: 500;
   }
 
   .roadAddressName,
   .addressName {
-    font-size: 1.3rem;
+    font-size: 1rem;
     color: gray;
   }
 
@@ -272,12 +272,17 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     setSearchState(true);
   };
 
+  // Feed CREATE
   const submitForm = async (data) => {
     if (!confirm('Feed를 추가하시겠습니까?')) return;
 
     const { title, description, address, image, x, y, searching } = data;
 
+    const myInfo = await UserApi.getMyUserInfo();
+    const userName = myInfo.name;
+
     const dummy = {
+      userName,
       title,
       description,
       address,
@@ -289,6 +294,7 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
 
     const fd = new FormData();
 
+    fd.append('userName', dummy.userName);
     fd.append('title', dummy.title);
     fd.append('description', dummy.description);
     fd.append('address', dummy.address);
@@ -395,6 +401,10 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
                 ))}
               </StyledSearchContainer>}
           </StyledSearchResultContainer>
+          <StyledInputContainer>
+            <StyledField>장소</StyledField>
+            <StyledInputText {...register('description')}></StyledInputText>
+          </StyledInputContainer>
         </StyledFormContainer>
       </form>
     </StyledModalForm>
