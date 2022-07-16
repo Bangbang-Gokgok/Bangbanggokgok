@@ -4,13 +4,15 @@ import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import { createClient } from 'redis';
+import schedule from 'node-schedule';
 // import path from 'path';
 
 import 'dotenv/config';
 import { apiRouter, authRouter } from './routes';
 import { errorHandler, getUserFromJWT } from './middlewares';
+import { userService, feedService } from './services';
 import { usePassport } from './passport';
-import { scheduler } from './node-schedule';
+import { likesScheduler, friendsScheduler } from './utils/scheduler';
 
 usePassport();
 
@@ -36,11 +38,10 @@ app.use('/auth', authRouter);
 
 app.use(errorHandler);
 
-export const changed = new Set();
-
 const server = app.listen(PORT, () => {
   console.log(`server is running ${PORT}`);
-  scheduler;
+  schedule.scheduleJob('*/1 * * * *', likesScheduler);
+  schedule.scheduleJob('*/1 * * * *', friendsScheduler);
 });
 
 // app.use(express.static(path.join(__dirname, '/../frontend/build'))); // 리액트 정적 파일 제공
