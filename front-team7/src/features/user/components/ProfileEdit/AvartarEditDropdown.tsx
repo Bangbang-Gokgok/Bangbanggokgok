@@ -1,3 +1,4 @@
+import { useRef, type MouseEvent } from 'react';
 import styled from 'styled-components';
 import { type UseFormRegister } from 'react-hook-form';
 
@@ -5,23 +6,40 @@ import { RegisterProps } from '@/features/user/components';
 
 interface AvartarEditDropdownProps {
   register: ReturnType<UseFormRegister<RegisterProps>>;
+  toggleDropdownMenu: (e: MouseEvent<HTMLButtonElement>) => void;
 }
 
-export const AvartarEditDropdown = ({ register }: AvartarEditDropdownProps) => {
+export const AvartarEditDropdown = ({ register, toggleDropdownMenu }: AvartarEditDropdownProps) => {
+  const { ref, ...rest } = register;
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  function onImageUploadHandler(e: MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    toggleDropdownMenu(e);
+    inputRef.current?.click();
+  }
+
   return (
     <StyledAvartarEditDropdown role="menu">
       <ul className="dropdown-ul">
         <li className="dropdown-li">
-          <label className="img-upload-label" htmlFor="profileImage">
+          <button type="button" onClick={(e) => onImageUploadHandler(e)}>
             이미지 업로드
-          </label>
-          <input className="img-upload-input" type="file" id="profileImage" {...register} />
+          </button>
+          <input
+            className="img-upload-input"
+            type="file"
+            id="profileImage"
+            ref={(e) => {
+              ref(e);
+              inputRef.current = e;
+            }}
+            {...rest}
+          />
         </li>
 
         <li className="dropdown-li">
-          <label className="img-upload-label" htmlFor="profileImage">
-            이미지 삭제
-          </label>
+          <button type="button">이미지 삭제</button>
         </li>
       </ul>
     </StyledAvartarEditDropdown>
@@ -46,14 +64,16 @@ const StyledAvartarEditDropdown = styled.div`
     padding: 0;
 
     .dropdown-li {
-      .img-upload-label {
+      button {
         display: block;
-        font-size: 1.5rem;
+        width: 100%;
+        font-size: 1.4rem;
         padding: 6px 14px;
         overflow: hidden;
         white-space: nowrap;
         cursor: pointer;
         z-index: 101;
+        text-align: start;
       }
 
       .img-upload-input {

@@ -1,18 +1,16 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { userService, UserInfo } from '../../../services';
-import { adminRouter } from './admin';
-import { upload } from '../../../middlewares/';
-import { getPostImageList } from '../../../utils/img';
-// import { adminCheck } from '../../../middlewares';
+import { userService, UserInfo } from '../../services';
+import { upload } from '../../middlewares/';
+import { getPostImageList } from '../../utils/img';
 import { Types } from 'mongoose';
-import { redisClient, changed } from '../../../server';
+import { redisClient } from '../../server';
 
 const userRouter = Router();
 
 declare global {
   namespace Express {
     interface User {
-      _id: Types.ObjectId | string;
+      _id: string;
       authority: string;
       email: string;
       name: string;
@@ -24,9 +22,6 @@ declare global {
     }
   }
 }
-
-// userRouter.use('/admin', adminCheck, adminRouter);
-userRouter.use('/admin', adminRouter);
 
 // 회원가입 API - 미구현, 주석 처리
 // userRouter.post('/user', async (req: Request, res: Response, next: NextFunction) => {
@@ -61,9 +56,10 @@ userRouter.get('/friends', async (req: Request, res: Response, next: NextFunctio
     if (req.user) {
       const userId = req.user._id;
       const resource = 'friends';
-      const key = `users:${userId}:${resource}`;
-      const friends = await redisClient.sMembers(key);
-      res.status(200).json(friends);
+      const key = `users:${resource}`;
+      const friends = await redisClient.hGet(key, userId);
+      const friendsArr = friends ? JSON.parse(friends) : [];
+      res.status(200).json(friendsArr);
     } else {
       const error = new Error('user 정보가 없습니다.');
       error.name = 'NotFound';
@@ -81,17 +77,26 @@ userRouter.get('/friends/:_id', async (req: Request, res: Response, next: NextFu
       const userId = req.user._id;
       const friendId = req.params._id;
       const resource = 'friends';
-      const key = `users:${userId}:${resource}`;
-      changed.add(key);
-      //친구 추가
-      const newFriend = await redisClient.sAdd(key, friendId);
-      //친구 취소
-      if (!newFriend) {
-        redisClient.sRem(key, friendId);
+      const key = `users:${resource}`;
+      const friends = await redisClient.hGet(key, userId);
+      let friendsArr: string[];
+      let friendNum;
+      if (friends) {
+        friendsArr = JSON.parse(friends);
+        friendNum = friendsArr.length;
+        friendsArr = friendsArr.filter((e) => e !== friendId);
+        if (friendNum === friendsArr.length) {
+          friendsArr.push(friendId);
+          friendNum += 1;
+        } else {
+          friendNum -= 1;
+        }
+      } else {
+        friendsArr = [friendId];
+        friendNum = 1;
       }
-
-      const friends = await redisClient.sCard(key);
-      res.status(200).json(friends);
+      await redisClient.hSet(key, userId, JSON.stringify(friendsArr));
+      res.status(200).json(friendNum);
     } else {
       const error = new Error('user 정보가 없습니다.');
       error.name = 'NotFound';
@@ -164,9 +169,9 @@ userRouter.delete('/user', async (req: Request, res: Response, next: NextFunctio
     if (req.user) {
       const _id: Types.ObjectId | string = req.user._id;
       const resource = 'friends';
-      const key = `users:${_id}:${resource}`;
+      const key = `users:${resource}`;
       //Redis 친구 data 삭제
-      await redisClient.del(key);
+      await redisClient.hDel(key, _id);
       //mongoDB 회원 data 삭제
       const deleteResult = await userService.deleteUserData(_id);
 
