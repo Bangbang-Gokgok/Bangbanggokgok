@@ -6,64 +6,161 @@ import { ImRoad } from 'react-icons/im';
 import { FaAddressBook, FaMapMarkedAlt, FaMousePointer, FaSave } from 'react-icons/fa';
 import { MdPlace } from 'react-icons/md';
 import * as Api from '@/api/feeds';
-import { AiOutlineConsoleSql } from 'react-icons/ai';
+import { FaSearchLocation } from 'react-icons/fa';
+import { FcAddImage, FcSearch } from 'react-icons/fc';
+import { useRecoilValue } from 'recoil';
+import { currentFeedAtom } from '@/store/currentFeed';
+
+const StyledModalForm = styled.div`
+  width: 330px;
+  height: 400px;
+  overflow-y: scroll;
+  border-radius: 10px;
+  background-color: white;
+`;
 
 const StyledFormContainer = styled.div`
-  min-width: 300px;
-  max-height: 500px;
-  box-sizing: content-box;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 50px 20px;
-  background-color: rgb(235, 235, 235);
-  overflow: scroll;
+  gap: 10px;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgb(219, 219, 219);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: white;
+    border-radius: 0 10px 10px 0;
+  }
 `;
 
 const StyledTitle = styled.div`
   width: 100%;
-  height: 60px;
-  font-size: 1.5rem;
-  background: pink;
+  padding: 15px;
+  border-bottom: 1px solid rgb(219, 219, 219);
+  text-align: center;
 `;
+
+const StyledTitleSpan = styled.span`
+  font-size: 1.8rem;
+  font-weight: 500;
+`;
+
 const StyledInputContainer = styled.div`
   width: 100%;
-  height: 40px;
   display: flex;
-  // background: lightgreen;
+  padding: 0 15px;
+  flex-direction: column;
+  border-bottom: 1px solid rgb(219, 219, 219);
+`;
 
-  .submitBtn {
-    font-size: 1.4rem;
-    border-radius: 15px;
+const StyledImgInputContainer = styled.div`
+  width: 100%;
+  display: flex;
+  padding: 0 15px;
+  flex-direction: row;
+  justify-content: space-between;
+  border-bottom: 1px solid rgb(219, 219, 219);
+`;
+
+const StyledField = styled.label`
+  font-size: 1.2rem;
+  font-weight: 600;
+`;
+
+const StyledInputTitle = styled.input.attrs({
+  placeholder: "제목 입력..."
+})`
+  width: 100%;
+  height: 34px;
+  font-size: 1.5rem;
+  border: none;
+  &:focus{
+    outline: none;
+    background-color: white;
   }
 `;
-const StyledField = styled.div`
-  width: 15%;
-  height: 40px;
-  line-height: 40px;
+
+const StyledInputText = styled.textarea.attrs({
+  placeholder: "글 입력..."
+})`
+  width: 100%;
+  height: 100px;
   font-size: 1.5rem;
+  border: none;
+  resize: none;
+  overflow-y: scroll;
+  &:focus{
+    outline: none;
+    background-color: white;
+  }
+
 `;
 
-const StyledInput = styled.input`
-  width: 85%;
-  box-sizing: border-box;
-  height: 40px;
-  font-size: 1.5rem;
-  padding-left: 10px;
-  border-radius: 15px;
+const StyledImgLabel = styled.label.attrs({
+  htmlFor: "image"
+})`
+  padding-right: 6px;
+  font-size: 3rem;
+  cursor: pointer;
+ 
+`;
 
-  // background-color: rgb(235, 235, 235);
+const StyledInputImg = styled(StyledInputTitle).attrs({
+  className: "login-input",
+  type: "file",
+  id: "image",
+  accept: "image/*",
+  multiple: true
+})`
+  display: none;
+`;
+
+const StyledSearchAddress = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const StyledInputSearchAddress = styled.input.attrs({
+  className: "login-input",
+  type: "text",
+  id: "searching",
+  placeholder: '장소 입력...'
+})`
+  width: 100%;
+  height: 34px;
+  font-size: 1.5rem;
+  border: none;
+  &:focus{
+    outline: none;
+    background-color: white;
+  }
+`;
+
+const StyledButtonSearchAddress = styled.button`
+  border: none;
+  background-color: white;
+  font-size: 3rem;
+`;
+
+const StyledSearchResultContainer = styled.div`
+  width: 100%;
+  max-height: 200px;
+  overflow-y: scroll;
 `;
 
 const StyledSearchContainer = styled.div`
   width: 100%;
-  min-height: 200px;
-  overflow-y: auto;
-
-  // display: flex;
-  // flex-direction: column;
-  // gap: 30px;
-  // background-color: red;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 const StyledSearchData = styled.div`
@@ -147,22 +244,15 @@ interface PlaceProps {
   y: number;
 }
 
-interface PlaceListProps extends Array<PlaceProps> {}
+interface PlaceListProps extends Array<PlaceProps> { }
 
-interface CenterLatLng {
-  lat: number;
-  lng: number;
-}
-
-interface Review {
-  userName: string;
-  contents: string;
-  timestamp: Date;
-}
-
-const Form = () => {
+const Form = ({ isEdit }: { isEdit: boolean; }) => {
+  const [searchState, setSearchState] = useState(false);
   const [placeInfoList, setPlaceInfoList] = useState<PlaceListProps>([]);
+  const currentFeedState = useRecoilValue(currentFeedAtom);
   const { register, watch, handleSubmit } = useForm();
+
+  if (isEdit) console.log(currentFeedState);
 
   // 검색어에 대한 장소 조회하기
   const searchPlace = async (e) => {
@@ -179,6 +269,7 @@ const Form = () => {
     const places: PlaceListProps = res.data.documents;
     // console.log('조회해온 장소들 : ', places);
     setPlaceInfoList(places);
+    setSearchState(true);
   };
 
   const submitForm = async (data) => {
@@ -215,76 +306,98 @@ const Form = () => {
       console.log(err);
     }
   };
+
+  const editSubmitForm = (data) => {
+    console.log(data);
+
+  };
+
   // <추가과제>
   // 빈 값을 넣고 엔터를 쳤을 때 axios Error 처리 하기
   // 성공적으로 값을 추가한 뒤 값을 초기화해서 빈 값으로 바꾸기
   // 여러 에러 발생 가능 => 에러 메세지 백엔드에서 구현되면, 프론트에서 보여주는 로직 추가하기 (useForm의 에러 처리 검색해보기)
   return (
-    <form onSubmit={handleSubmit(submitForm)}>
-      <StyledFormContainer>
-        <StyledTitle>Feed 추가하기</StyledTitle>
-        <StyledInputContainer>
-          <StyledField>제목</StyledField>
-          <StyledInput placeholder="title" {...register('title')}></StyledInput>
-        </StyledInputContainer>
-        <StyledInputContainer>
-          <StyledField>설명</StyledField>
-          <StyledInput placeholder="description" {...register('description')}></StyledInput>
-        </StyledInputContainer>
-        <StyledInputContainer>
-          <StyledField>이미지</StyledField>
-          <input className="login-input" type="file" id="image" multiple {...register('image')} />
-        </StyledInputContainer>
-        <StyledInputContainer>
-          <StyledField>주소</StyledField>
-          <input className="login-input" type="text" id="searching" {...register('searching')} />
-          <button
-            onClick={(e) => {
-              searchPlace(e);
-            }}
-          >
-            검색
-          </button>
-        </StyledInputContainer>
-        <StyledSearchContainer>
-          {placeInfoList?.map((place, index) => (
-            <StyledSearchData key={`${index}-${place.x}-${place.y}`}>
-              <StyledSearchInfoData>
-                <MdPlace className="place-icon"></MdPlace>
-                <span className="placeName">{place.place_name}</span>
-              </StyledSearchInfoData>
-              <StyledSearchInfoData>
-                <ImRoad className="roadAddress-icon"></ImRoad>
-                <span className="roadAddressName">{place.road_address_name}</span>
-              </StyledSearchInfoData>
-              <StyledSearchInfoData>
-                <FaAddressBook className="address-icon"></FaAddressBook>
-                <span className="addressName">{place.address_name}</span>
-                <input
-                  className="addressName"
-                  type="hidden"
-                  value={place.address_name}
-                  {...register('address')}
-                />
-                <input className="x" type="hidden" value={place.x} {...register('x')} />
-                <input className="y" type="hidden" value={place.y} {...register('y')} />
-              </StyledSearchInfoData>
-              <StyledSearchInfoData>
-                <div className="map">
-                  <FaMapMarkedAlt
-                    className="map-icon"
-                    onClick={() => {
-                      window.open(place.place_url);
-                    }}
-                  ></FaMapMarkedAlt>
-                  <button type="submit">추가</button>
-                </div>
-              </StyledSearchInfoData>
-            </StyledSearchData>
-          ))}
-        </StyledSearchContainer>
-      </StyledFormContainer>
-    </form>
+    <StyledModalForm>
+      <form onSubmit={isEdit ? handleSubmit(editSubmitForm) : handleSubmit(submitForm)}>
+        <StyledFormContainer>
+          <StyledTitle>
+            <StyledTitleSpan>{isEdit ? '내 피드 수정하기' : '새로운 피드 만들기'}</StyledTitleSpan>
+          </StyledTitle>
+          <StyledInputContainer>
+            <StyledField>제목</StyledField>
+            <StyledInputTitle  {...register('title')}></StyledInputTitle>
+          </StyledInputContainer>
+          <StyledInputContainer>
+            <StyledField>설명</StyledField>
+            <StyledInputText {...register('description')}></StyledInputText>
+          </StyledInputContainer>
+          <StyledImgInputContainer>
+            <StyledField>사진</StyledField>
+            <StyledImgLabel><FcAddImage /></StyledImgLabel>
+            <StyledInputImg {...register('image')} />
+          </StyledImgInputContainer>
+          <StyledInputContainer>
+            <StyledField>장소</StyledField>
+            <StyledSearchAddress>
+              <StyledInputSearchAddress {...register('searching')} />
+              <StyledButtonSearchAddress
+                onClick={(e) => {
+                  searchPlace(e);
+                }}
+              >
+                <FcSearch />
+              </StyledButtonSearchAddress>
+            </StyledSearchAddress>
+          </StyledInputContainer>
+          <StyledSearchResultContainer>
+            {searchState &&
+              <StyledSearchContainer>
+                {placeInfoList?.map((place, index) => (
+                  <StyledSearchData key={`${index}-${place.x}-${place.y}`}>
+                    <StyledSearchInfoData>
+                      <MdPlace className="place-icon"></MdPlace>
+                      <span className="placeName">{place.place_name}</span>
+                    </StyledSearchInfoData>
+                    <StyledSearchInfoData>
+                      <ImRoad className="roadAddress-icon"></ImRoad>
+                      <span className="roadAddressName">{place.road_address_name}</span>
+                    </StyledSearchInfoData>
+                    <StyledSearchInfoData>
+                      <FaAddressBook className="address-icon"></FaAddressBook>
+                      <span className="addressName">{place.address_name}</span>
+                      <input
+                        className="addressName"
+                        type="hidden"
+                        value={place.address_name}
+                        {...register('address')}
+                      />
+                      <input className="x" type="hidden" value={place.x} {...register('x')} />
+                      <input className="y" type="hidden" value={place.y} {...register('y')} />
+                    </StyledSearchInfoData>
+                    <StyledSearchInfoData>
+                      <div className="map">
+                        <FaMapMarkedAlt
+                          className="map-icon"
+                          onClick={() => {
+                            window.open(place.place_url);
+                          }}
+                        ></FaMapMarkedAlt>
+                        {
+                          isEdit
+                            ?
+                            <button name="edit" type="submit">수정</button>
+                            :
+                            <button name="add" type="submit">추가</button>
+                        }
+                      </div>
+                    </StyledSearchInfoData>
+                  </StyledSearchData>
+                ))}
+              </StyledSearchContainer>}
+          </StyledSearchResultContainer>
+        </StyledFormContainer>
+      </form>
+    </StyledModalForm>
   );
 };
 
