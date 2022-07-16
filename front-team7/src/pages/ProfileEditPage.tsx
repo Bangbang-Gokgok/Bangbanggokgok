@@ -1,11 +1,12 @@
+import styled from 'styled-components';
+
 import { Main } from '@/components/Layout';
 import { ProfileEditForm } from '@/features/user/components';
 
 const ProfileEditPage = () => {
   return (
     <Main
-      bg="#485461"
-      backgroundImage="linear-gradient(315deg, #485461 0%, #28313b 74%)"
+      bg="#282b37"
       display="flex"
       justifyContent="center"
       alignItems="center"
@@ -13,9 +14,16 @@ const ProfileEditPage = () => {
       width="100%"
       height="100%"
     >
-      <ProfileEditForm />
+      <StyledProfileEditPage>
+        <ProfileEditForm />
+      </StyledProfileEditPage>
     </Main>
   );
 };
+
+const StyledProfileEditPage = styled.div`
+  width: 100%;
+  max-width: 500px;
+`;
 
 export default ProfileEditPage;

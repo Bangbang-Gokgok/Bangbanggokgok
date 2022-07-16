@@ -13,11 +13,11 @@ import { profileEditSchema } from '@/features/user/schemas';
 import { AvartarEdit, Field, type kindType, type RegisterProps } from '@/features/user/components';
 
 const FIELD_DATA: { kind: kindType; labelName: string; inputType: string }[] = [
-  { kind: 'email', labelName: '이메일', inputType: 'text' },
-  { kind: 'name', labelName: '이름', inputType: 'text' },
-  { kind: 'description', labelName: '지도 소개말', inputType: 'text' },
-  { kind: 'contactNumber', labelName: '연락처', inputType: 'text' },
-  { kind: 'address', labelName: '주소', inputType: 'text' },
+  { kind: 'email', labelName: '💌 이메일', inputType: 'text' },
+  { kind: 'name', labelName: '🙋‍♀️ 이름', inputType: 'text' },
+  { kind: 'description', labelName: '🌎 지도 소개말', inputType: 'text' },
+  { kind: 'contactNumber', labelName: '📞 연락처', inputType: 'text' },
+  { kind: 'address', labelName: '📔 주소', inputType: 'text' },
 ];
 
 export const ProfileEditForm = () => {
@@ -32,6 +32,7 @@ export const ProfileEditForm = () => {
     setValue,
     formState: { errors },
   } = useForm<RegisterProps>({
+    mode: 'onChange',
     defaultValues: {
       profileImage: undefined,
       email: currentUser?.email,
@@ -87,7 +88,7 @@ export const ProfileEditForm = () => {
           <AvartarEdit control={control} register={register('profileImage')} />
         </li>
         {FIELD_DATA.map((field) => (
-          <li key={field.kind} className="login-li">
+          <li key={field.kind}>
             <Field
               kind={field.kind}
               labelName={field.labelName}
@@ -151,14 +152,14 @@ const StyledForm = styled.form`
 
   .profile-edit-ul {
     display: grid;
-    gap: 10px;
+    gap: 20px;
     margin: 0;
     padding: 0;
     height: 100%;
   }
 
   .address-btn-container {
-    margin-top: 10px;
+    margin-top: 13px;
 
     button {
       margin-right: 7px;

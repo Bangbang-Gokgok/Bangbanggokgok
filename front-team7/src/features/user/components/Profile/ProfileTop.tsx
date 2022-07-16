@@ -29,13 +29,13 @@ export const ProfileTop = () => {
           <div className="profile-info">
             <span className="profile-info-title">게시글</span>
             <span className="profile-info-number">
-              {currentUserFeeds!.length > 0 ? currentUserFeeds!.length : 0}
+              {currentUserFeeds?.length > 0 ? currentUserFeeds!.length : 0}
             </span>
           </div>
           <div className="profile-info">
             <span className="profile-info-title">친구</span>
             <span className="profile-info-number">
-              {currentUser!.friends.length > 0 ? currentUser!.friends.length : 0}
+              {currentUser!.friends?.length > 0 ? currentUser!.friends.length : 0}
             </span>
           </div>
         </div>
@@ -117,6 +117,37 @@ const StyledProfileTop = styled.div<{ image: string }>`
       .profile-info-number {
       }
     }
+  }
+
+  @media screen and (min-width: 768px) {
+    height: 350px;
+
+    .profile-main {
+      gap: 5px;
+
+      .username {
+        font-size: 1.8rem;
+        font-weight: bold;
+      }
+
+      .email {
+        font-size: 1.5rem;
+      }
+    }
+
+    .profile-info-container {
+      gap: 8px;
+
+      .profile-info {
+        width: 60px;
+        padding: 8px;
+        height: 100%;
+        border-radius: 5px;
+      }
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
   }
 `;
 
