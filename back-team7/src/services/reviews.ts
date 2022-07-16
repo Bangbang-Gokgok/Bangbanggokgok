@@ -2,6 +2,7 @@ import { Review } from '../models';
 import { Types } from 'mongoose';
 
 interface ReviewInfo {
+  userId: string | Types.ObjectId;
   feedId: string;
   userName: string;
   contents: string;

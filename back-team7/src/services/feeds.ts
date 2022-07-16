@@ -8,7 +8,7 @@ interface newLocation {
 }
 interface FeedInfo {
   userId: string | Types.ObjectId;
-  userName?: string | undefined;
+  userName: string;
   title: string;
   description: string;
   address: string;
