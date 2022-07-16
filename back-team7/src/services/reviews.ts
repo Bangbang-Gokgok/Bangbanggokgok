@@ -32,6 +32,17 @@ class ReviewService {
     return review;
   }
 
+  async getReviewByFeedId(feedId: string): Promise<ReviewData[]> {
+    // 우선 해당 상품이 db에 존재하는지 확인
+    const review = await Review.find({ feedId });
+    if (!review) {
+      const error = new Error('해당 리뷰가 존재하지 않습니다. 다시 확인해 주세요.');
+      error.name = 'NotFound';
+      throw error;
+    }
+    return review;
+  }
+
   // 리뷰 정보 수정
   async setReview(_id: string, update: Partial<ReviewInfo>) {
     // 업데이트 진행
