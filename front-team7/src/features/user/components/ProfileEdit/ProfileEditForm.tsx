@@ -32,6 +32,7 @@ export const ProfileEditForm = () => {
     setValue,
     formState: { errors },
   } = useForm<RegisterProps>({
+    mode: 'onChange',
     defaultValues: {
       profileImage: undefined,
       email: currentUser?.email,
