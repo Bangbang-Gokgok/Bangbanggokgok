@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { type UseFormRegister } from 'react-hook-form';
 
 export interface RegisterProps {
-  profileImage?: FileList | File;
+  profileImage?: FileList;
   email?: string;
   name?: string;
   description?: string;
@@ -46,18 +46,24 @@ const StyledField = styled.div`
   display: flex;
   flex-direction: column;
 
+  .field-label {
+    color: #484848;
+    font-size: 1.5rem;
+  }
+
   .field-input {
     font-size: 1.7rem;
-    height: 38px;
-    border: 1.5px solid #6a6a6a;
-    border-radius: 0.5rem;
-    margin-top: 0.2rem;
+    height: 45px;
+    border: 1.5px solid #dbe0df;
+    margin-top: 5px;
     padding: 0 8px;
     text-overflow: ellipsis;
+    transition: all 0.3s ease;
 
     :focus {
       outline: none;
-      background-color: #e7e7fc;
+      border-color: #d0e0e9;
+      background-color: #f2f2fc;
     }
 
     :disabled {

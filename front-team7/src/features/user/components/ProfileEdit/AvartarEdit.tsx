@@ -1,4 +1,4 @@
-import { useState, useEffect, type MouseEvent } from 'react';
+import { useState, useEffect } from 'react';
 
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
@@ -9,7 +9,7 @@ import { userProfileImageQuery } from '@/store';
 
 import { Avartar } from '@/components/Avatar';
 import { Icon } from '@/components/Icon';
-import { AvartarEditDropdown, RegisterProps } from '@/features/user/components';
+import { RegisterProps } from '@/features/user/components';
 
 interface AvartarEditProps {
   control: Control<RegisterProps>;
@@ -17,13 +17,13 @@ interface AvartarEditProps {
 }
 
 export const AvartarEdit = ({ control, register }: AvartarEditProps) => {
-  const [isOpenDropdownMenu, setIsOpenDropdownMenu] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const userProfileImage = useRecoilValue(userProfileImageQuery);
   const profileImage = useWatch({ control, name: 'profileImage' });
+  console.log(profileImage);
 
   useEffect(() => {
-    if (!profileImage) return;
+    if (!profileImage || profileImage?.length === 0) return;
 
     const imageUrl = URL.createObjectURL(profileImage[0] as Blob);
 
@@ -32,22 +32,15 @@ export const AvartarEdit = ({ control, register }: AvartarEditProps) => {
     return () => URL.revokeObjectURL(imageUrl);
   }, [profileImage]);
 
-  function toggleDropdownMenu(e: MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    setIsOpenDropdownMenu(!isOpenDropdownMenu);
-  }
-
   return (
     <StyledAvartarEdit>
-      <button onClick={(e) => toggleDropdownMenu(e)}>
+      <label className="img-upload-label" htmlFor="profile-image">
         <Avartar kind="circle" size="xl" src={imagePreview || userProfileImage} />
         <span className="icon-container">
           <Icon kind="circle" size="sm" element={<MdOutlineModeEditOutline />} />
         </span>
-      </button>
-      {isOpenDropdownMenu && (
-        <AvartarEditDropdown register={register} toggleDropdownMenu={toggleDropdownMenu} />
-      )}
+      </label>
+      <input className="img-upload-input" type="file" id="profile-image" {...register} />
     </StyledAvartarEdit>
   );
 };
@@ -66,5 +59,13 @@ const StyledAvartarEdit = styled.div`
     position: absolute;
     bottom: 0;
     right: 0;
+  }
+
+  .img-upload-label {
+    cursor: pointer;
+  }
+
+  .img-upload-input {
+    display: none;
   }
 `;
