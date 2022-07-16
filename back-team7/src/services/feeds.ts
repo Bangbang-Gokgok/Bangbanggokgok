@@ -1,6 +1,7 @@
 import { Feed } from '../models';
 import { Types } from 'mongoose';
 import { Schema } from 'mongoose';
+import mongodb = require('mongodb');
 
 interface newLocation {
   lat: number;
@@ -63,6 +64,10 @@ class FeedService {
       throw error;
     }
     return updatedFeed;
+  }
+
+  async likesBulkUpdate(writes: Array<mongodb.AnyBulkWriteOperation>) {
+    Feed.bulkWrite(writes);
   }
 
   // 피드 정보 삭제

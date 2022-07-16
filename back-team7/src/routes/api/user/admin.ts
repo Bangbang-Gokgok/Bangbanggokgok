@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { userService } from '../../../services';
+import { redisClient } from '../../../server';
 
 interface UserAuthority {
   authority: string;
@@ -24,6 +25,11 @@ adminRouter.put('/:_id', async (req: Request, res: Response, next: NextFunction)
 adminRouter.delete('/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const _id = req.params._id;
+    const resource = 'friends';
+    const key = `users:${resource}`;
+    //Redis 친구 data 삭제
+    await redisClient.hDel(key, _id);
+
     const deleteResult = await userService.deleteUserData(_id);
 
     res.status(200).json(deleteResult);
