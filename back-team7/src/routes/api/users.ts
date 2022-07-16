@@ -1,11 +1,9 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { userService, UserInfo } from '../../../services';
-import { adminRouter } from './admin';
-import { upload } from '../../../middlewares/';
-import { getPostImageList } from '../../../utils/img';
-// import { adminCheck } from '../../../middlewares';
+import { userService, UserInfo } from '../../services';
+import { upload } from '../../middlewares/';
+import { getPostImageList } from '../../utils/img';
 import { Types } from 'mongoose';
-import { redisClient } from '../../../server';
+import { redisClient } from '../../server';
 
 const userRouter = Router();
 
@@ -24,9 +22,6 @@ declare global {
     }
   }
 }
-
-// userRouter.use('/admin', adminCheck, adminRouter);
-userRouter.use('/admin', adminRouter);
 
 // 회원가입 API - 미구현, 주석 처리
 // userRouter.post('/user', async (req: Request, res: Response, next: NextFunction) => {
@@ -61,9 +56,10 @@ userRouter.get('/friends', async (req: Request, res: Response, next: NextFunctio
     if (req.user) {
       const userId = req.user._id;
       const resource = 'friends';
-      const key = `users:${userId}:${resource}`;
-      const friends = await redisClient.sMembers(key);
-      res.status(200).json(friends);
+      const key = `users:${resource}`;
+      const friends = await redisClient.hGet(key, userId);
+      const friendsArr = friends ? JSON.parse(friends) : [];
+      res.status(200).json(friendsArr);
     } else {
       const error = new Error('user 정보가 없습니다.');
       error.name = 'NotFound';
