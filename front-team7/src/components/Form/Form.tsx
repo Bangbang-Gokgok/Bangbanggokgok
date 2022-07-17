@@ -13,6 +13,8 @@ import { useRecoilValue } from 'recoil';
 import { currentFeedAtom } from '@/store/currentFeed';
 import * as UserApi from '@/api/users';
 import { currentUserQuery } from '@/store';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { formSchema } from './schemas/Form-schema';
 
 // 나중에 인터페이스 통잎해서 한 파일에 정리하기!
 interface PlaceProps {
@@ -30,6 +32,16 @@ interface PlaceProps {
   y: number;
 }
 
+interface FromInputs {
+  title: string,
+  description: string,
+  image: FileList,
+  searching: string,
+  address: string,
+  lat: number,
+  lng: number;
+}
+
 interface PlaceListProps extends Array<PlaceProps> { }
 
 const Form = ({ isEdit }: { isEdit: boolean; }) => {
@@ -37,7 +49,16 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const currentUser = useRecoilValue(currentUserQuery);
   const [placeInfoList, setPlaceInfoList] = useState<PlaceListProps>([]);
-  const { register, watch, handleSubmit, reset, setValue } = useForm();
+  const {
+    register,
+    watch,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors }
+  } = useForm<FromInputs>({
+    resolver: yupResolver(formSchema)
+  });
   const currentFeedState = useRecoilValue(currentFeedAtom);
   const imageData = watch('image');
 
@@ -211,7 +232,6 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
 
     // setValue('images', imageData.filter((_, index) => index !== id));
     setPreviewImages(previewImages.filter((_, index) => index !== id));
-    console.log(imageData);
   };
 
 
@@ -227,18 +247,22 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
             <StyledTitleSpan>{isEdit ? '내 피드 수정하기' : '새로운 피드 만들기'}</StyledTitleSpan>
           </StyledTitle>
           <StyledInputContainer>
+
             <StyledField>제목</StyledField>
             <StyledInputTitle
               defaultValue={isEdit ? currentFeedState.title : ''}
               {...register('title')}
             />
+            <StyledInputError>{errors.title?.message}</StyledInputError>
           </StyledInputContainer>
+
           <StyledInputContainer>
             <StyledField>설명</StyledField>
             <StyledInputText
               defaultValue={isEdit ? currentFeedState.description : ''}
               {...register('description')}
             />
+            <StyledInputError >{errors.description?.message}</StyledInputError>
           </StyledInputContainer>
           <StyledImgInputContainer>
             <StyledField>사진</StyledField>
@@ -271,6 +295,7 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
                 <FcSearch />
               </StyledButtonSearchAddress>
             </StyledSearchAddress>
+            <StyledInputError>{errors.address?.message}</StyledInputError>
           </StyledInputContainer>
           <StyledSearchResultContainer>
             {searchState &&
@@ -308,6 +333,7 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
               {...register('address')}
               disabled
             />
+            <StyledInputError>{errors.address?.message}</StyledInputError>
           </StyledInputContainer>
           <input type='hidden' {...register('lat')} />
           <input type='hidden' {...register('lng')} />
@@ -602,6 +628,12 @@ const StyledSubmitButton = styled.button`
   &:hover{
     background-color: #00cec9;
   }
+`;
+
+const StyledInputError = styled.p`
+  font-size: 0.5rem;
+  color: red;
+  text-align: right;
 `;
 
 export default Form;

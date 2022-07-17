@@ -10,5 +10,5 @@ export const formSchema = yup.object().shape({
     .max(1000, '본문은 1000자를 넘을 수 없습니다.'),
   address: yup
     .string()
-    .required('필수 입력 항목입니다.')
+    .required('장소를 검색해주세요.')
 });
