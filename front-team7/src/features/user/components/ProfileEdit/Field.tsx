@@ -6,7 +6,7 @@ export interface RegisterProps {
   email?: string;
   name?: string;
   description?: string;
-  contactNumber?: number;
+  contactNumber?: string;
   address?: string;
 }
 

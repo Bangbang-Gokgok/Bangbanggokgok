@@ -5,7 +5,8 @@ interface LocationState {
 
 export function getLocation(address: string): Promise<LocationState> | undefined {
   // 주소가 빈 값인 경우, 엘리스 주소로 대체
-  if (!address) address = '대전광역시 유성구 문지로 193 KAIST 캠퍼스 진리관 T 201호';
+  if (!address || address === 'undefined')
+    address = '대전광역시 유성구 문지로 193 KAIST 캠퍼스 진리관 T 201호';
 
   const geocoder = new kakao.maps.services.Geocoder();
 

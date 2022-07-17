@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { currentUserQuery } from '@/store';
+import { userState } from '@/store';
 import { currentFeedAtom } from '@/store/currentFeed';
 import { useForm } from 'react-hook-form';
 import { formSchema } from './schemas/Form-schema';
@@ -29,19 +29,19 @@ interface PlaceProps {
 }
 
 interface FromInputs {
-  title: string,
-  description: string,
-  image: FileList,
-  searching: string,
-  address: string,
-  lat: number,
+  title: string;
+  description: string;
+  image: FileList;
+  searching: string;
+  address: string;
+  lat: number;
   lng: number;
 }
 
 type PlaceListProps = Array<PlaceProps>;
 
-const Form = ({ isEdit }: { isEdit: boolean; }) => {
-  const currentUser = useRecoilValue(currentUserQuery);
+const Form = ({ isEdit }: { isEdit: boolean }) => {
+  const currentUser = useRecoilValue(userState);
   const currentFeedState = useRecoilValue(currentFeedAtom);
   const [searchState, setSearchState] = useState(false);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
@@ -52,9 +52,9 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     handleSubmit,
     reset,
     setValue,
-    formState: { errors }
+    formState: { errors },
   } = useForm<FromInputs>({
-    resolver: yupResolver(formSchema)
+    resolver: yupResolver(formSchema),
   });
   const imageData = watch('image');
 
@@ -66,8 +66,8 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
       if (currentFeedState.imageUrl.length > 0) {
         // setFeedImageState(currentFeedState.imageUrl);
         setPreviewImages(currentFeedState.imageUrl);
-      };
-    };
+      }
+    }
   }, []);
 
   // const setFeedImageState = (imageArray) => {
@@ -100,7 +100,7 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
   };
 
   const revokePreviewUrl = () => {
-    previewImages.forEach(url => {
+    previewImages.forEach((url) => {
       URL.revokeObjectURL(url);
     });
   };
@@ -227,7 +227,6 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     setPreviewImages(previewImages.filter((_, index) => index !== id));
   };
 
-
   // <추가과제>
   // 빈 값을 넣고 엔터를 쳤을 때 axios Error 처리 하기
   // 성공적으로 값을 추가한 뒤 값을 초기화해서 빈 값으로 바꾸기
@@ -240,7 +239,6 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
             <StyledTitleSpan>{isEdit ? '내 피드 수정하기' : '새로운 피드 만들기'}</StyledTitleSpan>
           </StyledTitle>
           <StyledInputContainer>
-
             <StyledField>제목</StyledField>
             <StyledInputTitle
               defaultValue={isEdit ? currentFeedState.title : ''}
@@ -255,21 +253,25 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
               defaultValue={isEdit ? currentFeedState.description : ''}
               {...register('description')}
             />
-            <StyledInputError >{errors.description?.message}</StyledInputError>
+            <StyledInputError>{errors.description?.message}</StyledInputError>
           </StyledInputContainer>
           <StyledImgInputContainer>
             <StyledField>사진</StyledField>
-            <StyledImgLabel><FcAddImage /></StyledImgLabel>
-            <StyledInputImg {...register('image', {
-              onChange: (e) => handleAddPreviewImages(e)
-            })} />
+            <StyledImgLabel>
+              <FcAddImage />
+            </StyledImgLabel>
+            <StyledInputImg
+              {...register('image', {
+                onChange: (e) => handleAddPreviewImages(e),
+              })}
+            />
           </StyledImgInputContainer>
           {previewImages.length > 0 && (
             <StyledPreviewImgWrapper>
               {previewImages.map((image, id) => (
                 <StyledPreviewImg key={id}>
                   <StyledPreviewImgSrc src={image} alt={`${image}-${id}`} />
-                  <StyledPreviewDeleteButton onClick={(e) => handleDeleteImage(e, id)} >
+                  <StyledPreviewDeleteButton onClick={(e) => handleDeleteImage(e, id)}>
                     <TiDelete />
                   </StyledPreviewDeleteButton>
                 </StyledPreviewImg>
@@ -291,57 +293,57 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
             <StyledInputError>{errors.address?.message}</StyledInputError>
           </StyledInputContainer>
           <StyledSearchResultContainer>
-            {searchState &&
+            {searchState && (
               <StyledSearchContainer>
                 {placeInfoList?.map((place, index) => (
                   <StyledSearchData
                     key={`${index}-${place.x}-${place.y}`}
-                    onClick={() => handleAddressState(place.address_name, Number(place.y), Number(place.x))}
+                    onClick={() =>
+                      handleAddressState(place.address_name, Number(place.y), Number(place.x))
+                    }
                   >
                     <StyledFiExternalLink href={place.place_url}>
                       <FiExternalLink />
                     </StyledFiExternalLink>
                     <StyledSearchInfoHeader>
-                      <StyledSearchInfoTitle>
-                        {place.place_name}
-                      </StyledSearchInfoTitle>
+                      <StyledSearchInfoTitle>{place.place_name}</StyledSearchInfoTitle>
                     </StyledSearchInfoHeader>
-                    {place.road_address_name &&
+                    {place.road_address_name && (
                       <StyledSearchInfoData>
                         <TbRoad />
                         <StyledAddressName>{place.road_address_name}</StyledAddressName>
                       </StyledSearchInfoData>
-                    }
+                    )}
                     <StyledSearchInfoData>
                       <MdShareLocation />
                       <StyledAddressName>{place.address_name}</StyledAddressName>
                     </StyledSearchInfoData>
                   </StyledSearchData>
                 ))}
-              </StyledSearchContainer>}
+              </StyledSearchContainer>
+            )}
           </StyledSearchResultContainer>
           <StyledInputContainer>
             <StyledField>주소</StyledField>
-            <StyledInputAddress
-              {...register('address')}
-              disabled
-            />
+            <StyledInputAddress {...register('address')} disabled />
             <StyledInputError>{errors.address?.message}</StyledInputError>
           </StyledInputContainer>
-          <input type='hidden' {...register('lat')} />
-          <input type='hidden' {...register('lng')} />
+          <input type="hidden" {...register('lat')} />
+          <input type="hidden" {...register('lng')} />
           <StyledSubmitButtonWrapper>
-            {
-              isEdit
-                ?
-                <StyledSubmitButton name="edit" type="submit">수정</StyledSubmitButton>
-                :
-                <StyledSubmitButton name="add" type="submit">추가</StyledSubmitButton>
-            }
+            {isEdit ? (
+              <StyledSubmitButton name="edit" type="submit">
+                수정
+              </StyledSubmitButton>
+            ) : (
+              <StyledSubmitButton name="add" type="submit">
+                추가
+              </StyledSubmitButton>
+            )}
           </StyledSubmitButtonWrapper>
         </StyledFormContainer>
       </form>
-    </StyledModalForm >
+    </StyledModalForm>
   );
 };
 
@@ -359,7 +361,7 @@ const StyledFormContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  
+
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -408,20 +410,20 @@ const StyledField = styled.label`
 `;
 
 const StyledInputTitle = styled.input.attrs({
-  placeholder: "제목 입력..."
+  placeholder: '제목 입력...',
 })`
   width: 100%;
   font-size: 1.5rem;
   padding: 5px;
   border: none;
-  &:focus{
+  &:focus {
     outline: none;
     background-color: transparent;
   }
 `;
 
 const StyledInputText = styled.textarea.attrs({
-  placeholder: "글 입력..."
+  placeholder: '글 입력...',
 })`
   width: 100%;
   height: 100px;
@@ -430,15 +432,14 @@ const StyledInputText = styled.textarea.attrs({
   border: none;
   resize: none;
   overflow-y: scroll;
-  &:focus{
+  &:focus {
     outline: none;
     background-color: transparent;
   }
-
 `;
 
 const StyledImgLabel = styled.label.attrs({
-  htmlFor: "image"
+  htmlFor: 'image',
 })`
   padding-right: 6px;
   font-size: 3rem;
@@ -446,10 +447,10 @@ const StyledImgLabel = styled.label.attrs({
 `;
 
 const StyledInputImg = styled(StyledInputTitle).attrs({
-  type: "file",
-  id: "image",
-  accept: "image/*",
-  multiple: true
+  type: 'file',
+  id: 'image',
+  accept: 'image/*',
+  multiple: true,
 })`
   display: none;
 `;
@@ -473,7 +474,7 @@ const StyledPreviewImg = styled.div`
 const StyledPreviewImgSrc = styled.img`
   width: 100%;
   height: 100%;
-  object-fit:cover;
+  object-fit: cover;
 `;
 
 const StyledPreviewDeleteButton = styled.button`
@@ -493,15 +494,15 @@ const StyledSearchAddress = styled.div`
 `;
 
 const StyledInputSearchAddress = styled.input.attrs({
-  type: "text",
-  id: "searching",
-  placeholder: '장소 검색...'
+  type: 'text',
+  id: 'searching',
+  placeholder: '장소 검색...',
 })`
   width: 100%;
   height: 34px;
   font-size: 1.5rem;
   border: none;
-  &:focus{
+  &:focus {
     outline: none;
     background-color: transparent;
   }
@@ -541,7 +542,7 @@ const StyledSearchData = styled.div`
   box-shadow: 5px 5px 5px #c2c2c2;
   transition: all 0.5s linear;
   cursor: pointer;
-  &:hover{
+  &:hover {
     box-shadow: none;
   }
 `;
@@ -558,10 +559,10 @@ const StyledSearchInfoTitle = styled.span`
 `;
 
 const StyledFiExternalLink = styled.a.attrs({
-  target: '_blank'
+  target: '_blank',
 })`
   position: absolute;
-  top : 15px;
+  top: 15px;
   right: 15px;
   font-size: 1.8rem;
   cursor: pointer;
@@ -586,19 +587,19 @@ const StyledSearchInfoData = styled.div`
 `;
 
 const StyledInputAddress = styled.input.attrs({
-  placeholder: "검색 결과..."
+  placeholder: '검색 결과...',
 })`
   width: 100%;
   height: 34px;
   font-size: 1.5rem;
   border: none;
-  &:focus{
+  &:focus {
     outline: none;
     background-color: transparent;
   }
 
-  &:disabled{
-    background-color:transparent;
+  &:disabled {
+    background-color: transparent;
   }
 `;
 
@@ -614,11 +615,11 @@ const StyledSubmitButton = styled.button`
   background-color: transparent;
   font-size: 1.6rem;
   width: 30%;
-  padding:10px 0;
+  padding: 10px 0;
   cursor: pointer;
   border-radius: 20px;
   transition: all 0.8s linear;
-  &:hover{
+  &:hover {
     background-color: #00cec9;
   }
 `;
