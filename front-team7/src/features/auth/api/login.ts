@@ -7,7 +7,7 @@ import { getCurrentUser } from '@/features/user/api';
 
 export const useLogin = () => {
   const [loading, setLoading] = useState(true);
-  const setAuth = useSetRecoilState(userState);
+  const setUser = useSetRecoilState(userState);
 
   useEffect(() => {
     async function getAccessToken(): Promise<UserState> {
@@ -16,12 +16,14 @@ export const useLogin = () => {
 
       console.log(user);
 
-      const newUser: UserState & { _id?: string } = {
+      const newUser: UserState & { _id?: string; updatedAt?: string; refreshToken?: string } = {
         ...user,
         id: user._id,
       };
 
       delete newUser._id;
+      delete newUser.updatedAt;
+      delete newUser.refreshToken;
 
       console.log(newUser);
 
@@ -29,7 +31,7 @@ export const useLogin = () => {
     }
 
     getAccessToken()
-      .then(setAuth)
+      .then(setUser)
       .catch((e) => console.log(e))
       .finally(() => setLoading(false));
   }, []);

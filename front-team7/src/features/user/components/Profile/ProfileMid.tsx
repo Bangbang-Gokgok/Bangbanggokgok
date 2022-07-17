@@ -6,8 +6,9 @@ import { userFieldQuery } from '@/store';
 export const ProfileMid = () => {
   const username = useRecoilValue(userFieldQuery('name'));
   const description = useRecoilValue(userFieldQuery('description'));
+  console.log(description);
 
-  const newDescription = description ?? `${username}님의 지도입니다.`;
+  const newDescription = description || `${username}님의 지도입니다.`;
 
   return (
     <StyledProfileMid>

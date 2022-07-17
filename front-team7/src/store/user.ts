@@ -7,7 +7,7 @@ export interface UserState {
   email?: string;
   name?: string;
   authority?: string;
-  createdAt?: number;
+  createdAt?: string;
   description?: string;
   profileImage?: string[];
   contactNumber?: string;
@@ -34,8 +34,8 @@ export interface UserResponse {
   };
   friends?: string[] | [];
   refreshToken?: string;
-  createdAt?: number;
-  updatedAt?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export const userState = atom<UserState | null>({
@@ -48,7 +48,7 @@ export const userFieldQuery = selectorFamily({
   get:
     (field: keyof UserState) =>
     ({ get }) => {
-      if (userState === null) return;
+      if (userState === null) return undefined;
       return get(userState)![field];
     },
   set:

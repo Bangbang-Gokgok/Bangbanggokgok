@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { axios } from '@/lib';
-import { UserResponse, userState } from '@/store';
+import { UserResponse, UserState, userState } from '@/store';
 import { useDaumAddress, getLocation } from '@/features/user/api';
 import { profileEditSchema } from '@/features/user/schemas';
 
@@ -39,7 +39,7 @@ export const ProfileEditForm = () => {
       name: currentUser?.name,
       description: currentUser?.description,
       contactNumber: currentUser?.contactNumber,
-      address: currentUser?.address,
+      address: currentUser?.address === 'undefined' ? '' : currentUser?.address,
     },
   });
 
@@ -74,12 +74,20 @@ export const ProfileEditForm = () => {
     if (profileImage) formData.append('profileImage', profileImage);
 
     const user = await axios.put<never, UserResponse>('/api/users/user', formData);
-    console.log(user);
-    const newUser = {
+
+    const newUser: UserState & { _id?: string; updatedAt?: string; refreshToken?: string } = {
       ...user,
       id: user._id,
     };
-    // navigate('/profile');
+
+    delete newUser._id;
+    delete newUser.updatedAt;
+    delete newUser.refreshToken;
+
+    console.log(newUser);
+    setCurrentUser(newUser);
+
+    navigate('/profile');
   }
 
   return (
