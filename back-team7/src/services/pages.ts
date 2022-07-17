@@ -8,7 +8,7 @@ class PageService {
   async getPaginatedFeeds(query: any, page: any, perPage: any) {
     const [total, feedList] = await Promise.all([
       Feed.countDocuments(query),
-      Feed.find(query)
+      Feed.find({ query })
         .sort({ views: -1 })
         .skip(perPage * (page - 1))
         .limit(perPage),
