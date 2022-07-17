@@ -150,15 +150,27 @@ feedRouter.delete('/:_id', async (req: Request, res: Response, next: NextFunctio
   }
 });
 
-// feedRouter.get('/list/page', async (req: Request, res: Response, next: NextFunction) => {
-//   try {
-//     // 전체 피드 목록을 얻음
-//     const { page, perPage } = req.query;
-//     const [feedList, totalPage] = await feedService.getFeedPage(page, perPage);
-//     res.status(200).json([feedList, totalPage]);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
+feedRouter.get('/page/list', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // 전체 피드 목록을 얻음
+    const { page, perPage } = req.query;
+    const [feedList, totalPage] = await feedService.getFeedPage(page, perPage);
+    res.status(200).json({ feedList, totalPage });
+  } catch (error) {
+    next(error);
+  }
+});
+feedRouter.get('/page/list/:userId', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.params.userId;
+    const { page, perPage } = req.query;
+    // userId 값으로 검색
+    const [feedList, totalPage] = await feedService.getFeedByUserIdPage(userId, page, perPage);
+
+    res.status(200).json({ feedList, totalPage });
+  } catch (error) {
+    next(error);
+  }
+});
 
 export { feedRouter };
