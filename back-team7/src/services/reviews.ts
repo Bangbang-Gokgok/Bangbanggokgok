@@ -19,7 +19,7 @@ class ReviewService {
   //전체 review 조회
   async getReview(): Promise<ReviewData[]> {
     const reviews = await Review.find({});
-    return reviews;
+    return reviews.reverse();
   }
   //특정 review 조회
   async getReviewById(_id: string): Promise<ReviewData> {
@@ -51,7 +51,7 @@ class ReviewService {
       error.name = 'NotFound';
       throw error;
     }
-    return review;
+    return review.reverse();
   }
 
   // 리뷰 정보 수정

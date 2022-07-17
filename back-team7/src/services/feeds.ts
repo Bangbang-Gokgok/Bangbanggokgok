@@ -30,7 +30,7 @@ class FeedService {
   async getFeed(): Promise<FeedData[]> {
     const feeds = await Feed.find({});
 
-    return feeds;
+    return feeds.reverse();
   }
   // //전체 feed 조회 pagenation
   // async getFeedPage(page: any, perPage: any) {
@@ -59,7 +59,7 @@ class FeedService {
       error.name = 'NotFound';
       throw error;
     }
-    return feed;
+    return feed.reverse();
   }
   // //유저_id로 feed 조회 pagenation
   // async getFeedByUserIdPage(
