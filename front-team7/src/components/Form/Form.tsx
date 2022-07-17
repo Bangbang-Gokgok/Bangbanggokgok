@@ -77,7 +77,53 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     if (!confirm('피드를 생성하시겠습니까?')) return;
 
     const { title, description, image, } = data;
+    console.log(image);
 
+
+    const userName = currentUser?.name || 'undefined';
+
+    const dummy = {
+      userName,
+      title,
+      description,
+      address: selectedAddressState.address,
+      location: {
+        lat: selectedAddressState.lat,
+        lng: selectedAddressState.lng,
+      },
+    };
+
+    const fd = new FormData();
+
+    fd.append('userName', dummy.userName);
+    fd.append('title', dummy.title);
+    fd.append('description', dummy.description);
+    fd.append('address', dummy.address);
+    fd.append('location', JSON.stringify(dummy.location));
+
+    for (let i = 0; i < image.length; i++) {
+      fd.append('imageUrl', image[i]);
+      console.log(image[i]);
+
+    }
+
+    try {
+      let res = await axios.post(`/api/feeds`, fd);
+      alert('성공적으로 추가되었습니다.');
+      console.log('create Feed : ', res);
+    } catch (err) {
+      console.log(err);
+    }
+    reset();
+    setSelectedAddressState(initSelectedAddressState);
+  };
+
+  const editSubmitForm = async (data) => {
+    console.log(currentFeedState._id);
+
+    if (!confirm('피드를 수정하시겠습니까?')) return;
+
+    const { title, description, image, } = data;
 
     const userName = currentUser?.name || 'undefined';
 
@@ -105,52 +151,13 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     }
 
     try {
-      let res = await axios.post(`/api/feeds`, fd);
-      alert('성공적으로 추가되었습니다.');
-      console.log('create Feed : ', res);
+      let res = await axios.put(`/api/feeds/${currentFeedState._id}`, fd);
+      alert('피드가 수정되었습니다.');
+      console.log('edit Feed : ', res);
     } catch (err) {
       console.log(err);
     }
-    reset();
-    setSelectedAddressState(initSelectedAddressState);
-  };
 
-  const editSubmitForm = (data) => {
-    console.log(currentFeedState._id);
-
-    if (!confirm('피드를 수정하시겠습니까?')) return;
-
-    const { title, description, image, } = data;
-
-
-    const userName = currentUser?.name || 'undefined';
-
-    const dummy = {
-      userName,
-      title,
-      description,
-      address: selectedAddressState.address,
-      location: {
-        lat: selectedAddressState.lat,
-        lng: selectedAddressState.lng,
-      },
-    };
-
-    const fd = new FormData();
-
-    fd.append('userName', dummy.userName);
-    fd.append('title', dummy.title);
-    fd.append('description', dummy.description);
-    fd.append('address', dummy.address);
-    fd.append('location', JSON.stringify(dummy.location));
-
-    for (let i = 0; i < image.length; i++) {
-      fd.append('imageUrl', image[i]);
-    }
-
-    console.log(fd);
-
-    // API CALL
     reset();
     setSelectedAddressState(initSelectedAddressState);
   };
@@ -362,7 +369,6 @@ const StyledImgLabel = styled.label.attrs({
 `;
 
 const StyledInputImg = styled(StyledInputTitle).attrs({
-  className: "login-input",
   type: "file",
   id: "image",
   accept: "image/*",
@@ -378,7 +384,6 @@ const StyledSearchAddress = styled.div`
 `;
 
 const StyledInputSearchAddress = styled.input.attrs({
-  className: "login-input",
   type: "text",
   id: "searching",
   placeholder: '장소 검색...'
