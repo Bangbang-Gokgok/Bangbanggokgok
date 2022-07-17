@@ -161,9 +161,6 @@ const FeedDetail = ({
       const res = await ReviewApi.updateOneReview(review_id, updatedData);
       alert('댓글이 수정되었습니다!');
       console.log('updatedReview : ', res);
-
-      // setReviewList((prev) => [...prev, createdReview]);
-      // console.log('reviewList : ', reviewList);
     } catch (err) {
       alert('Error 발생 ');
       console.log(err);
@@ -236,7 +233,7 @@ const FeedDetail = ({
         <StyledFeedDetailReview>
           <Comment.Group className="commentGroup">
             <Header as="h2" className="commentHeader" dividing>
-              Comments
+              Comment
             </Header>
 
             {/* 여기다가 scrollableTarget을 걸면 안되나? 왜 한참 더 내려가야 fetchMoreData 가 실행되는지 알아내기! */}
@@ -254,9 +251,22 @@ const FeedDetail = ({
                   // <Comment key={index} className={'comment'}>
                   <Comment
                     key={index}
-                    style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '10px',
+                      margin: '15px',
+                      border: '0',
+                      // border: '1px solid white',
+                      backgroundColor: 'white',
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                      padding: '5px',
+                    }}
                   >
-                    <div style={{ display: 'flex', gap: '10px' }}>
+                    <div
+                      style={{ display: 'flex', gap: '10px', height: '50px', position: 'relative' }}
+                    >
                       <Comment.Avatar
                         src="https://react.semantic-ui.com/images/avatar/small/matt.jpg"
                         alt="User"
@@ -264,10 +274,11 @@ const FeedDetail = ({
                       <Comment.Author
                         as="a"
                         style={{
-                          fontSize: '1.7rem',
-
+                          fontSize: '1.5rem',
+                          fontWeight: '600',
                           width: '50%',
-                          height: '50px',
+                          position: 'relative',
+                          height: '100%',
                           lineHeight: '50px',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -280,35 +291,52 @@ const FeedDetail = ({
                         style={{
                           fontSize: '1.2rem',
                           width: '40%',
-                          height: '50px',
+                          position: 'relative',
+                          height: '100%',
                           lineHeight: '50px',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
                           whiteSpace: 'nowrap',
                         }}
                       >
-                        <div>{review.createdAt}</div>
+                        {review.createdAt?.substr(0, 10)}
                       </Comment.Metadata>
                     </div>
                     <div>
-                      <Comment.Content>
+                      <Comment.Content style={{ margin: 0, padding: 0 }}>
                         {isEdit && review._id === clickedReview ? (
                           <input
+                            style={{
+                              width: '100%',
+                              // backgroundColor: 'red',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                            }}
                             type="text"
                             placeholder={review.contents}
                             onChange={onChangeReview}
                           />
                         ) : (
-                          <Comment.Text>{review.contents}</Comment.Text>
+                          <Comment.Text
+                            style={{
+                              // backgroundColor: 'red',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            {review.contents}
+                          </Comment.Text>
                         )}
                       </Comment.Content>
                     </div>
                     {review.userId === userId ? (
-                      <div>
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
                         {isEdit && review._id === clickedReview ? (
                           <Button
                             content="반영"
-                            labelPosition="left"
+                            // labelPosition="right"
                             primary
                             onClick={() => {
                               updateReview(review._id, updatedReview);
@@ -317,7 +345,7 @@ const FeedDetail = ({
                         ) : (
                           <Button
                             content="수정"
-                            labelPosition="left"
+                            // labelPosition="right"
                             primary
                             onClick={() => {
                               setIsEdit((prev) => !prev);
@@ -328,7 +356,7 @@ const FeedDetail = ({
                         {isEdit && review._id === clickedReview ? (
                           <Button
                             content="취소"
-                            labelPosition="left"
+                            // labelPosition="right"
                             primary
                             onClick={() => {
                               setIsEdit((prev) => !prev);
@@ -337,7 +365,7 @@ const FeedDetail = ({
                         ) : (
                           <Button
                             content="삭제"
-                            labelPosition="left"
+                            // labelPosition="right"
                             primary
                             onClick={() => {
                               deleteReview(review._id);
@@ -389,7 +417,7 @@ const StyledFeedDetailContainer = styled.div<FeedDetailContainerProps>`
   flex-direction: column;
   border-radius: 10px;
   gap: 10px;
-  box-shadow: ${(props) => (props.boxShadow ? '' : '0 0 15px #c2c2c2')};
+  box-shadow: ${(props) => (props.boxShadow ? '' : '0 0 10px 5px #c2c2c2')};
   // margin-top: ${(props) => (props.boxShadow ? '' : '30px')};
 
   @media only screen and (min-width: 768px) {
@@ -408,11 +436,11 @@ const StyledFeedDetailHeader = styled.div`
 `;
 const StyledFeedDetailBody = styled.div`
   // width: 90%;
-  height: 400px;
+  height: 420px;
   position: relative;
   box-sizing: border-box;
   z-index: 2;
-  // margin: 10px;
+  padding: 10px;
 
   background-color: whitesmoke;
   display: flex;
@@ -480,7 +508,7 @@ const StyledFeedDetailInfo = styled.div`
   font-size: 1.5rem;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
   .dropBtn {
     font-size: 2.5rem;
     cursor: pointer;
@@ -502,8 +530,8 @@ const StyledFeedDetailReview = styled.div`
   height: 300px;
   margin: 10px;
   padding: 10px;
-  background-color: #d9d9d9;
-  border-radius: 0px 0px 10px 10px;
+  background-color: #a2c4f3;
+  border-radius: 10px;
   z-index: 1;
 
   animation: ${dropAnimation} 1s alternate;
@@ -514,7 +542,7 @@ const StyledFeedDetailReview = styled.div`
     gap: 10px;
     position: relative;
     height: 100%;
-
+    // padding: 5px;
     .commentHeader {
       margin: 0;
       .comment {
@@ -574,8 +602,10 @@ const StyledFeedDetailReview = styled.div`
 const StyledCommentBody = styled.div`
   width: 100%;
   height: 150px;
-  border: 10px solid black;
-  // background-color: yellow;
+
+  // border: 10px solid black;
+  border-radius: 10px;
+  background-color: #cfe7d8;
   overflow-y: scroll;
 `;
 

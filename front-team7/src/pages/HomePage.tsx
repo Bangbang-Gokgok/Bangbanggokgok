@@ -16,24 +16,24 @@ const StyledFeedListContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 30px 0;
+  margin: 50px 0;
 
-  .grid-group {
-    display: grid;
-    grid-template-columns: 1fr;
-    row-gap: 30px;
-    // column-gap: 30px;
-    @media only screen and (min-width: 1024px) {
-      // display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      row-gap: 30px;
-      column-gap: 30px;
-    }
+  // .grid-group {
+  //   display: grid;
+  //   grid-template-columns: 1fr;
+  //   row-gap: 30px;
+  //   // column-gap: 30px;
+  //   @media only screen and (min-width: 1024px) {
+  //     // display: grid;
+  //     grid-template-columns: repeat(2, 1fr);
+  //     row-gap: 30px;
+  //     column-gap: 30px;
+  //   }
 
-    .grid-item {
-      margin-bottom: 30px;
-    }
-  }
+  //   .grid-item {
+  //     margin-bottom: 30px;
+  //   }
+  // }
 `;
 
 interface CenterLatLng {
@@ -164,10 +164,9 @@ const HomePage = () => {
           loader={<Loading text={'Loading...'}></Loading>}
           scrollableTarget="main-styled"
         >
-          <div className="grid-group">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '80px' }}>
             {feedList?.map((feed, index) => (
               <FeedDetail
-                className="grid-item"
                 isModal={false}
                 key={`${feed.title}-${index}`}
                 name={feed.userName}
