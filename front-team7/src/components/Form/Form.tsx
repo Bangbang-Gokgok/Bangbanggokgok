@@ -77,7 +77,7 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
   const searchPlace = async (e) => {
     e.preventDefault();
     const searching = watch().searching;
-
+    if (searching.length <= 0) return;
     const url = `https://dapi.kakao.com/v2/local/search/keyword.json?query=${searching}`;
     const res = await axios.get(url, {
       headers: {
@@ -133,11 +133,10 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     setSelectedAddressState(initSelectedAddressState);
   };
 
-  const editSubmitForm = async (e, data) => {
+  const editSubmitForm = async (data) => {
     if (!confirm('피드를 수정하시겠습니까?')) return;
 
     const { title, description, image } = data;
-    console.log(image);
 
     const userName = currentUser?.name || 'undefined';
 
@@ -163,8 +162,6 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     for (let i = 0; i < image.length; i++) {
       fd.append('imageUrl', image[i]);
     }
-
-    console.log(fd.getAll('imageUrl'));
 
     try {
       let res = await axios.put(`/api/feeds/${currentFeedState._id}`, fd);
@@ -285,14 +282,15 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
             {searchState &&
               <StyledSearchContainer>
                 {placeInfoList?.map((place, index) => (
-                  <StyledSearchData key={`${index}-${place.x}-${place.y}`}>
+                  <StyledSearchData
+                    key={`${index}-${place.x}-${place.y}`}
+                    onClick={() => handleAddressState(place.address_name, Number(place.y), Number(place.x))}
+                  >
                     <StyledFiExternalLink href={place.place_url}>
                       <FiExternalLink />
                     </StyledFiExternalLink>
                     <StyledSearchInfoHeader>
-                      <StyledSearchInfoTitle
-                        onClick={() => handleAddressState(place.address_name, Number(place.y), Number(place.x))}
-                      >
+                      <StyledSearchInfoTitle>
                         {place.place_name}
                       </StyledSearchInfoTitle>
                     </StyledSearchInfoHeader>
