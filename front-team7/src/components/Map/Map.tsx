@@ -64,9 +64,9 @@ const Map = ({
     address.style.cssText = 'font-size: 8px; color:blue;';
     address.innerHTML = feed.address;
 
-    const reviewLength = document.createElement('span');
-    reviewLength.style.cssText = 'font-size: 4px;';
-    reviewLength.innerHTML = `${feed.review?.length}개의 리뷰`;
+    // const reviewLength = document.createElement('span');
+    // reviewLength.style.cssText = 'font-size: 4px;';
+    // reviewLength.innerHTML = `${feed.review?.length}개의 리뷰`;
 
     const closeButton = document.createElement('button');
     closeButton.className = 'close-btn';
@@ -78,7 +78,7 @@ const Map = ({
 
     content.appendChild(title);
     content.appendChild(address);
-    content.appendChild(reviewLength);
+    // content.appendChild(reviewLength);
     content.appendChild(closeButton);
 
     return content;
