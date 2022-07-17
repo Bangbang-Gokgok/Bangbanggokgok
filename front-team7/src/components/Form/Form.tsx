@@ -6,6 +6,7 @@ import { TbRoad } from 'react-icons/tb';
 import { FaAddressBook, FaMapMarkedAlt, FaMousePointer, FaSave } from 'react-icons/fa';
 import { MdPlace, MdShareLocation } from 'react-icons/md';
 import * as Api from '@/api/feeds';
+import { TiDelete } from 'react-icons/ti';
 import { FiExternalLink } from 'react-icons/fi';
 import { FcAddImage, FcSearch } from 'react-icons/fc';
 import { useRecoilValue } from 'recoil';
@@ -38,11 +39,13 @@ interface PlaceListProps extends Array<PlaceProps> { }
 
 const Form = ({ isEdit }: { isEdit: boolean; }) => {
   const [searchState, setSearchState] = useState(false);
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [selectedAddressState, setSelectedAddressState] = useState(initSelectedAddressState);
   const currentUser = useRecoilValue(currentUserQuery);
   const [placeInfoList, setPlaceInfoList] = useState<PlaceListProps>([]);
-  const { register, watch, handleSubmit, reset } = useForm();
+  const { register, watch, handleSubmit, reset, setValue } = useForm();
   const currentFeedState = useRecoilValue(currentFeedAtom);
+  const imageData = watch('image');
 
   useEffect(() => {
     if (isEdit) {
@@ -51,8 +54,24 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
         lat: currentFeedState.location.lat,
         lng: currentFeedState.location.lng,
       });
+      if (currentFeedState.imageUrl.length > 0) {
+        // setFeedImageState(currentFeedState.imageUrl);
+        setPreviewImages(currentFeedState.imageUrl);
+      };
     };
   }, []);
+
+  // const setFeedImageState = (imageArray) => {
+  //   const dataTranster = new DataTransfer();
+
+  //   imageArray
+  //     .forEach((item: any) => {
+  //       dataTranster.items.add(item);
+  //     });
+
+  //   setValue('image', dataTranster.files);
+
+  // };
 
   // 검색어에 대한 장소 조회하기
   const searchPlace = async (e) => {
@@ -77,8 +96,6 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     if (!confirm('피드를 생성하시겠습니까?')) return;
 
     const { title, description, image, } = data;
-    console.log(image);
-
 
     const userName = currentUser?.name || 'undefined';
 
@@ -103,8 +120,6 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
 
     for (let i = 0; i < image.length; i++) {
       fd.append('imageUrl', image[i]);
-      console.log(image[i]);
-
     }
 
     try {
@@ -118,12 +133,11 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     setSelectedAddressState(initSelectedAddressState);
   };
 
-  const editSubmitForm = async (data) => {
-    console.log(currentFeedState._id);
-
+  const editSubmitForm = async (e, data) => {
     if (!confirm('피드를 수정하시겠습니까?')) return;
 
-    const { title, description, image, } = data;
+    const { title, description, image } = data;
+    console.log(image);
 
     const userName = currentUser?.name || 'undefined';
 
@@ -149,6 +163,8 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     for (let i = 0; i < image.length; i++) {
       fd.append('imageUrl', image[i]);
     }
+
+    console.log(fd.getAll('imageUrl'));
 
     try {
       let res = await axios.put(`/api/feeds/${currentFeedState._id}`, fd);
@@ -173,6 +189,40 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     });
     setSearchState(false);
   };
+
+  const handleAddPreviewImages = (e) => {
+    const imageList = e.target.files;
+    let previewUrlList: string[] = [...previewImages];
+
+    for (let idx = 0; idx < imageList.length; idx++) {
+      const currentImageUrl = URL.createObjectURL(imageList[idx]);
+      previewUrlList.push(currentImageUrl);
+    }
+    //URL.revokeObjectURL
+    if (previewUrlList.length > 5) {
+      previewUrlList = previewUrlList.slice(0, 5);
+    }
+
+    setPreviewImages(previewUrlList);
+  };
+
+  const handleDeleteImage = (e, id) => {
+    e.preventDefault();
+    const dataTranster = new DataTransfer();
+
+    Array.from(imageData)
+      .filter((_, index) => index !== id)
+      .forEach((item: any) => {
+        dataTranster.items.add(item);
+      });
+
+    setValue('image', dataTranster.files);
+
+    // setValue('images', imageData.filter((_, index) => index !== id));
+    setPreviewImages(previewImages.filter((_, index) => index !== id));
+    console.log(imageData);
+  };
+
 
   // <추가과제>
   // 빈 값을 넣고 엔터를 쳤을 때 axios Error 처리 하기
@@ -202,8 +252,22 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
           <StyledImgInputContainer>
             <StyledField>사진</StyledField>
             <StyledImgLabel><FcAddImage /></StyledImgLabel>
-            <StyledInputImg {...register('image')} />
+            <StyledInputImg {...register('image', {
+              onChange: (e) => handleAddPreviewImages(e)
+            })} />
           </StyledImgInputContainer>
+          {previewImages.length > 0 && (
+            <StyledPreviewImgWrapper>
+              {previewImages.map((image, id) => (
+                <StyledPreviewImg key={id}>
+                  <StyledPreviewImgSrc src={image} alt={`${image}-${id}`} />
+                  <StyledPreviewDeleteButton onClick={(e) => handleDeleteImage(e, id)} >
+                    <TiDelete />
+                  </StyledPreviewDeleteButton>
+                </StyledPreviewImg>
+              ))}
+            </StyledPreviewImgWrapper>
+          )}
           <StyledInputContainer>
             <StyledField>장소</StyledField>
             <StyledSearchAddress>
@@ -339,7 +403,7 @@ const StyledInputTitle = styled.input.attrs({
   border: none;
   &:focus{
     outline: none;
-    background-color: white;
+    background-color: transparent;
   }
 `;
 
@@ -355,7 +419,7 @@ const StyledInputText = styled.textarea.attrs({
   overflow-y: scroll;
   &:focus{
     outline: none;
-    background-color: white;
+    background-color: transparent;
   }
 
 `;
@@ -377,6 +441,38 @@ const StyledInputImg = styled(StyledInputTitle).attrs({
   display: none;
 `;
 
+const StyledPreviewImgWrapper = styled.div`
+  width: 100%;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-bottom: 1px solid rgb(219, 219, 219);
+`;
+
+const StyledPreviewImg = styled.div`
+  position: relative;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+`;
+
+const StyledPreviewImgSrc = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit:cover;
+`;
+
+const StyledPreviewDeleteButton = styled.button`
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translate(50%, -50%);
+  font-size: 2.2rem;
+  background-color: transparent;
+  border: none;
+`;
+
 const StyledSearchAddress = styled.div`
   display: flex;
   flex-direction: row;
@@ -394,13 +490,13 @@ const StyledInputSearchAddress = styled.input.attrs({
   border: none;
   &:focus{
     outline: none;
-    background-color: white;
+    background-color: transparent;
   }
 `;
 
 const StyledButtonSearchAddress = styled.button`
   border: none;
-  background-color: white;
+  background-color: transparent;
   font-size: 3rem;
 `;
 
@@ -478,11 +574,11 @@ const StyledInputAddress = styled.input.attrs({
   border: none;
   &:focus{
     outline: none;
-    background-color: white;
+    background-color: transparent;
   }
 
   &:disabled{
-    background-color:white;
+    background-color:transparent;
   }
 `;
 
@@ -495,7 +591,7 @@ const StyledSubmitButtonWrapper = styled.div`
 
 const StyledSubmitButton = styled.button`
   border: none;
-  background-color: white;
+  background-color: transparent;
   font-size: 1.6rem;
   width: 30%;
   padding:10px 0;
