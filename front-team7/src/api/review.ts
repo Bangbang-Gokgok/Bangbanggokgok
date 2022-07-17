@@ -66,7 +66,7 @@ export const updateOneReview = async (id, sendData) => {
 
 export const deleteOneReview = async (id) => {
   try {
-    let res = await axios.delete(`/api/reviews/${id}`);
+    const res = await axios.delete(`/api/reviews/${id}`);
     // console.log('deleted res.data : ', res.data);
     return res.data;
   } catch (err) {
