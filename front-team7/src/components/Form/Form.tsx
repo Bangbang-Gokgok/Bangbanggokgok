@@ -30,17 +30,11 @@ interface PlaceProps {
   y: number;
 }
 
-const initSelectedAddressState = {
-  address: '',
-  lat: 0,
-  lng: 0
-};
 interface PlaceListProps extends Array<PlaceProps> { }
 
 const Form = ({ isEdit }: { isEdit: boolean; }) => {
   const [searchState, setSearchState] = useState(false);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
-  const [selectedAddressState, setSelectedAddressState] = useState(initSelectedAddressState);
   const currentUser = useRecoilValue(currentUserQuery);
   const [placeInfoList, setPlaceInfoList] = useState<PlaceListProps>([]);
   const { register, watch, handleSubmit, reset, setValue } = useForm();
@@ -49,11 +43,9 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
 
   useEffect(() => {
     if (isEdit) {
-      setSelectedAddressState({
-        address: currentFeedState.address,
-        lat: currentFeedState.location.lat,
-        lng: currentFeedState.location.lng,
-      });
+      setValue('address', currentFeedState.address);
+      setValue('lat', currentFeedState.location.lat);
+      setValue('lng', currentFeedState.location.lng);
       if (currentFeedState.imageUrl.length > 0) {
         // setFeedImageState(currentFeedState.imageUrl);
         setPreviewImages(currentFeedState.imageUrl);
@@ -76,7 +68,7 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
   // 검색어에 대한 장소 조회하기
   const searchPlace = async (e) => {
     e.preventDefault();
-    const searching = watch().searching;
+    const searching = watch().searching.trim();
     if (searching.length <= 0) return;
     const url = `https://dapi.kakao.com/v2/local/search/keyword.json?query=${searching}`;
     const res = await axios.get(url, {
@@ -91,11 +83,18 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     setSearchState(true);
   };
 
+  const revokePreviewUrl = () => {
+    previewImages.forEach(url => {
+      URL.revokeObjectURL(url);
+    });
+  };
+
   // Feed CREATE
   const submitForm = async (data) => {
     if (!confirm('피드를 생성하시겠습니까?')) return;
 
-    const { title, description, image, } = data;
+    const { title, description, image, address, lat, lng } = data;
+    console.log(data);
 
     const userName = currentUser?.name || 'undefined';
 
@@ -103,10 +102,10 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
       userName,
       title,
       description,
-      address: selectedAddressState.address,
+      address: address,
       location: {
-        lat: selectedAddressState.lat,
-        lng: selectedAddressState.lng,
+        lat: lat,
+        lng: lng,
       },
     };
 
@@ -130,13 +129,13 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
       console.log(err);
     }
     reset();
-    setSelectedAddressState(initSelectedAddressState);
+    revokePreviewUrl();
   };
 
   const editSubmitForm = async (data) => {
     if (!confirm('피드를 수정하시겠습니까?')) return;
 
-    const { title, description, image } = data;
+    const { title, description, image, address, lat, lng } = data;
 
     const userName = currentUser?.name || 'undefined';
 
@@ -144,10 +143,10 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
       userName,
       title,
       description,
-      address: selectedAddressState.address,
+      address: address,
       location: {
-        lat: selectedAddressState.lat,
-        lng: selectedAddressState.lng,
+        lat: lat,
+        lng: lng,
       },
     };
 
@@ -172,18 +171,13 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     }
 
     reset();
-    setSelectedAddressState(initSelectedAddressState);
+    revokePreviewUrl();
   };
 
   const handleAddressState = (address: string, lat: number, lng: number) => {
-    setSelectedAddressState((prev) => {
-      return {
-        ...prev,
-        address,
-        lat,
-        lng
-      };
-    });
+    setValue('address', address);
+    setValue('lat', lat);
+    setValue('lng', lng);
     setSearchState(false);
   };
 
@@ -195,7 +189,7 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
       const currentImageUrl = URL.createObjectURL(imageList[idx]);
       previewUrlList.push(currentImageUrl);
     }
-    //URL.revokeObjectURL
+
     if (previewUrlList.length > 5) {
       previewUrlList = previewUrlList.slice(0, 5);
     }
@@ -311,10 +305,12 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
           <StyledInputContainer>
             <StyledField>주소</StyledField>
             <StyledInputAddress
-              value={selectedAddressState.address}
+              {...register('address')}
               disabled
             />
           </StyledInputContainer>
+          <input type='hidden' {...register('lat')} />
+          <input type='hidden' {...register('lng')} />
           <StyledSubmitButtonWrapper>
             {
               isEdit
@@ -524,6 +520,11 @@ const StyledSearchData = styled.div`
   border-radius: 20px;
   background-color: whitesmoke;
   box-shadow: 5px 5px 5px #c2c2c2;
+  transition: all 0.5s linear;
+  cursor: pointer;
+  &:hover{
+    box-shadow: none;
+  }
 `;
 
 const StyledSearchInfoHeader = styled.div`
@@ -535,7 +536,6 @@ const StyledSearchInfoHeader = styled.div`
 
 const StyledSearchInfoTitle = styled.span`
   font-weight: 500;
-  cursor:pointer;
 `;
 
 const StyledFiExternalLink = styled.a.attrs({
@@ -547,9 +547,12 @@ const StyledFiExternalLink = styled.a.attrs({
   font-size: 1.8rem;
   cursor: pointer;
   color: #487eb0;
+  &:hover {
+    color: #67a2d9;
+  }
   &:visited {
-  color: #487eb0;
-}
+    color: #487eb0;
+  }
 `;
 
 const StyledAddressName = styled.span`
