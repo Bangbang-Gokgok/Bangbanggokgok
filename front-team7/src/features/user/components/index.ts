@@ -1,4 +1,2 @@
-export * from './ProfileTop';
-export * from './ProfileMid';
-export * from './ProfileBot';
+export * from './Profile';
 export * from './ProfileEdit';

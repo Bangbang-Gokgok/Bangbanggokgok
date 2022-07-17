@@ -1,7 +1,8 @@
 import { Feed } from '../models';
 import { Types } from 'mongoose';
 import { Schema } from 'mongoose';
-import { pageService } from './';
+//import { pageService } from './pages';
+import mongodb = require('mongodb');
 interface newLocation {
   lat: number;
   lng: number;
@@ -13,7 +14,7 @@ interface FeedInfo {
   description: string;
   address: string;
   location: newLocation;
-  like?: string[] | undefined;
+  likes?: string[] | undefined;
   imageUrl?: string[] | undefined;
 }
 interface FeedData extends FeedInfo {
@@ -86,6 +87,10 @@ class FeedService {
       throw error;
     }
     return updatedFeed;
+  }
+
+  async likesBulkUpdate(writes: Array<mongodb.AnyBulkWriteOperation>) {
+    Feed.bulkWrite(writes);
   }
 
   // 피드 정보 삭제

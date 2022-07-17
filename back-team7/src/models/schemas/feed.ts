@@ -32,11 +32,7 @@ const FeedSchema = new Schema(
       type: Object,
       required: true,
     },
-    like: {
-      type: Array,
-      required: false,
-    },
-    review: {
+    likes: {
       type: Array,
       required: false,
     },
