@@ -150,6 +150,7 @@ const FeedDetail = ({
       alert('Error 발생 ');
       console.log(err);
     }
+    setTextarea('');
     get();
   };
 
