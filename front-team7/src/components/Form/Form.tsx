@@ -1,22 +1,18 @@
-import styled from 'styled-components';
-import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import { currentUserQuery } from '@/store';
+import { currentFeedAtom } from '@/store/currentFeed';
 import { useForm } from 'react-hook-form';
+import { formSchema } from './schemas/Form-schema';
+import { yupResolver } from '@hookform/resolvers/yup';
+import styled from 'styled-components';
 import { TbRoad } from 'react-icons/tb';
-import { FaAddressBook, FaMapMarkedAlt, FaMousePointer, FaSave } from 'react-icons/fa';
-import { MdPlace, MdShareLocation } from 'react-icons/md';
-import * as Api from '@/api/feeds';
+import { MdShareLocation } from 'react-icons/md';
 import { TiDelete } from 'react-icons/ti';
 import { FiExternalLink } from 'react-icons/fi';
 import { FcAddImage, FcSearch } from 'react-icons/fc';
-import { useRecoilValue } from 'recoil';
-import { currentFeedAtom } from '@/store/currentFeed';
-import * as UserApi from '@/api/users';
-import { currentUserQuery } from '@/store';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { formSchema } from './schemas/Form-schema';
 
-// 나중에 인터페이스 통잎해서 한 파일에 정리하기!
 interface PlaceProps {
   address_name: 'string';
   category_group_code: 'string';
@@ -42,12 +38,13 @@ interface FromInputs {
   lng: number;
 }
 
-interface PlaceListProps extends Array<PlaceProps> { }
+type PlaceListProps = Array<PlaceProps>;
 
 const Form = ({ isEdit }: { isEdit: boolean; }) => {
+  const currentUser = useRecoilValue(currentUserQuery);
+  const currentFeedState = useRecoilValue(currentFeedAtom);
   const [searchState, setSearchState] = useState(false);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
-  const currentUser = useRecoilValue(currentUserQuery);
   const [placeInfoList, setPlaceInfoList] = useState<PlaceListProps>([]);
   const {
     register,
@@ -59,7 +56,6 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
   } = useForm<FromInputs>({
     resolver: yupResolver(formSchema)
   });
-  const currentFeedState = useRecoilValue(currentFeedAtom);
   const imageData = watch('image');
 
   useEffect(() => {
@@ -86,8 +82,7 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
 
   // };
 
-  // 검색어에 대한 장소 조회하기
-  const searchPlace = async (e) => {
+  const searchPlace = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const searching = watch().searching.trim();
     if (searching.length <= 0) return;
@@ -111,11 +106,10 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
   };
 
   // Feed CREATE
-  const submitForm = async (data) => {
+  const submitForm = async (data: FromInputs) => {
     if (!confirm('피드를 생성하시겠습니까?')) return;
 
     const { title, description, image, address, lat, lng } = data;
-    console.log(data);
 
     const userName = currentUser?.name || 'undefined';
 
@@ -143,9 +137,8 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     }
 
     try {
-      let res = await axios.post(`/api/feeds`, fd);
+      await axios.post(`/api/feeds`, fd);
       alert('성공적으로 추가되었습니다.');
-      console.log('create Feed : ', res);
     } catch (err) {
       console.log(err);
     }
@@ -153,7 +146,7 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     revokePreviewUrl();
   };
 
-  const editSubmitForm = async (data) => {
+  const editSubmitForm = async (data: FromInputs) => {
     if (!confirm('피드를 수정하시겠습니까?')) return;
 
     const { title, description, image, address, lat, lng } = data;
@@ -184,9 +177,8 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     }
 
     try {
-      let res = await axios.put(`/api/feeds/${currentFeedState._id}`, fd);
+      await axios.put(`/api/feeds/${currentFeedState._id}`, fd);
       alert('피드가 수정되었습니다.');
-      console.log('edit Feed : ', res);
     } catch (err) {
       console.log(err);
     }
@@ -202,8 +194,9 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     setSearchState(false);
   };
 
-  const handleAddPreviewImages = (e) => {
-    const imageList = e.target.files;
+  const handleAddPreviewImages = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const imageList: FileList = e.target.files;
     let previewUrlList: string[] = [...previewImages];
 
     for (let idx = 0; idx < imageList.length; idx++) {
@@ -218,13 +211,13 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     setPreviewImages(previewUrlList);
   };
 
-  const handleDeleteImage = (e, id) => {
+  const handleDeleteImage = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
     e.preventDefault();
     const dataTranster = new DataTransfer();
 
     Array.from(imageData)
       .filter((_, index) => index !== id)
-      .forEach((item: any) => {
+      .forEach((item: File) => {
         dataTranster.items.add(item);
       });
 
