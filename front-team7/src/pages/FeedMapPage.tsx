@@ -15,7 +15,6 @@ import Form from '@/components/Form/Form';
 import { userIdState } from '@/store';
 import queryString from 'query-string';
 
-
 enum ModalState {
   CREATE = 'CREATE',
   EDIT = 'EDIT',
@@ -61,11 +60,11 @@ interface FeedListProps extends Array<FeedProps> { }
 const FeedMapPage = () => {
   const { userId } = useParams();
   const [feedList, setFeedList] = useState<FeedListProps>([]);
-  const [_mapValue, setMapValue] = useRecoilState(mapAtom);
   const [stateModal, setStateModal] = useState(false);
   const [modalChildrenState, setModalChildrenState] = useState('');
   const userIdAtom = useRecoilValue(userIdState);
   const [currentFeedState, setCurrentFeedState] = useRecoilState(currentFeedAtom);
+  const [_mapValue, setMapValue] = useRecoilState(mapAtom);
   const feedIdQueryString = queryString.parse(window.location.search);
 
   useEffect(() => {
