@@ -28,7 +28,7 @@ interface ReviewProps {
   createdAt?: string;
 }
 
-interface ReviewListProps extends Array<ReviewProps> {}
+interface ReviewListProps extends Array<ReviewProps> { }
 
 const REVIEW_MOCK: ReviewListProps = [
   {
@@ -66,11 +66,11 @@ const FeedDetail = ({
   feedUser,
   feedImg,
   feedLocation,
-}: UserInfoProps & { userId: string } & { title: string } & { feedImg?: Array<string> } & {
+}: UserInfoProps & { userId: string; } & { title: string; } & { feedImg?: Array<string>; } & {
   feedUser?: string;
 } & {
   feedLocation?: CenterLatLng;
-} & { feedId?: string } & { desc: string } & { isModal: boolean }) => {
+} & { feedId?: string; } & { desc: string; } & { isModal: boolean; }) => {
   const [reviewList, setReviewList] = useState<ReviewListProps>(REVIEW_MOCK);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [textarea, setTextarea] = useState<string>('');
@@ -491,7 +491,7 @@ const StyledFeedDetailSlide = styled.div`
 //   background-color: yellow;
 // `;
 
-const StyledSlide = styled.div<{ src: string }>`
+const StyledSlide = styled.div<{ src: string; }>`
   width: 100%;
   height: 100%;
   position: absolute;

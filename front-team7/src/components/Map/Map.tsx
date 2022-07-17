@@ -3,9 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import pinImg from '@/assets/images/general-marker.png';
 import centerPinImg from '@/assets/images/point-marker.png';
-import { useRecoilValue, useRecoilState } from 'recoil';
-import { mapAtom } from '@/store/map';
-import { feedModalAtom } from '@/store/feedModal';
+import { useRecoilValue } from "recoil";
+import { mapAtom } from "@/store/map";
+
 
 interface MapContainer {
   width: string;
@@ -38,6 +38,7 @@ interface FeedProps {
 
 type FeedListProps = Array<FeedProps>;
 
+
 const { kakao } = window;
 
 const Map = ({
@@ -48,8 +49,6 @@ const Map = ({
   toggleModal: (item: FeedProps) => void;
 }) => {
   const mapValue = useRecoilValue(mapAtom);
-  // const [_mapValue, setMapValue] = useRecoilState(mapAtom);
-  const [_feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
   const [mapState, setMapState] = useState(null);
   const mapContainer = useRef<HTMLDivElement>(null);
 
@@ -65,9 +64,9 @@ const Map = ({
     address.style.cssText = 'font-size: 8px; color:blue;';
     address.innerHTML = feed.address;
 
-    const reviewLength = document.createElement('span');
-    reviewLength.style.cssText = 'font-size: 4px;';
-    reviewLength.innerHTML = `${feed.review?.length}개의 리뷰`;
+    // const reviewLength = document.createElement('span');
+    // reviewLength.style.cssText = 'font-size: 4px;';
+    // reviewLength.innerHTML = `${feed.review?.length}개의 리뷰`;
 
     const closeButton = document.createElement('button');
     closeButton.className = 'close-btn';
@@ -79,7 +78,7 @@ const Map = ({
 
     content.appendChild(title);
     content.appendChild(address);
-    content.appendChild(reviewLength);
+    // content.appendChild(reviewLength);
     content.appendChild(closeButton);
 
     return content;
@@ -132,7 +131,7 @@ const Map = ({
         position: position.latlng, // 마커의 위치
         image:
           mapValue.centerLatLng.lat === position.latlng.Ma &&
-          mapValue.centerLatLng.lng === position.latlng.La
+            mapValue.centerLatLng.lng === position.latlng.La
             ? centerMarkerImage
             : markerImage,
       });
@@ -190,11 +189,14 @@ const Map = ({
 
   useEffect(() => {
     drawMap();
-  }, [feedList]);
-
-  useEffect(() => {
     panTo(mapState, mapValue.centerLatLng);
-  }, [mapValue]);
+    console.log('Side Effect');
+
+  }, [feedList, mapValue]);
+
+  // useEffect(() => {
+
+  // }, [mapValue]);
 
   return (
     <StyledMapContainer

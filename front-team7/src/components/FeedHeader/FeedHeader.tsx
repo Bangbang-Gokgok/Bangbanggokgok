@@ -11,7 +11,9 @@ interface CenterLatLng {
 }
 
 export const FeedHeader = ({
-  onClickHandler,
+  onClickFeedModal,
+  onClickEditFeedModal,
+  onClickDeleteFeed,
   isFolded,
   isUser,
   name,
@@ -20,15 +22,15 @@ export const FeedHeader = ({
   feedId,
   feedUser,
   feedLocation,
-}: UserInfoProps & { title: string } & { feedId?: string } & { feedLocation?: CenterLatLng } & {
+}: UserInfoProps & { title: string; } & { feedId?: string; } & { feedLocation?: CenterLatLng; } & {
   feedUser?: string;
-} & { isFolded: boolean } & { isUser: boolean } & { onClickHandler?: (event: any) => void }) => {
+} & { isFolded: boolean; } & { isUser: boolean; } & { onClickFeedModal?: () => void; } & { onClickEditFeedModal?: () => void; } & { onClickDeleteFeed?: () => void; }) => {
   return (
     <StyledFeedHeader isModal={isFolded}>
       <span className="user-info-container">
         <UserInfo name={name} image={image} />
       </span>
-      <span className="title-container" onClick={onClickHandler}>
+      <span className="title-container" onClick={onClickFeedModal}>
         {title}
       </span>
       {!isFolded ? (
@@ -39,14 +41,10 @@ export const FeedHeader = ({
         isUser && (
           <>
             <StyleEditIcon
-              onClick={(event) => {
-                console.log(feedId);
-              }}
+              onClick={onClickEditFeedModal}
             />
             <StyleDeleteIcon
-              onClick={(event) => {
-                console.log(feedId);
-              }}
+              onClick={onClickDeleteFeed}
             />
           </>
         )
@@ -72,7 +70,7 @@ const StyleDeleteIcon = styled(AiFillDelete)`
   font-size: 1.8rem;
 `;
 
-const StyledFeedHeader = styled.div<{ isModal: boolean }>`
+const StyledFeedHeader = styled.div<{ isModal: boolean; }>`
   display: flex;
   height: 60px;
   align-items: center;
@@ -84,7 +82,7 @@ const StyledFeedHeader = styled.div<{ isModal: boolean }>`
   ${(props) => (props.isModal ? 'border-radius: 10px;' : 'border-radius: 10px 10px 0 0;')}
   box-shadow: 0 0.3rem 0.4rem rgba(0, 0, 0, 25%);
   background-color: white;
-  ${(props) => props.isModal && 'cursor: pointer;'}
+  
   .user-info-container {
     width: 35%;
     word-break: break-all;
@@ -95,6 +93,7 @@ const StyledFeedHeader = styled.div<{ isModal: boolean }>`
     font-size: 1.45rem;
     font-weight: 500;
     word-break: break-all;
+    ${(props) => props.isModal && 'cursor: pointer;'}
   }
 
   /* @media only screen and (min-width: 768px) {
