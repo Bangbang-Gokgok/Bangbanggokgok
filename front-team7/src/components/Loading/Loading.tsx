@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const StyledLoadingContainer = styled.div`
   width: 100%;
-  margin: 30px 0;
+  margin-top: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
