@@ -38,8 +38,9 @@ declare global {
 //회원 프로필 API
 userRouter.get('/user', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    if (req.user) {
-      res.json(req.user);
+    if (req.cookies.refreshToken) {
+      const user = await userService.getUserDataByRefreshToken(req.cookies.refreshToken);
+      res.json(user);
     } else {
       const error = new Error('user 정보가 없습니다.');
       error.name = 'NotFound';
