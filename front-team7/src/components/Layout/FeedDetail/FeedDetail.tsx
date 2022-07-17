@@ -324,15 +324,25 @@ const FeedDetail = ({
                             }}
                           />
                         )}
-
-                        <Button
-                          content="삭제"
-                          labelPosition="left"
-                          primary
-                          onClick={() => {
-                            deleteReview(review._id);
-                          }}
-                        />
+                        {isEdit && review._id === clickedReview ? (
+                          <Button
+                            content="취소"
+                            labelPosition="left"
+                            primary
+                            onClick={() => {
+                              setIsEdit((prev) => !prev);
+                            }}
+                          />
+                        ) : (
+                          <Button
+                            content="삭제"
+                            labelPosition="left"
+                            primary
+                            onClick={() => {
+                              deleteReview(review._id);
+                            }}
+                          />
+                        )}
                       </div>
                     ) : (
                       <></>
