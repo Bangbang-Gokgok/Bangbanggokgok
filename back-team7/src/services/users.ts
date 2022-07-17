@@ -1,6 +1,6 @@
 import { User } from '../models';
 import { Types } from 'mongoose';
-
+import mongodb = require('mongodb');
 export interface UserInfo {
   authority: string;
   email: string;
@@ -41,7 +41,7 @@ class UserService {
     return data;
   }
 
-  async getUserDataById(_id: Types.ObjectId | string): Promise<UserData> {
+  async getUserDataById(_id: Types.ObjectId | string): Promise<Partial<UserData>> {
     const user = await User.findOne({ _id });
     // db에서 찾지 못한 경우, 에러 메시지 반환
     if (!user) {
@@ -49,8 +49,12 @@ class UserService {
       error.name = 'NotFound';
       throw error;
     }
-
-    return user;
+    const data = {
+      _id: user._id,
+      name: user.name,
+      profileImage: user.profileImage,
+    };
+    return data;
   }
 
   async getUserDataByRefreshToken(refreshToken: string): Promise<UserData> {
@@ -75,6 +79,10 @@ class UserService {
       throw error;
     }
     return updatedUser;
+  }
+
+  async friendsBulkUpdate(writes: Array<mongodb.AnyBulkWriteOperation>) {
+    User.bulkWrite(writes);
   }
 
   async deleteUserData(_id: Types.ObjectId | string): Promise<{ result: string }> {

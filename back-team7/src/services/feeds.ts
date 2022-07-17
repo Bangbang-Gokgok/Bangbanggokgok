@@ -1,7 +1,8 @@
 import { Feed } from '../models';
 import { Types } from 'mongoose';
 import { Schema } from 'mongoose';
-
+//import { pageService } from './pages';
+import mongodb = require('mongodb');
 interface newLocation {
   lat: number;
   lng: number;
@@ -31,6 +32,13 @@ class FeedService {
 
     return feeds;
   }
+  // //전체 feed 조회 pagenation
+  // async getFeedPage(page: any, perPage: any) {
+  //   const feeds = await Feed.find({});
+  //   let query = {}
+  //   const [feedList, totalPage] = await pageService.getPaginatedFeeds(query, page, perPage);
+  //   return [feedList,totalPage];
+  // }
   //특정 feed 조회
   async getFeedById(_id: string): Promise<FeedData> {
     // 우선 해당 상품이 db에 존재하는지 확인
@@ -53,6 +61,22 @@ class FeedService {
     }
     return feed;
   }
+  // //유저_id로 feed 조회 pagenation
+  // async getFeedByUserIdPage(
+  //   userId: string | Types.ObjectId,
+  //   page: any,
+  //   perPage: any
+  // ): Promise<FeedData[]> {
+  //   // 우선 해당 상품이 db에 존재하는지 확인
+  //   const feed = await Feed.find({ userId });
+  //   if (!feed) {
+  //     const error = new Error('해당 피드가 존재하지 않습니다. 다시 확인해 주세요.');
+  //     error.name = 'NotFound';
+  //     throw error;
+  //   }
+  //   const [productList, totalPage] = await pageService.getPaginatedFeeds(page, perPage);
+  //   return feed;
+  // }
   // 피드 정보 수정
   async setFeed(_id: string, update: Partial<FeedInfo>) {
     // 업데이트 진행
@@ -63,6 +87,10 @@ class FeedService {
       throw error;
     }
     return updatedFeed;
+  }
+
+  async likesBulkUpdate(writes: Array<mongodb.AnyBulkWriteOperation>) {
+    Feed.bulkWrite(writes);
   }
 
   // 피드 정보 삭제
