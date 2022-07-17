@@ -108,19 +108,31 @@ feedRouter.get('/list/:userId', async (req: Request, res: Response, next: NextFu
   }
 });
 
-feedRouter.put('/:_id', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const _id = req.params._id;
-    const update = req.body; // any 처리 필요
-    update.location = JSON.parse(update.location);
-    // 피드를 업데이트함.
-    const updatedFeed = await feedService.setFeed(_id, update);
+feedRouter.put(
+  '/:_id',
+  upload.array('imageUrl', 5),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const _id = req.params._id;
+      const update = req.body; // any 처리 필요
+      update.location = JSON.parse(update.location);
+      if (req.files!.length) {
+        const postImages = getPostImageList(
+          req.files as {
+            [fieldname: string]: Express.Multer.File[];
+          }
+        );
+        update.imageUrl = postImages;
+      }
+      // 피드를 업데이트함.
+      const updatedFeed = await feedService.setFeed(_id, update);
 
-    res.status(200).json(updatedFeed);
-  } catch (error) {
-    next(error);
+      res.status(200).json(updatedFeed);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 feedRouter.delete('/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -137,5 +149,16 @@ feedRouter.delete('/:_id', async (req: Request, res: Response, next: NextFunctio
     next(error);
   }
 });
+
+// feedRouter.get('/list/page', async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     // 전체 피드 목록을 얻음
+//     const { page, perPage } = req.query;
+//     const [feedList, totalPage] = await feedService.getFeedPage(page, perPage);
+//     res.status(200).json([feedList, totalPage]);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 export { feedRouter };
