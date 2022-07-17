@@ -74,7 +74,7 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
 
   // Feed CREATE
   const submitForm = async (data) => {
-    if (!confirm('Feed를 추가하시겠습니까?')) return;
+    if (!confirm('피드를 생성하시겠습니까?')) return;
 
     const { title, description, image, } = data;
 
@@ -116,8 +116,43 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
   };
 
   const editSubmitForm = (data) => {
-    console.log(data);
+    console.log(currentFeedState._id);
 
+    if (!confirm('피드를 수정하시겠습니까?')) return;
+
+    const { title, description, image, } = data;
+
+
+    const userName = currentUser?.name || 'undefined';
+
+    const dummy = {
+      userName,
+      title,
+      description,
+      address: selectedAddressState.address,
+      location: {
+        lat: selectedAddressState.lat,
+        lng: selectedAddressState.lng,
+      },
+    };
+
+    const fd = new FormData();
+
+    fd.append('userName', dummy.userName);
+    fd.append('title', dummy.title);
+    fd.append('description', dummy.description);
+    fd.append('address', dummy.address);
+    fd.append('location', JSON.stringify(dummy.location));
+
+    for (let i = 0; i < image.length; i++) {
+      fd.append('imageUrl', image[i]);
+    }
+
+    console.log(fd);
+
+    // API CALL
+    reset();
+    setSelectedAddressState(initSelectedAddressState);
   };
 
   const handleAddressState = (address: string, lat: number, lng: number) => {
@@ -138,7 +173,7 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
   // 여러 에러 발생 가능 => 에러 메세지 백엔드에서 구현되면, 프론트에서 보여주는 로직 추가하기 (useForm의 에러 처리 검색해보기)
   return (
     <StyledModalForm>
-      <form onSubmit={handleSubmit(submitForm)}>
+      <form onSubmit={isEdit ? handleSubmit(editSubmitForm) : handleSubmit(submitForm)}>
         <StyledFormContainer>
           <StyledTitle>
             <StyledTitleSpan>{isEdit ? '내 피드 수정하기' : '새로운 피드 만들기'}</StyledTitleSpan>
