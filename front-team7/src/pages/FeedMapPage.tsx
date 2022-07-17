@@ -12,7 +12,7 @@ import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
 import { feedModalAtom } from '@/store/feedModal';
 import * as Api from '@/api/feeds';
 import Form from '@/components/Form/Form';
-import { userIdState } from '@/store';
+import { userFieldQuery } from '@/store';
 import queryString from 'query-string';
 
 interface CenterLatLng {
@@ -49,7 +49,7 @@ interface FeedDetail {
   updatedAt: string;
 }
 
-interface FeedListProps extends Array<FeedProps> { }
+interface FeedListProps extends Array<FeedProps> {}
 
 const FeedMapPage = () => {
   const { userId } = useParams();
@@ -57,7 +57,7 @@ const FeedMapPage = () => {
   const [_mapValue, setMapValue] = useRecoilState(mapAtom);
   const [stateModal, setStateModal] = useState(false);
   const [modalChildrenState, setModalChildrenState] = useState(false);
-  const userIdAtom = useRecoilValue(userIdState);
+  const userIdAtom = useRecoilValue(userFieldQuery('id'));
   const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
   const feedIdQueryString = queryString.parse(window.location.search);
 

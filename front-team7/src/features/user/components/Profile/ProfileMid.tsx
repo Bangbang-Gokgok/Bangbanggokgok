@@ -1,17 +1,18 @@
 import styled from 'styled-components';
 
 import { useRecoilValue } from 'recoil';
-import { currentUserQuery } from '@/store';
+import { userFieldQuery } from '@/store';
 
 export const ProfileMid = () => {
-  const currentUser = useRecoilValue(currentUserQuery);
+  const username = useRecoilValue(userFieldQuery('name'));
+  const description = useRecoilValue(userFieldQuery('description'));
 
-  const newDescription = currentUser?.description || `${currentUser?.name}님의 지도입니다.`;
+  const newDescription = description ?? `${username}님의 지도입니다.`;
 
   return (
     <StyledProfileMid>
       <span className="introduction">나의 지도를 소개합니다 ✨</span>
-      <span className="content">{newDescription}</span>
+      <span className="content">{newDescription as React.ReactNode}</span>
     </StyledProfileMid>
   );
 };

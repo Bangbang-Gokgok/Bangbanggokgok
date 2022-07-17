@@ -4,10 +4,10 @@ import { Navigate } from 'react-router-dom';
 import { Main } from '@/components/Layout';
 import { LoginForm, LoginLogo, LoginTitle, LoginButtons } from '@/features/auth';
 
-import { userIdState } from '@/store';
+import { userFieldQuery } from '@/store';
 
 const LoginPage = () => {
-  const userId = useRecoilValue(userIdState);
+  const userId = useRecoilValue(userFieldQuery('id'));
 
   if (userId !== null) return <Navigate to="/" />;
 

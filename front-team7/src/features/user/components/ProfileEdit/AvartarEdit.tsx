@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { MdOutlineModeEditOutline } from 'react-icons/md';
 import { useWatch, type Control, type UseFormRegister } from 'react-hook-form';
 
-import { userProfileImageQuery } from '@/store';
+import { userFieldQuery } from '@/store';
 
 import { Avartar } from '@/components/Avatar';
 import { Icon } from '@/components/Icon';
@@ -18,7 +18,7 @@ interface AvartarEditProps {
 
 export const AvartarEdit = ({ control, register }: AvartarEditProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const userProfileImage = useRecoilValue(userProfileImageQuery);
+  const userProfileImage = useRecoilValue(userFieldQuery('profileImage'));
   const profileImage = useWatch({ control, name: 'profileImage' });
   console.log(profileImage);
 
@@ -35,7 +35,11 @@ export const AvartarEdit = ({ control, register }: AvartarEditProps) => {
   return (
     <StyledAvartarEdit>
       <label className="img-upload-label" htmlFor="profile-image">
-        <Avartar kind="circle" size="xl" src={imagePreview || userProfileImage} />
+        <Avartar
+          kind="circle"
+          size="xl"
+          src={imagePreview || (userProfileImage ? (userProfileImage[0] as string) : undefined)}
+        />
         <span className="icon-container">
           <Icon kind="circle" size="sm" element={<MdOutlineModeEditOutline />} />
         </span>

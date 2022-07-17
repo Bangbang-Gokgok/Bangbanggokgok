@@ -1,12 +1,12 @@
 import { type MouseEvent } from 'react';
 import styled from 'styled-components';
-import { useRecoilValue, useRecoilRefresher_UNSTABLE } from 'recoil';
+import { useRecoilState, useRecoilRefresher_UNSTABLE } from 'recoil';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { axios } from '@/lib';
-import { currentUserQuery } from '@/store';
+import { UserResponse, userState } from '@/store';
 import { useDaumAddress, getLocation } from '@/features/user/api';
 import { profileEditSchema } from '@/features/user/schemas';
 
@@ -21,8 +21,8 @@ const FIELD_DATA: { kind: kindType; labelName: string; inputType: string }[] = [
 ];
 
 export const ProfileEditForm = () => {
-  const currentUser = useRecoilValue(currentUserQuery);
-  const refreshCurrentUser = useRecoilRefresher_UNSTABLE(currentUserQuery);
+  const [currentUser, setCurrentUser] = useRecoilState(userState);
+  const refreshCurrentUser = useRecoilRefresher_UNSTABLE(userState);
   const navigate = useNavigate();
 
   const {
@@ -60,7 +60,7 @@ export const ProfileEditForm = () => {
   }
 
   async function submitProfileEditForm(data: RegisterProps) {
-    const profileImage = data.profileImage && (data.profileImage[0] as File);
+    const profileImage = data.profileImage && data.profileImage[0];
     const location = await getLocation(data.address!);
 
     delete data.profileImage;
@@ -73,12 +73,13 @@ export const ProfileEditForm = () => {
     formData.append('location', JSON.stringify(location));
     if (profileImage) formData.append('profileImage', profileImage);
 
-    const user = await axios.put('/api/users/user', formData);
+    const user = await axios.put<never, UserResponse>('/api/users/user', formData);
     console.log(user);
-
-    refreshCurrentUser();
-
-    navigate('/profile');
+    const newUser = {
+      ...user,
+      id: user._id,
+    };
+    // navigate('/profile');
   }
 
   return (
