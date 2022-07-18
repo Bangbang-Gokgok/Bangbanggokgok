@@ -6,6 +6,7 @@ import unknownUser from '@/assets/images/unknown-user.png';
 import { useEffect, useState } from 'react';
 import { userState } from '@/store';
 import { useRecoilValue } from 'recoil';
+import { axios } from '@/lib';
 // import * as UserApiByUser from '@/api/users';
 // import * as UserApiByAdmin from '@/api/usersByAdmin';
 // import { useEffect, useState } from 'react';
@@ -93,6 +94,13 @@ const SearchPage = () => {
   useEffect(() => {
     console.log(currentUser?.friends);
 
+    const searchUser = async (keyword: string) => {
+      const result = await axios.get(`/api/users/list?keyword=${keyword}`);
+      console.log(result);
+    };
+
+    searchUser('정현');
+
     const mockData = [
       {
         "_id": "2gPRjW-t2",
@@ -134,11 +142,18 @@ const SearchPage = () => {
 };
 
 const StyledFollowButton = styled.button<{ isfollowed: boolean; }>`
-border: none;
-background-color: transparent;
-color: blue;
+  border: none;
+  background-color: transparent;
+  color: #487eb0;
+  cursor: pointer;
   &::after{
     content: ${(props) => props.isfollowed ? '"팔로잉 취소"' : '"팔로우"'};
+  }
+  &:hover {
+    color: #67a2d9;
+  }
+  &:visited {
+    color: #487eb0;
   }
 `;
 
