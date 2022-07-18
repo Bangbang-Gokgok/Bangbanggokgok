@@ -123,11 +123,15 @@ const FeedMapPage = () => {
     toggleModal();
   };
 
-  const onClickDeleteFeed = async (feedId: string) => {
+  const onClickDeleteFeed = async (feedId: string, feedUserId: string) => {
     if (!window.confirm('피드를 정말로 삭제하시겠습니까 ?')) return;
 
     try {
-      await axios.delete(`/api/feeds/${feedId}`);
+      await axios.delete(`/api/feeds/${feedId}`, {
+        data: {
+          userId: feedUserId
+        }
+      });
       alert('피드가 삭제되었습니다.');
       window.location.reload();
     } catch (err) {
@@ -149,7 +153,7 @@ const FeedMapPage = () => {
             <FeedHeader
               onClickFeedModal={() => onClickMapFeed(item)}
               onClickEditFeedModal={() => onClickEditFeedModal(item)}
-              onClickDeleteFeed={() => onClickDeleteFeed(item._id)}
+              onClickDeleteFeed={() => onClickDeleteFeed(item._id, item.userId)}
               isFolded={true}
               isUser={userIdAtom === userId}
               key={idx}
