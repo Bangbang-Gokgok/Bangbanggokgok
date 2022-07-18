@@ -16,6 +16,9 @@ function errorHandler(error: Error, req: Request, res: Response, next: NextFunct
     case 'Conflict':
       res.status(409);
       break;
+    case 'Access Denied':
+      res.status(403);
+      break;
     default:
       res.status(400);
   }

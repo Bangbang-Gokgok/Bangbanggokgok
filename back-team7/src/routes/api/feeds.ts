@@ -113,6 +113,11 @@ feedRouter.put(
   upload.array('imageUrl', 5),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      if (req.user!._id !== req.body.userId) {
+        const error = new Error('작성자만 수정할 수 있습니다.');
+        error.name = '403';
+        throw error;
+      }
       const _id = req.params._id;
       const update = req.body; // any 처리 필요
       update.location = JSON.parse(update.location);
