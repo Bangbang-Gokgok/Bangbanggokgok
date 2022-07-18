@@ -57,7 +57,7 @@ class FeedService {
   }
 
   // 피드 정보 수정
-  async setFeed(_id: string, update: Partial<FeedInfo>, userId: string | undefined) {
+  async setFeed(_id: string, update: Partial<FeedInfo>, user: any) {
     // 업데이트 진행
     const updatedFeed = await Feed.findOneAndUpdate({ _id }, update, { returnOriginal: false });
     if (!updatedFeed) {
@@ -65,7 +65,7 @@ class FeedService {
       error.name = 'NotFound';
       throw error;
     }
-    if (userId !== update.userId) {
+    if (user._id !== update.userId && user.authority !== 'admin') {
       const error = new Error('작성자만 수정할 수 있습니다.');
       error.name = 'Access Denied';
       throw error;
@@ -80,7 +80,7 @@ class FeedService {
   // 피드 정보 삭제
   async deleteFeedData(
     _id: string,
-    user_id: string | undefined,
+    user: any,
     userId: string | undefined
   ): Promise<{ result: string }> {
     const { deletedCount } = await Feed.deleteOne({ _id });
@@ -90,7 +90,7 @@ class FeedService {
       error.name = 'NotFound';
       throw error;
     }
-    if (user_id !== userId) {
+    if (user._id !== userId && user.authority !== 'admin') {
       const error = new Error('작성자만 수정할 수 있습니다.');
       error.name = 'Access Denied';
       throw error;

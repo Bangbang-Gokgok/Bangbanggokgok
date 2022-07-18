@@ -113,11 +113,7 @@ feedRouter.put(
   upload.array('imageUrl', 5),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      if (req.user!._id !== req.body.userId) {
-        const error = new Error('작성자만 수정할 수 있습니다.');
-        error.name = '403';
-        throw error;
-      }
+      const user = req.user;
       const _id = req.params._id;
       const update = req.body; // any 처리 필요
       update.location = JSON.parse(update.location);
@@ -130,7 +126,7 @@ feedRouter.put(
         update.imageUrl = postImages;
       }
       // 피드를 업데이트함.
-      const updatedFeed = await feedService.setFeed(_id, update);
+      const updatedFeed = await feedService.setFeed(_id, update, user);
 
       res.status(200).json(updatedFeed);
     } catch (error) {
@@ -141,6 +137,8 @@ feedRouter.put(
 
 feedRouter.delete('/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const user = req.user;
+    const userId = req.body.userId;
     const _id = req.params._id;
     //피드 삭제
     //Redis 좋아요 data 삭제
@@ -148,7 +146,7 @@ feedRouter.delete('/:_id', async (req: Request, res: Response, next: NextFunctio
     const key = `feeds:${resource}`;
     await redisClient.hDel(key, _id);
     //mongoDB data 삭제
-    const deleteResult = await feedService.deleteFeedData(_id);
+    const deleteResult = await feedService.deleteFeedData(_id, user, userId);
     res.status(200).json(deleteResult);
   } catch (error) {
     next(error);
