@@ -55,7 +55,7 @@ interface FeedDetail {
   updatedAt: string;
 }
 
-interface FeedListProps extends Array<FeedProps> {}
+interface FeedListProps extends Array<FeedProps> { }
 
 const FeedMapPage = () => {
   const { userId } = useParams();
@@ -138,9 +138,7 @@ const FeedMapPage = () => {
         return (
           <FeedDetail
             isModal={true}
-            name={currentFeedState.userName}
-            title={currentFeedState.title}
-            desc={currentFeedState.description}
+            feedList={currentFeedState}
           />
         );
     }
