@@ -36,7 +36,7 @@ export const ProfileTop = () => {
             </span>
           </div>
           <div className="profile-info">
-            <span className="profile-info-title">친구</span>
+            <span className="profile-info-title">팔로워</span>
             <span className="profile-info-number">
               {currentUser?.friends ? currentUser?.friends.length : 0}
             </span>
