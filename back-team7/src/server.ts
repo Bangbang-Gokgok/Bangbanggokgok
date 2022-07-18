@@ -13,6 +13,7 @@ import { errorHandler, getUserFromJWT } from './middlewares';
 import { userService, feedService } from './services';
 import { usePassport } from './passport';
 import { likesScheduler, friendsScheduler } from './utils/scheduler';
+import { ws } from './socket';
 
 usePassport();
 
@@ -27,7 +28,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(cookieParser());
 
-const PORT = process.env.PORT;
+const PORT = Number(process.env.PORT);
+const DOMAIN = process.env.DOMAIN;
 
 app.use(passport.initialize());
 
@@ -62,6 +64,7 @@ db.on('error', (error: Error) =>
 );
 
 export const redisClient = createClient({ url: process.env.REDIS_URL });
+// export const redisClient = createClient();
 
 redisClient.on('ready', (err) => console.log('정상적으로 Redis 서버에 연결되었습니다.'));
 redisClient.on('error', (error: Error) =>
@@ -69,3 +72,5 @@ redisClient.on('error', (error: Error) =>
 );
 
 redisClient.connect();
+
+ws(server);
