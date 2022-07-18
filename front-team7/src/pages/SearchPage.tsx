@@ -3,7 +3,7 @@ import { Main } from '@/components/Layout';
 import { UserInfo } from '@/components/UserInfo';
 import Input from '@/components/Input/Input';
 import unknownUser from '@/assets/images/unknown-user.png';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { userState } from '@/store';
 import { useRecoilValue } from 'recoil';
 import { axios } from '@/lib';
@@ -90,6 +90,7 @@ type userDataList = Array<userData>;
 
 const SearchPage = () => {
   const [searchUserList, setSearchUserList] = useState<userDataList>([]);
+  const [searchKeyword, setSearchKeyword] = useState('');
   const currentUser = useRecoilValue(userState);
   useEffect(() => {
     console.log(currentUser?.friends);
@@ -119,6 +120,16 @@ const SearchPage = () => {
     setSearchUserList(mockData);
 
   }, []);
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(e.target.value);
+  };
+
+  const onClickSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log(e.target);
+
+  };
+
   return (
     <Main
       display={'flex'}
@@ -127,7 +138,10 @@ const SearchPage = () => {
       alignItems={'center'}
     >
       <StyledSearchContainer>
-        <Input></Input>
+        <Input
+          handleInput={(e) => handleInput(e)}
+          onClickSearch={(e) => onClickSearch(e)}
+        />
         {
           searchUserList.map((user, idx) => (
             <StyledUserInfoWrapper key={idx}>

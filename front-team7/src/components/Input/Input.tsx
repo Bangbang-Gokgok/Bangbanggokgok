@@ -19,18 +19,27 @@ const StyledInput = styled.input`
 
   background-color: rgb(235, 235, 235);
 `;
-const StyledSearchIconContainer = styled.div`
+const StyledSearchIconContainer = styled.button`
   position: absolute;
   right: 12px;
   top: 7px;
+  border: none;
+  background-color: transparent;
+  
+  cursor: pointer;
 `;
 
-const Input = () => {
+const Input = (
+  { handleInput,
+    onClickSearch
+  }
+    : { handleInput: (e: React.ChangeEvent<HTMLInputElement>) => void; } & { onClickSearch: (e: React.MouseEvent<HTMLButtonElement>) => void; }
+) => {
   return (
     <StyledInputContainer>
-      <StyledInput></StyledInput>
+      <StyledInput onChange={handleInput}></StyledInput>
 
-      <StyledSearchIconContainer>
+      <StyledSearchIconContainer onClick={onClickSearch}>
         <IconContext.Provider value={{ size: '20px' }}>
           <BsSearch></BsSearch>
         </IconContext.Provider>
