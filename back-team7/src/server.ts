@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import { createClient } from 'redis';
 import schedule from 'node-schedule';
+import { Server } from 'socket.io';
 // import path from 'path';
 
 import 'dotenv/config';
@@ -27,7 +28,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(cookieParser());
 
-const PORT = process.env.PORT;
+const PORT = Number(process.env.PORT);
+const DOMAIN = process.env.DOMAIN;
 
 app.use(passport.initialize());
 
@@ -69,3 +71,20 @@ redisClient.on('error', (error: Error) =>
 );
 
 redisClient.connect();
+
+const io = new Server(server, {
+  cors: {
+    origin: DOMAIN,
+    methods: ['GET', 'POST'],
+  },
+});
+
+io.on('connection', (client) => {
+  console.log(`클라이언트 연결 성공 - ID: ${client.id}`);
+  client.on('event', (data) => {
+    /* … */
+  });
+  client.on('disconnect', () => {
+    console.log(`연결 종료 - ID: ${client.id}`);
+  });
+});
