@@ -87,5 +87,51 @@ reviewRouter.delete('/:_id', async (req: Request, res: Response, next: NextFunct
     next(error);
   }
 });
+reviewRouter.get('page/list', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // 전체 리뷰 목록을 얻음
+    const { page, perPage } = req.query;
+    const [reviewList, totalPage] = await reviewService.getReviewPage(page, perPage);
+    res.status(200).json({ reviewList, totalPage });
+  } catch (error) {
+    next(error);
+  }
+});
+reviewRouter.get(
+  'page/list/feed/:feedId',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const feedId = req.params.feedId;
+      // _id 값으로 검색
+      const { page, perPage } = req.query;
+      const [reviewList, totalPage] = await reviewService.getReviewByFeedIdPage(
+        feedId,
+        page,
+        perPage
+      );
+      res.status(200).json({ reviewList, totalPage });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+reviewRouter.get(
+  'page/list/user/:userId',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.params.userId;
+      // userId 값으로 검색
+      const { page, perPage } = req.query;
+      const [reviewList, totalPage] = await reviewService.getReviewByUserIdPage(
+        userId,
+        page,
+        perPage
+      );
+      res.status(200).json({ reviewList, totalPage });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 export { reviewRouter };

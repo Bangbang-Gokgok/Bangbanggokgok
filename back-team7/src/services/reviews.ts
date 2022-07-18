@@ -1,5 +1,6 @@
 import { Review } from '../models';
 import { Types } from 'mongoose';
+import { pageService } from './pages';
 
 interface ReviewInfo {
   userId: string | Types.ObjectId;
@@ -77,6 +78,39 @@ class ReviewService {
     }
 
     return { result: 'success' };
+  }
+
+  async getReviewPage(page: any, perPage: any) {
+    const reviews = await Review.find({});
+    let query = { reviews };
+    const [reviewList, totalPage] = await pageService.getPaginatedReviews(query, page, perPage);
+    return [reviewList, totalPage];
+  }
+
+  async getReviewByFeedIdPage(feedId: string, page: any, perPage: any) {
+    // 우선 해당 상품이 db에 존재하는지 확인
+    const review = await Review.find({ feedId });
+    if (!review) {
+      const error = new Error('해당 리뷰가 존재하지 않습니다. 다시 확인해 주세요.');
+      error.name = 'NotFound';
+      throw error;
+    }
+    let query = { review };
+    const [reviewList, totalPage] = await pageService.getPaginatedReviews(query, page, perPage);
+    return [reviewList, totalPage];
+  }
+
+  async getReviewByUserIdPage(userId: string, page: any, perPage: any) {
+    // 우선 해당 상품이 db에 존재하는지 확인
+    const review = await Review.find({ userId });
+    if (!review) {
+      const error = new Error('해당 리뷰가 존재하지 않습니다. 다시 확인해 주세요.');
+      error.name = 'NotFound';
+      throw error;
+    }
+    let query = { review };
+    const [reviewList, totalPage] = await pageService.getPaginatedReviews(query, page, perPage);
+    return [reviewList, totalPage];
   }
 }
 
