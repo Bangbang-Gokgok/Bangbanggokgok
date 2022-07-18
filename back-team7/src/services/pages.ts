@@ -9,7 +9,7 @@ class PageService {
     const [total, feedList] = await Promise.all([
       Feed.countDocuments(query),
       Feed.find({ query })
-        .sort()
+        .sort({ createdAt: -1 })
         .skip(perPage * (page - 1))
         .limit(perPage),
     ]);
