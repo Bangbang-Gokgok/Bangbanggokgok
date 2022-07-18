@@ -101,10 +101,15 @@ const SearchPage = () => {
     searchUser(searchKeyword);
   };
 
-  const onClickFollow = (selectedUserId: string) => {
-    // try {
-    //   const result = await axios.
-    // }
+  const onClickFollow = async (selectedUserId: string) => {
+    try {
+      const result = await axios.put(`api/users/friends/${selectedUserId}`);
+      console.log(result);
+
+    } catch (err) {
+      console.log(err);
+
+    }
   };
 
   const searchUser = async (keyword: string) => {
