@@ -111,7 +111,8 @@ userRouter.get('/friends/:_id', async (req: Request, res: Response, next: NextFu
 //전체 회원 조회 API
 userRouter.get('/list', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const users = await userService.getUsers();
+    const { keyword } = req.body;
+    const users = await userService.getUsers(keyword);
     res.status(200).json(users);
   } catch (error) {
     next(error);
