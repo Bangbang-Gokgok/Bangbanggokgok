@@ -4,7 +4,7 @@ import { UserInfo } from '@/components/UserInfo';
 import Input from '@/components/Input/Input';
 import unknownUser from '@/assets/images/unknown-user.png';
 import { useEffect, useState } from 'react';
-import { currentUserQuery } from '@/store';
+import { userState } from '@/store';
 import { useRecoilValue } from 'recoil';
 // import * as UserApiByUser from '@/api/users';
 // import * as UserApiByAdmin from '@/api/usersByAdmin';
@@ -89,56 +89,22 @@ type userDataList = Array<userData>;
 
 const SearchPage = () => {
   const [searchUserList, setSearchUserList] = useState<userDataList>([]);
-  const currentUser = useRecoilValue(currentUserQuery);
+  const currentUser = useRecoilValue(userState);
   useEffect(() => {
-    console.log(currentUser);
+    console.log(currentUser?.friends);
 
     const mockData = [
       {
-        "_id": "efukkgJ4B",
-        "name": "Ik Yoon",
-        "profileImage": []
-      },
-      {
-        "_id": "bCJcG23WB",
-        "name": "YongJae Wonderss",
-        "profileImage": [
-          "https://gabang-bucket.s3.ap-northeast-2.amazonaws.com/1658010722813_7a844d66-5600-436f-a78f-157d1a8cdc3e.png"
-        ]
-      },
-      {
         "_id": "2gPRjW-t2",
         "name": "김정현",
-        "profileImage": []
-      },
-      {
-        "_id": "EUNUFXYeq",
-        "name": "배윤주",
-        "profileImage": []
-      },
-      {
-        "_id": "lGl0AOVlG",
-        "name": "김지환",
-        "profileImage": [
-          "https://gabang-bucket.s3.ap-northeast-2.amazonaws.com/1657765593898_7.6%20%C3%AA%C2%B2%C2%8C%C3%AB%C2%8D%C2%94%C3%AD%C2%83%C2%80%C3%AC%C2%9A%C2%B4%20%C3%AC%C2%8A%C2%A4%C3%AD%C2%81%C2%AC%C3%AB%C2%9F%C2%BC%20%C3%AC%C2%9D%C2%B8%C3%AC%C2%A6%C2%9D%C3%AC%C2%83%C2%B7.png"
-        ]
+        "profileImage": [],
+        "friends": []
       },
       {
         "_id": "C638LX3Po",
         "name": "김정현",
-        "profileImage": []
-      },
-      {
-        "_id": "zNSj7kWAd",
-        "name": "조재홍",
-        "profileImage": [
-          "https://gabang-bucket.s3.ap-northeast-2.amazonaws.com/1657892554817_%C3%A1%C2%84%C2%89%C3%A1%C2%85%C2%A5%C3%A1%C2%86%C2%BC%C3%A1%C2%84%C2%82%C3%A1%C2%85%C2%A1%C3%A1%C2%86%C2%AB%20%C3%A1%C2%84%C2%80%C3%A1%C2%85%C2%A1%C3%A1%C2%86%C2%BC%C3%A1%C2%84%C2%8B%C3%A1%C2%85%C2%A1%C3%A1%C2%84%C2%8C%C3%A1%C2%85%C2%B5.jpeg"
-        ]
-      },
-      {
-        "_id": "KclrxnAZd",
-        "name": "윤익",
-        "profileImage": []
+        "profileImage": [],
+        "friends": []
       }
     ];
 
@@ -179,14 +145,17 @@ color: blue;
 const StyledUserInfoWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  width: 90%;
 `;
 
 const StyledSearchContainer = styled.div`
-  width: 90%;
+  width: 100%;
   height: 100%;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 35px;
+  align-items: center;
+  gap: 25px;
 `;
 
 export default SearchPage;
