@@ -7,10 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { userState } from '@/store';
 import { useRecoilValue } from 'recoil';
 import { axios } from '@/lib';
-// import * as UserApiByUser from '@/api/users';
-// import * as UserApiByAdmin from '@/api/usersByAdmin';
-// import { useEffect, useState } from 'react';
-// import { Types } from 'mongoose';
+// import import io from 'socket.io-client';
 
 
 
@@ -88,12 +85,20 @@ interface userData {
 
 type userDataList = Array<userData>;
 
+// const socket = io.connect('http://localhost:5030', { autoConnect: true, transports: ['websocket'] });
+
 const SearchPage = () => {
   const [searchUserList, setSearchUserList] = useState<userDataList>([]);
   const [searchKeyword, setSearchKeyword] = useState('');
   const currentUser = useRecoilValue(userState);
   useEffect(() => {
+
+    // socket.on('event', (msg) => {
+    //   console.log(msg);
+    // }); // socket
+
     console.log(currentUser?.friends);
+
 
     const searchUser = async (keyword: string) => {
       const result = await axios.get(`/api/users/list?keyword=${keyword}`);
