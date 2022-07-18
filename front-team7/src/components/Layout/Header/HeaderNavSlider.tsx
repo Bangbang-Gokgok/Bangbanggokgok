@@ -44,7 +44,7 @@ export const HeaderNavSlider = () => {
               </Link>
             </li>
             <li>
-              <Link to="/profile" onClick={() => setIsOpenSlider(false)}>
+              <Link to={`/profile/${userId}`} onClick={() => setIsOpenSlider(false)}>
                 <FaUserAlt />
                 <span className="link-text">내 프로필</span>
               </Link>

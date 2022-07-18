@@ -13,7 +13,7 @@ export const Footer = () => {
       <FooterIcon icon={<FaHome />} to="/" />
       <FooterIcon icon={<FaMapMarkedAlt />} to={`/feedmap/${userId}`} />
       <FooterIcon icon={<FaSearch />} to="/search" />
-      <FooterIcon icon={<FaUserAlt />} to="/profile" />
+      <FooterIcon icon={<FaUserAlt />} to={`/profile/${userId}`} />
     </StyledFooter>
   );
 };
