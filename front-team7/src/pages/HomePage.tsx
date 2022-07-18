@@ -54,7 +54,7 @@ interface FeedProps {
   createdAt: string;
 }
 
-interface FeedListProps extends Array<FeedProps> {}
+type FeedListProps = Array<FeedProps>;
 
 const HomePage = () => {
   const [feedList, setFeedList] = useState<FeedListProps>([]);
@@ -91,12 +91,6 @@ const HomePage = () => {
   }, []);
 
   const fetchMoreData = () => {
-    // fetchMoreData 함수가 처음 한번밖에 실행이 안됨...
-
-    // alert('?');
-    // console.log('hasMore : ', hasMore);
-    // console.log('typeof page, perPage, totalPage', typeof page, typeof perPage, typeof totalPage);
-    // console.log('fetchMoreData : page, perPage, totalPage : ', page, perPage, totalPage);
 
     if (page > totalPage) {
       setHasMore(false);
@@ -112,12 +106,7 @@ const HomePage = () => {
       });
       setPage((page) => page + 1);
 
-      // console.log('지금까지 존재하는 전체 리스트들 : ', feedList);
-      // console.log('이번에 가져온 리스트들 : ', newItems.feedList);
-      const newFeedList = feedList.concat(newItems.feedList);
-
-      // console.log('합친 리스트들 : ', newFeedList);
-      setFeedList(newFeedList);
+      setFeedList([...feedList, ...newItems.feedList]);
     }, 1000);
   };
 
@@ -132,7 +121,7 @@ const HomePage = () => {
       <StyledFeedListContainer>
         <InfiniteScroll
           style={{ overflow: 'visibility' }}
-          dataLength={perPage}
+          dataLength={feedList.length}
           next={fetchMoreData}
           hasMore={hasMore}
           endMessage={<Loading text={'모든 데이터 로드 완료!'}></Loading>}
