@@ -50,6 +50,7 @@ export function ws(server: http.Server) {
       await redisClient.hSet(key, feedId, JSON.stringify(usersArr));
 
       socket.emit('likeResponse', usersArr);
+      socket.broadcast.emit('likeResponse', usersArr);
     });
     socket.on('disconnect', () => {});
   });
