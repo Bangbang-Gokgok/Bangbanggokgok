@@ -85,44 +85,11 @@ interface userData {
 
 type userDataList = Array<userData>;
 
-// const socket = io.connect('http://localhost:5030', { autoConnect: true, transports: ['websocket'] });
-
 const SearchPage = () => {
   const [searchUserList, setSearchUserList] = useState<userDataList>([]);
   const [searchKeyword, setSearchKeyword] = useState('');
   const currentUser = useRecoilValue(userState);
   useEffect(() => {
-
-    // socket.on('event', (msg) => {
-    //   console.log(msg);
-    // }); // socket
-
-    console.log(currentUser?.friends);
-
-
-    const searchUser = async (keyword: string) => {
-      const result = await axios.get(`/api/users/list?keyword=${keyword}`);
-      console.log(result);
-    };
-
-    searchUser('정현');
-
-    const mockData = [
-      {
-        "_id": "2gPRjW-t2",
-        "name": "김정현",
-        "profileImage": [],
-        "friends": []
-      },
-      {
-        "_id": "C638LX3Po",
-        "name": "김정현",
-        "profileImage": [],
-        "friends": []
-      }
-    ];
-
-    setSearchUserList(mockData);
 
   }, []);
 
@@ -131,7 +98,17 @@ const SearchPage = () => {
   };
 
   const onClickSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(e.target);
+    searchUser(searchKeyword);
+  };
+
+  const searchUser = async (keyword: string) => {
+    const validatedKeyword = keyword.trim();
+    try {
+      const result = await axios.get<never, userDataList>(`/api/users/list?keyword=${validatedKeyword}`);
+      setSearchUserList(result);
+    } catch (err) {
+      console.log(err);
+    }
 
   };
 
@@ -147,13 +124,16 @@ const SearchPage = () => {
           handleInput={(e) => handleInput(e)}
           onClickSearch={(e) => onClickSearch(e)}
         />
-        {
+        {searchUserList.length > 0
+          ?
           searchUserList.map((user, idx) => (
             <StyledUserInfoWrapper key={idx}>
               <UserInfo name={user.name} image={user.profileImage[0] || unknownUser as string}></UserInfo>
               <StyledFollowButton isfollowed={false} />
             </StyledUserInfoWrapper>
           ))
+          :
+          <StyledNoSearchResult />
         }
       </StyledSearchContainer>
     </Main>
@@ -190,6 +170,13 @@ const StyledSearchContainer = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 25px;
+`;
+
+const StyledNoSearchResult = styled.div`
+  font-size: 2rem;
+  &::after{
+    content: '검색 결과가 없습니다.'
+  }
 `;
 
 export default SearchPage;

@@ -25,12 +25,12 @@ const StyledSearchIconContainer = styled.button`
   top: 7px;
   border: none;
   background-color: transparent;
-  
   cursor: pointer;
 `;
 
 const Input = (
-  { handleInput,
+  {
+    handleInput,
     onClickSearch
   }
     : { handleInput: (e: React.ChangeEvent<HTMLInputElement>) => void; } & { onClickSearch: (e: React.MouseEvent<HTMLButtonElement>) => void; }

@@ -40,7 +40,7 @@ interface FromInputs {
 
 type PlaceListProps = Array<PlaceProps>;
 
-const Form = ({ isEdit }: { isEdit: boolean }) => {
+const Form = ({ isEdit }: { isEdit: boolean; }) => {
   const currentUser = useRecoilValue(userState);
   const currentFeedState = useRecoilValue(currentFeedAtom);
   const [searchState, setSearchState] = useState(false);

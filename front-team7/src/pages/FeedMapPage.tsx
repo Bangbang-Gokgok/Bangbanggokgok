@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import queryString from 'query-string';
-import * as Api from '@/api/feeds';
 import { FeedHeader } from '@/components/FeedHeader';
 import { Main } from '@/components/Layout';
 import Map from '@/components/Map/Map';
@@ -15,6 +14,7 @@ import { currentFeedAtom } from '@/store/currentFeed';
 import { FeedListProps, FeedProps, LocationProps } from '@/types/feed';
 import { BsPlus } from 'react-icons/bs';
 import styled from 'styled-components';
+import { axios } from '@/lib';
 
 enum ModalState {
   CREATE = 'CREATE',
@@ -34,35 +34,40 @@ const FeedMapPage = () => {
   const feedIdQueryString = queryString.parse(window.location.search);
 
   useEffect(() => {
-    // userId를 사용한 API Call -> feedList를 useState로 관리
     async function getFeedList() {
-      const result = await Api.getUserFeedList(userId);
-
-      setFeedList(result);
-
-      if (Object.keys(feedIdQueryString).length > 0) {
-        setMapValue((currMapValue) => ({
-          ...currMapValue,
-          centerLatLng: {
-            lat: Number(feedIdQueryString.lat),
-            lng: Number(feedIdQueryString.lng),
-          },
-        }));
-      } else if (result.length > 0) {
-        setMapValue((currMapValue) => ({
-          ...currMapValue,
-          centerLatLng: {
-            lat: result[0].location.lat,
-            lng: result[0].location.lng,
-          },
-        }));
+      try {
+        const result = await axios.get<never, FeedListProps>(`/api/feeds/list/${userId}`);
+        setFeedList(result);
+        initializeMapCenterLatLng(result[0]);
+      } catch (err) {
+        alert(err);
+        window.location.reload();
       }
     }
-
     getFeedList();
   }, []);
 
-  const onClickModal = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const initializeMapCenterLatLng = (result: FeedProps) => {
+    if (Object.keys(feedIdQueryString).length > 0) {
+      setMapValue((currMapValue) => ({
+        ...currMapValue,
+        centerLatLng: {
+          lat: Number(feedIdQueryString.lat),
+          lng: Number(feedIdQueryString.lng),
+        },
+      }));
+    } else {
+      setMapValue((currMapValue) => ({
+        ...currMapValue,
+        centerLatLng: {
+          lat: result.location.lat,
+          lng: result.location.lng,
+        },
+      }));
+    }
+  };
+
+  const onClickModal = () => {
     setModalChildrenState(ModalState.CREATE);
     toggleModal();
   };
@@ -101,6 +106,7 @@ const FeedMapPage = () => {
       case ModalState.FEED:
         return (
           <FeedDetail
+            currentUserId={userIdAtom as string}
             isModal={true}
             feedList={currentFeedState}
           />
@@ -120,9 +126,13 @@ const FeedMapPage = () => {
   const onClickDeleteFeed = async (feedId: string) => {
     if (!window.confirm('피드를 정말로 삭제하시겠습니까 ?')) return;
 
-    const result = await Api.deleteOneFeed(feedId);
-
-    if (result.result === 'success') alert('피드가 삭제되었습니다.'); // re-rendering 구현
+    try {
+      await axios.delete(`/api/feeds/${feedId}`);
+      alert('피드가 삭제되었습니다.');
+      window.location.reload();
+    } catch (err) {
+      alert(err);
+    }
   };
 
   return (
@@ -143,7 +153,6 @@ const FeedMapPage = () => {
               isFolded={true}
               isUser={userIdAtom === userId}
               key={idx}
-              feedId={item._id}
               name={item.userName}
               title={item.title}
             />
