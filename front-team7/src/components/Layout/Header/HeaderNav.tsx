@@ -1,33 +1,27 @@
 import styled from 'styled-components';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { RiLogoutBoxRLine, RiAdminLine, RiMenuFill } from 'react-icons/ri';
-import { useNavigate, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
-import { userState, sliderState, type UserState } from '@/store';
-import { logout } from '@/features/auth/api';
+import { userFieldQuery, sliderState } from '@/store';
+import { useLogout } from '@/features/auth/api';
 
 import { HeaderNavSlider } from './HeaderNavSlider';
 
 export const HeaderNav = () => {
-  const [user, setUser] = useRecoilState<UserState | null>(userState);
+  const authority = useRecoilValue(userFieldQuery('authority'));
   const setIsOpenSlider = useSetRecoilState<boolean>(sliderState);
-  const navigate = useNavigate();
-
-  async function onLogoutHandler() {
-    await logout();
-    setUser(null);
-    navigate('/login');
-  }
+  const logout = useLogout();
 
   return (
     <StyledHeaderNav>
       <div className="mobile">
-        {user?.authority === 'admin' && (
+        {authority === 'admin' && (
           <NavLink className="nav-item" to="/admin">
             <RiAdminLine />
           </NavLink>
         )}
-        <button className="nav-item" onClick={onLogoutHandler}>
+        <button className="nav-item" onClick={logout}>
           <RiLogoutBoxRLine />
         </button>
       </div>

@@ -1,6 +1,6 @@
 export interface ReviewProps {
   _id: string;
-  userId: string;
+  userId?: string;
   userName: string;
   contents: string;
   feedId: string;
