@@ -3,11 +3,10 @@ import { FaHome, FaMapMarkedAlt, FaSearch, FaUserAlt } from 'react-icons/fa';
 
 import { FooterIcon } from './FooterIcon';
 import { useRecoilValue } from 'recoil';
-import { userIdState } from '@/store';
+import { userFieldQuery } from '@/store';
 
 export const Footer = () => {
-
-  const userId = useRecoilValue(userIdState);
+  const userId = useRecoilValue(userFieldQuery('id'));
 
   return (
     <StyledFooter>
@@ -27,7 +26,7 @@ const StyledFooter = styled.footer`
   justify-content: space-between;
   width: 100vw;
   height: 70px;
-  padding: 0 25px;
+  padding: 0 35px;
   background: #313131;
   z-index: 99;
 `;

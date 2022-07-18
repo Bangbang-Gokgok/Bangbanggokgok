@@ -12,14 +12,14 @@ import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
 import { currentFeedAtom } from '@/store/currentFeed';
 import * as Api from '@/api/feeds';
 import Form from '@/components/Form/Form';
-import { userIdState } from '@/store';
+import { userFieldQuery } from '@/store';
 import queryString from 'query-string';
 
 enum ModalState {
   CREATE = 'CREATE',
   EDIT = 'EDIT',
   FEED = 'FEED',
-};
+}
 
 interface CenterLatLng {
   lat: number;
@@ -55,16 +55,18 @@ interface FeedDetail {
   updatedAt: string;
 }
 
-interface FeedListProps extends Array<FeedProps> { }
+interface FeedListProps extends Array<FeedProps> {}
 
 const FeedMapPage = () => {
   const { userId } = useParams();
   const [feedList, setFeedList] = useState<FeedListProps>([]);
   const [stateModal, setStateModal] = useState(false);
+
   const [modalChildrenState, setModalChildrenState] = useState('');
-  const userIdAtom = useRecoilValue(userIdState);
+  const userIdAtom = useRecoilValue(userFieldQuery('id'));
   const [currentFeedState, setCurrentFeedState] = useRecoilState(currentFeedAtom);
   const [_mapValue, setMapValue] = useRecoilState(mapAtom);
+
   const feedIdQueryString = queryString.parse(window.location.search);
 
   useEffect(() => {
@@ -93,8 +95,6 @@ const FeedMapPage = () => {
       }
     }
 
-
-
     getFeedList();
   }, []);
 
@@ -107,11 +107,10 @@ const FeedMapPage = () => {
     changeCenterLatLng(item.location);
     setCurrentFeedState((prev) => ({
       ...prev,
-      ...item
+      ...item,
     }));
     setModalChildrenState(ModalState.FEED);
     toggleModal();
-
   };
 
   const changeCenterLatLng = (newCenterLatLng: CenterLatLng) => {
@@ -136,45 +135,43 @@ const FeedMapPage = () => {
       case ModalState.EDIT:
         return <Form isEdit={true} />;
       case ModalState.FEED:
-        return <FeedDetail
-          isModal={true}
-          name={currentFeedState.userName}
-          title={currentFeedState.title}
-          desc={currentFeedState.description}
-        />;
+        return (
+          <FeedDetail
+            isModal={true}
+            name={currentFeedState.userName}
+            title={currentFeedState.title}
+            desc={currentFeedState.description}
+          />
+        );
     }
   };
 
   const onClickEditFeedModal = (item: FeedProps) => {
     setCurrentFeedState((prev) => ({
       ...prev,
-      ...item
+      ...item,
     }));
     setModalChildrenState(ModalState.EDIT);
     toggleModal();
   };
 
   const onClickDeleteFeed = async (feedId: string) => {
-
     if (!window.confirm('피드를 정말로 삭제하시겠습니까 ?')) return;
 
     const result = await Api.deleteOneFeed(feedId);
 
     if (result.result === 'success') alert('피드가 삭제되었습니다.'); // re-rendering 구현
-
   };
-
-
 
   return (
     <Main>
       <StyledWrapper>
         <Map feedList={feedList} toggleModal={onClickMapFeed}></Map>
-        {(userIdAtom === userId) &&
+        {userIdAtom === userId && (
           <Button onClick={onClickModal}>
             <BsPlus />
           </Button>
-        }
+        )}
         <StyledFeeds>
           {feedList?.map((item, idx) => (
             <FeedHeader
@@ -231,7 +228,7 @@ const Button = styled.button`
     font-size: 7rem;
   }
 
-  @media only screen and (min-width: 1024px) { 
+  @media only screen and (min-width: 1024px) {
     bottom: 5%;
     width: 80px;
     height: 80px;

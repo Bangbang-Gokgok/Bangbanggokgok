@@ -38,8 +38,9 @@ declare global {
 //회원 프로필 API
 userRouter.get('/user', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    if (req.user) {
-      res.json(req.user);
+    if (req.cookies.refreshToken) {
+      const user = await userService.getUserDataByRefreshToken(req.cookies.refreshToken);
+      res.json(user);
     } else {
       const error = new Error('user 정보가 없습니다.');
       error.name = 'NotFound';
@@ -110,7 +111,8 @@ userRouter.get('/friends/:_id', async (req: Request, res: Response, next: NextFu
 //전체 회원 조회 API
 userRouter.get('/list', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const users = await userService.getUsers();
+    const keyword = req.query.keyword ? req.query.keyword.toString() : '';
+    const users = await userService.getUsers(keyword);
     res.status(200).json(users);
   } catch (error) {
     next(error);

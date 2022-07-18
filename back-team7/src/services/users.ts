@@ -35,9 +35,15 @@ class UserService {
     return createdNewUser;
   }
 
-  async getUsers(): Promise<Partial<UserData>[]> {
-    const users = await User.find({});
-    const data = await users.map(({ _id, name, profileImage }) => ({ _id, name, profileImage }));
+  async getUsers(keyword: string): Promise<Partial<UserData>[]> {
+    const keywordExp = new RegExp(keyword);
+    const users = keyword ? await User.find({ name: { $regex: keywordExp } }) : await User.find({});
+    const data = await users.map(({ _id, name, profileImage, friends }) => ({
+      _id,
+      name,
+      profileImage,
+      friends,
+    }));
     return data;
   }
 
@@ -53,6 +59,7 @@ class UserService {
       _id: user._id,
       name: user.name,
       profileImage: user.profileImage,
+      friends: user.friends,
     };
     return data;
   }
