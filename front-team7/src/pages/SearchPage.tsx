@@ -5,7 +5,7 @@ import Input from '@/components/Input/Input';
 import unknownUser from '@/assets/images/unknown-user.png';
 import React, { useEffect, useState } from 'react';
 import { userState } from '@/store';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { axios } from '@/lib';
 // import import io from 'socket.io-client';
 
@@ -97,8 +97,14 @@ const SearchPage = () => {
     setSearchKeyword(e.target.value);
   };
 
-  const onClickSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const onClickSearch = () => {
     searchUser(searchKeyword);
+  };
+
+  const onClickFollow = (selectedUserId: string) => {
+    // try {
+    //   const result = await axios.
+    // }
   };
 
   const searchUser = async (keyword: string) => {
@@ -109,7 +115,6 @@ const SearchPage = () => {
     } catch (err) {
       console.log(err);
     }
-
   };
 
   return (
@@ -122,14 +127,14 @@ const SearchPage = () => {
       <StyledSearchContainer>
         <Input
           handleInput={(e) => handleInput(e)}
-          onClickSearch={(e) => onClickSearch(e)}
+          onClickSearch={() => onClickSearch()}
         />
         {searchUserList.length > 0
           ?
           searchUserList.map((user, idx) => (
             <StyledUserInfoWrapper key={idx}>
               <UserInfo name={user.name} image={user.profileImage[0] || unknownUser as string}></UserInfo>
-              <StyledFollowButton isfollowed={false} />
+              <StyledFollowButton onClick={() => onClickFollow(user._id)} isfollowed={false} />
             </StyledUserInfoWrapper>
           ))
           :
@@ -165,10 +170,11 @@ const StyledUserInfoWrapper = styled.div`
 const StyledSearchContainer = styled.div`
   width: 100%;
   height: 100%;
-  padding: 20px;
+  padding: 25px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-y: scroll;
   gap: 25px;
 `;
 

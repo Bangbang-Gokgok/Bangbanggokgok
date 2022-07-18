@@ -33,7 +33,7 @@ const Input = (
     handleInput,
     onClickSearch
   }
-    : { handleInput: (e: React.ChangeEvent<HTMLInputElement>) => void; } & { onClickSearch: (e: React.MouseEvent<HTMLButtonElement>) => void; }
+    : { handleInput: (e: React.ChangeEvent<HTMLInputElement>) => void; } & { onClickSearch: () => void; }
 ) => {
   return (
     <StyledInputContainer>
