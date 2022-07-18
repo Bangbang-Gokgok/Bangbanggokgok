@@ -2,13 +2,14 @@ import { Main } from '@/components/Layout';
 import styled from 'styled-components';
 import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
 import unknownUser from '@/assets/images/unknown-user.png';
-import * as Api from '@/api/feeds';
 import * as UserApi from '@/api/users';
+import { axios } from '@/lib';
 // import { UserInfoProps } from '@/components/UserInfo';
 import { useEffect, useState, CSSProperties } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Loading from '@/components/Loading/Loading';
-import { axios } from '@/lib';
+import { FeedListProps } from '@/types/feed';
+
 
 const StyledFeedListContainer = styled.div`
   width: 100%;
@@ -37,29 +38,10 @@ const StyledFeedListContainer = styled.div`
   // }
 `;
 
-interface CenterLatLng {
-  lat: number;
-  lng: number;
-}
-
-interface FeedProps {
-  _id: string;
-  userName: string;
-  userId: string;
-  title: string;
-  imageUrl: Array<string>;
-  description: string;
-  address: string;
-  location: CenterLatLng;
-  createdAt: string;
-}
-
-type FeedListProps = Array<FeedProps>;
-
 const HomePage = () => {
   const [feedList, setFeedList] = useState<FeedListProps>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
-  const [myUserId, setMyUserId] = useState<string>();
+  const [myUserId, setMyUserId] = useState<string>('');
   const [page, setPage] = useState<number>(1);
   const [perPage, setPerPage] = useState<number>(3);
   const [totalPage, setTotalPage] = useState<number>(0);
@@ -133,15 +115,9 @@ const HomePage = () => {
               <FeedDetail
                 isModal={false}
                 key={`${feed.title}-${index}`}
-                name={feed.userName}
-                userId={myUserId}
-                feedId={feed._id}
-                feedLocation={feed.location}
-                feedUser={feed.userId}
-                feedImg={feed.imageUrl}
+                currentUserId={myUserId}
                 image={unknownUser as string}
-                title={feed.title}
-                desc={feed.description}
+                feedList={feed}
               ></FeedDetail>
             ))}
           </div>
