@@ -3,21 +3,16 @@ import { Main } from '@/components/Layout';
 import { UserInfo } from '@/components/UserInfo';
 import Input from '@/components/Input/Input';
 import unknownUser from '@/assets/images/unknown-user.png';
+import { useEffect, useState } from 'react';
+import { userState } from '@/store';
+import { useRecoilValue } from 'recoil';
+import { axios } from '@/lib';
 // import * as UserApiByUser from '@/api/users';
 // import * as UserApiByAdmin from '@/api/usersByAdmin';
 // import { useEffect, useState } from 'react';
 // import { Types } from 'mongoose';
 
-const StyledSearchContainer = styled.div`
-  width: 330px;
-  // background: lightgray;
-  display: flex;
-  flex-direction: column;
-  justify-contents: center;
-  align-itmes: center;
-  padding: 40px 10px;
-  gap: 35px;
-`;
+
 
 // 아래는 User Schema의 CRUD 가 정상적으로 작동하는지 확인하는 임시 코드
 
@@ -85,16 +80,45 @@ async function deleteByAdmin() {
 }
 */
 
+interface userData {
+  _id: string,
+  name: string,
+  profileImage: Array<string>;
+}
+
+type userDataList = Array<userData>;
+
 const SearchPage = () => {
-  // useEffect(() => {
-  //   // updateByAdmin();
-  //   // deleteByAdmin();
-  //   // updateMyInfo();
-  //   // deleteMyInfo();
-  //   // getMyInfo();
-  //   // getAll();
-  // }, []);
-  let name = '김지환';
+  const [searchUserList, setSearchUserList] = useState<userDataList>([]);
+  const currentUser = useRecoilValue(userState);
+  useEffect(() => {
+    console.log(currentUser?.friends);
+
+    const searchUser = async (keyword: string) => {
+      const result = await axios.get(`/api/users/list?keyword=${keyword}`);
+      console.log(result);
+    };
+
+    searchUser('정현');
+
+    const mockData = [
+      {
+        "_id": "2gPRjW-t2",
+        "name": "김정현",
+        "profileImage": [],
+        "friends": []
+      },
+      {
+        "_id": "C638LX3Po",
+        "name": "김정현",
+        "profileImage": [],
+        "friends": []
+      }
+    ];
+
+    setSearchUserList(mockData);
+
+  }, []);
   return (
     <Main
       display={'flex'}
@@ -103,30 +127,50 @@ const SearchPage = () => {
       alignItems={'center'}
     >
       <StyledSearchContainer>
-        {/* <button
-          onClick={() => {
-            if (confirm('자신의 정보를 삭제하시겠습니까??')) {
-              deleteMyInfo();
-            }
-          }}
-        >삭제</button> */}
         <Input></Input>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
+        {
+          searchUserList.map((user, idx) => (
+            <StyledUserInfoWrapper key={idx}>
+              <UserInfo name={user.name} image={user.profileImage[0] || unknownUser as string}></UserInfo>
+              <StyledFollowButton isfollowed={false} />
+            </StyledUserInfoWrapper>
+          ))
+        }
       </StyledSearchContainer>
     </Main>
   );
 };
+
+const StyledFollowButton = styled.button<{ isfollowed: boolean; }>`
+  border: none;
+  background-color: transparent;
+  color: #487eb0;
+  cursor: pointer;
+  &::after{
+    content: ${(props) => props.isfollowed ? '"팔로잉 취소"' : '"팔로우"'};
+  }
+  &:hover {
+    color: #67a2d9;
+  }
+  &:visited {
+    color: #487eb0;
+  }
+`;
+
+const StyledUserInfoWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+`;
+
+const StyledSearchContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+`;
 
 export default SearchPage;

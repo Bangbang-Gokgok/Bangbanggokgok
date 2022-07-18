@@ -34,10 +34,11 @@ export const google = new Strategy(
   ) => {
     const { email, name } = profile._json;
     try {
-      const { _id, authority } = await findOrCreateUser(email!, name!);
+      const { _id, authority, friends } = await findOrCreateUser(email!, name!);
       done(null, {
         _id,
         authority,
+        friends,
         email,
         name,
       });
