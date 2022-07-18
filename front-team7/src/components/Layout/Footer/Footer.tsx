@@ -20,13 +20,25 @@ export const Footer = () => {
 
 const StyledFooter = styled.footer`
   position: fixed;
-  bottom: 0px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  bottom: 0px;
   width: 100vw;
   height: 70px;
-  padding: 0 35px;
+  padding: 0 25px;
   background: #313131;
   z-index: 99;
+
+  @media screen and (min-width: 480px) {
+    padding: 0 40px;
+  }
+
+  @media screen and (min-width: 620px) {
+    padding: 0 60px;
+  }
+
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
 `;

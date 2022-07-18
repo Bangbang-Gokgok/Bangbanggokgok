@@ -38,7 +38,7 @@ class UserService {
   async getUsers(keyword: string): Promise<Partial<UserData>[]> {
     const keywordExp = new RegExp(keyword);
     const users = keyword ? await User.find({ name: { $regex: keywordExp } }) : await User.find({});
-    const data = await users.map(({ _id, name, profileImage, friends }) => ({
+    const data = users.map(({ _id, name, profileImage, friends }) => ({
       _id,
       name,
       profileImage,
@@ -57,7 +57,9 @@ class UserService {
     }
     const data = {
       _id: user._id,
+      email: user.email,
       name: user.name,
+      description: user.description,
       profileImage: user.profileImage,
       friends: user.friends,
     };

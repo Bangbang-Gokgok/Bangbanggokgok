@@ -1,6 +1,6 @@
 import { type MouseEvent } from 'react';
 import styled from 'styled-components';
-import { useRecoilState, useRecoilRefresher_UNSTABLE } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -22,7 +22,6 @@ const FIELD_DATA: { kind: kindType; labelName: string; inputType: string }[] = [
 
 export const ProfileEditForm = () => {
   const [currentUser, setCurrentUser] = useRecoilState(userState);
-  const refreshCurrentUser = useRecoilRefresher_UNSTABLE(userState);
   const navigate = useNavigate();
 
   const {
@@ -168,6 +167,8 @@ const StyledForm = styled.form`
   }
 
   .address-btn-container {
+    display: flex;
+    justify-content: flex-end;
     margin-top: 13px;
 
     button {
