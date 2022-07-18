@@ -21,7 +21,7 @@ const FeedDetail = ({
   currentUserId,
   image,
   feedList
-}: UserInfoProps & { currentUserId: string; } & { isModal: boolean; } & { feedList: FeedProps; }) => {
+}: { image?: Array<string>; } & { currentUserId: string; } & { isModal: boolean; } & { feedList: FeedProps; }) => {
   const [reviewList, setReviewList] = useState<ReviewListProps>();
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [textarea, setTextarea] = useState<string>('');
