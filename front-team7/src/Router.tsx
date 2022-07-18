@@ -11,6 +11,7 @@ import LoginPage from '@/pages/LoginPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 import HomePage from '@/pages/HomePage';
 import AuthRouter from '@/components/AuthRouter';
+import AdminPage from './pages/AdminPage';
 import InfiniteScrollHomePage from './pages/InfiniteScrollHomePage';
 
 const AppRouter = () => {
@@ -59,6 +60,14 @@ const AppRouter = () => {
             element={
               <AuthRouter>
                 <ProfileEditPage />
+              </AuthRouter>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <AuthRouter>
+                <AdminPage />
               </AuthRouter>
             }
           />
