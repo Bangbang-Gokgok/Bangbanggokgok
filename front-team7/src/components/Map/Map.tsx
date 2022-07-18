@@ -5,39 +5,12 @@ import pinImg from '@/assets/images/general-marker.png';
 import centerPinImg from '@/assets/images/point-marker.png';
 import { useRecoilValue } from "recoil";
 import { mapAtom } from "@/store/map";
-
+import { FeedListProps, FeedProps } from '@/types/feed';
 
 interface MapContainer {
   width: string;
   height: string;
 }
-
-interface CenterLatLng {
-  lat: number;
-  lng: number;
-}
-
-interface Review {
-  userName: string;
-  contents: string;
-  timestamp: Date;
-}
-
-interface FeedProps {
-  _id: string;
-  userName: string;
-  title: string;
-  description: string;
-  imageUrl: Array<string>;
-  review: Array<Review>;
-  address: string;
-  location: CenterLatLng;
-  createdAt: string;
-  updatedAt: string;
-}
-
-type FeedListProps = Array<FeedProps>;
-
 
 const { kakao } = window;
 

@@ -1,14 +1,9 @@
 import styled from 'styled-components';
 import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
-
 import { FaMapMarkedAlt } from 'react-icons/fa';
 import { UserInfo, UserInfoProps } from '@/components/UserInfo';
 import { NavLink } from 'react-router-dom';
-
-interface CenterLatLng {
-  lat: number;
-  lng: number;
-}
+import { LocationProps } from '@/types/feed';
 
 export const FeedHeader = ({
   onClickFeedModal,
@@ -19,10 +14,9 @@ export const FeedHeader = ({
   name,
   image,
   title,
-  feedId,
   feedUser,
   feedLocation,
-}: UserInfoProps & { title: string; } & { feedId?: string; } & { feedLocation?: CenterLatLng; } & {
+}: UserInfoProps & { title: string; } & { feedLocation?: LocationProps; } & {
   feedUser?: string;
 } & { isFolded: boolean; } & { isUser: boolean; } & { onClickFeedModal?: () => void; } & { onClickEditFeedModal?: () => void; } & { onClickDeleteFeed?: () => void; }) => {
   return (
