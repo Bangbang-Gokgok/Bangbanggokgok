@@ -1,19 +1,20 @@
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import queryString from 'query-string';
+import * as Api from '@/api/feeds';
 import { FeedHeader } from '@/components/FeedHeader';
 import { Main } from '@/components/Layout';
 import Map from '@/components/Map/Map';
-import { useEffect, useState } from 'react';
-import { BsPlus } from 'react-icons/bs';
-import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { mapAtom } from '@/store/map';
 import ModalFrame from '@/components/Layout/ModalFrame/ModalFrame';
 import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
-import { currentFeedAtom } from '@/store/currentFeed';
-import * as Api from '@/api/feeds';
 import Form from '@/components/Form/Form';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userFieldQuery } from '@/store';
-import queryString from 'query-string';
+import { mapAtom } from '@/store/map';
+import { currentFeedAtom } from '@/store/currentFeed';
+import { FeedListProps, FeedProps, LocationProps } from '@/types/feed';
+import { BsPlus } from 'react-icons/bs';
+import styled from 'styled-components';
 
 enum ModalState {
   CREATE = 'CREATE',
@@ -21,47 +22,10 @@ enum ModalState {
   FEED = 'FEED',
 }
 
-interface CenterLatLng {
-  lat: number;
-  lng: number;
-}
-
-interface Review {
-  userName: string;
-  contents: string;
-  timestamp: Date;
-}
-
-interface FeedProps {
-  _id: string;
-  userName: string;
-  title: string;
-  description: string;
-  imageUrl: Array<string>;
-  review: Array<Review>;
-  address: string;
-  location: CenterLatLng;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface FeedDetail {
-  userName: string;
-  title: string;
-  description: string;
-  review: Array<Review>;
-  address: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface FeedListProps extends Array<FeedProps> { }
-
 const FeedMapPage = () => {
   const { userId } = useParams();
   const [feedList, setFeedList] = useState<FeedListProps>([]);
   const [stateModal, setStateModal] = useState(false);
-
   const [modalChildrenState, setModalChildrenState] = useState('');
   const userIdAtom = useRecoilValue(userFieldQuery('id'));
   const [currentFeedState, setCurrentFeedState] = useRecoilState(currentFeedAtom);
@@ -113,7 +77,7 @@ const FeedMapPage = () => {
     toggleModal();
   };
 
-  const changeCenterLatLng = (newCenterLatLng: CenterLatLng) => {
+  const changeCenterLatLng = (newCenterLatLng: LocationProps) => {
     setMapValue((currMapValue) => ({
       ...currMapValue,
       centerLatLng: {

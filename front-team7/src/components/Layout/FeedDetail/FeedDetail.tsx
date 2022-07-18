@@ -10,25 +10,11 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Loading from '@/components/Loading/Loading';
 import * as ReviewApi from '@/api/review';
 import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
+import { FeedProps, ReviewListProps, ReviewProps } from '@/types/feed';
 interface FeedDetailContainerProps {
   boxShadow: boolean;
   // dropDownVisible: boolean;
 }
-
-interface CenterLatLng {
-  lat: number;
-  lng: number;
-}
-
-interface ReviewProps {
-  userId: string;
-  userName: string;
-  contents: string;
-  feedId: string;
-  createdAt?: string;
-}
-
-interface ReviewListProps extends Array<ReviewProps> { }
 
 const REVIEW_MOCK: ReviewListProps = [
   {
@@ -56,21 +42,11 @@ const REVIEW_MOCK: ReviewListProps = [
 ];
 
 const FeedDetail = ({
-  name,
-  image,
-  title,
-  desc,
   isModal,
-  userId,
-  feedId,
-  feedUser,
-  feedImg,
-  feedLocation,
-}: UserInfoProps & { userId: string; } & { title: string; } & { feedImg?: Array<string>; } & {
-  feedUser?: string;
-} & {
-  feedLocation?: CenterLatLng;
-} & { feedId?: string; } & { desc: string; } & { isModal: boolean; }) => {
+  currentUserId,
+  image,
+  feedList
+}: UserInfoProps & { currentUserId: string; } & { isModal: boolean; } & { feedList: FeedProps; }) => {
   const [reviewList, setReviewList] = useState<ReviewListProps>(REVIEW_MOCK);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [textarea, setTextarea] = useState<string>('');
@@ -94,8 +70,8 @@ const FeedDetail = ({
     // console.log('getReviewByFeedID : ', getReviewByFeedID);
 
     // 해당 피드에 저장된 댓글들만 가져오기
-    const getReviewByFeedID: ReviewListProps = await ReviewApi.getReviewsByFeedID(feedId);
-    console.log('feedId, getReviewByFeedID : ', feedId, getReviewByFeedID);
+    const getReviewByFeedID: ReviewListProps = await ReviewApi.getReviewsByFeedID(feedList._id);
+    console.log('feedId, getReviewByFeedID : ', feedList._id, getReviewByFeedID);
     setReviewList(getReviewByFeedID);
   }
 
@@ -136,9 +112,9 @@ const FeedDetail = ({
     if (!confirm('댓글을 등록하시겠습니까?')) return;
 
     const review: ReviewProps = {
-      userName: name,
+      userName: feedList.userName,
       contents: textAreaContent.current?.ref.current.value,
-      feedId,
+      feedId: feedList._id,
     };
     console.log('review 등록! ', review);
 
@@ -188,14 +164,13 @@ const FeedDetail = ({
   return (
     <StyledFeedDetailContainer boxShadow={isModal}>
       <FeedHeader
-        feedId={feedId}
-        feedLocation={feedLocation}
-        feedUser={feedUser}
+        feedLocation={feedList.location}
+        feedUser={feedList.userId}
         isUser={false}
         isFolded={isModal}
-        name={name}
+        name={feedList.userName}
         image={image}
-        title={title}
+        title={feedList.title}
       ></FeedHeader>
       <StyledFeedDetailBody>
         {/* <StyledTitle>👍🏽 {title}</StyledTitle> */}
@@ -331,7 +306,7 @@ const FeedDetail = ({
                         )}
                       </Comment.Content>
                     </div>
-                    {review.userId === userId ? (
+                    {review.userId === currentUserId ? (
                       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
                         {isEdit && review._id === clickedReview ? (
                           <Button
