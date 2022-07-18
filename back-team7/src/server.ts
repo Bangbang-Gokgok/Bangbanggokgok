@@ -12,6 +12,7 @@ import { apiRouter, authRouter } from './routes';
 import { errorHandler, getUserFromJWT } from './middlewares';
 import { userService, feedService } from './services';
 import { usePassport } from './passport';
+
 import { likesScheduler, friendsScheduler } from './utils/scheduler';
 import { ws } from './socket';
 
@@ -43,7 +44,7 @@ app.use(errorHandler);
 const server = app.listen(PORT, () => {
   console.log(`server is running ${PORT}`);
   schedule.scheduleJob('*/1 * * * *', likesScheduler);
-  schedule.scheduleJob('*/1 * * * *', friendsScheduler);
+  schedule.scheduleJob('* * * * * *', friendsScheduler);
 });
 
 // app.use(express.static(path.join(__dirname, '/../frontend/build'))); // 리액트 정적 파일 제공

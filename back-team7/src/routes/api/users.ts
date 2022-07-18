@@ -72,7 +72,7 @@ userRouter.get('/friends', async (req: Request, res: Response, next: NextFunctio
 });
 
 // 친구 추가 및 취소 API(테스트용으로 GET, PUT으로 변경할 것)
-userRouter.get('/friends/:_id', async (req: Request, res: Response, next: NextFunction) => {
+userRouter.put('/friends/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.user) {
       const userId = req.user._id;
