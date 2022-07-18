@@ -48,7 +48,7 @@ const AppRouter = () => {
             }
           />
           <Route
-            path="/profile"
+            path="/profile/:userId"
             element={
               <AuthRouter>
                 <ProfilePage />

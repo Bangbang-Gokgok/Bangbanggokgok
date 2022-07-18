@@ -6,13 +6,11 @@ import { BiEditAlt } from 'react-icons/bi';
 import profileBackground from '@/assets/images/profile-background.jpg';
 
 import { Avartar } from '@/components/Avatar';
-import { userState, currentUserFeedsQuery } from '@/store';
+import { userByIdQuery, userByIdFeedsQuery } from '@/store';
 
 export const ProfileTop = () => {
-  const currentUser = useRecoilValue(userState);
-  const currentUserFeeds = useRecoilValue(currentUserFeedsQuery);
-
-  console.log(currentUser?.profileImage);
+  const user = useRecoilValue(userByIdQuery);
+  const feeds = useRecoilValue(userByIdFeedsQuery);
 
   return (
     <StyledProfileTop image={profileBackground as string}>
@@ -22,24 +20,17 @@ export const ProfileTop = () => {
         </StyledLinkButton>
       </div>
       <div className="profile-main">
-        <Avartar
-          size="xl"
-          src={currentUser?.profileImage ? currentUser.profileImage[0] : undefined}
-        />
-        <span className="username">{currentUser?.name}</span>
-        <span className="email">{currentUser?.email}</span>
+        <Avartar size="xl" src={user?.profileImage ? user.profileImage[0] : undefined} />
+        <span className="username">{user?.name}</span>
+        <span className="email">{user?.email}</span>
         <div className="profile-info-container">
           <div className="profile-info">
             <span className="profile-info-title">게시글</span>
-            <span className="profile-info-number">
-              {currentUserFeeds!.length > 0 ? currentUserFeeds!.length : 0}
-            </span>
+            <span className="profile-info-number">{feeds!.length > 0 ? feeds!.length : 0}</span>
           </div>
           <div className="profile-info">
             <span className="profile-info-title">팔로워</span>
-            <span className="profile-info-number">
-              {currentUser?.friends ? currentUser?.friends.length : 0}
-            </span>
+            <span className="profile-info-number">0</span>
           </div>
         </div>
       </div>
@@ -49,7 +40,7 @@ export const ProfileTop = () => {
 
 const StyledProfileTop = styled.div<{ image: string }>`
   position: relative;
-  height: 250px;
+  min-height: 250px;
 
   :before {
     content: '';
@@ -61,7 +52,7 @@ const StyledProfileTop = styled.div<{ image: string }>`
     background-image: ${({ image }) => `url(${image})`};
     background-size: cover;
     filter: grayscale(80%);
-    opacity: 0.55;
+    opacity: 0.6;
   }
 
   .profile-icon {
@@ -123,7 +114,7 @@ const StyledProfileTop = styled.div<{ image: string }>`
   }
 
   @media screen and (min-width: 768px) {
-    height: 350px;
+    min-height: 350px;
 
     .profile-main {
       gap: 5px;

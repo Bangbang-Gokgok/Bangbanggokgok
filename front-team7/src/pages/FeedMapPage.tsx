@@ -40,8 +40,9 @@ const FeedMapPage = () => {
         setFeedList(result);
         initializeMapCenterLatLng(result[0]);
       } catch (err) {
-        alert(err);
-        window.location.reload();
+        // alert(err);
+        // window.location.reload();
+        console.log(err);
       }
     }
     getFeedList();
@@ -129,8 +130,8 @@ const FeedMapPage = () => {
     try {
       await axios.delete(`/api/feeds/${feedId}`, {
         data: {
-          userId: feedUserId
-        }
+          userId: feedUserId,
+        },
       });
       alert('피드가 삭제되었습니다.');
       window.location.reload();

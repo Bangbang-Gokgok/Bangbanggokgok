@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom'; // 해당 피드를 작성한 유저로 이동시키기 위한 Link
 
 import { Avartar } from '@/components/Avatar';
 
