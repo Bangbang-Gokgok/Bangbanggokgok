@@ -1,11 +1,13 @@
 import styled from 'styled-components';
-
 import { useRecoilValue } from 'recoil';
-import { userFieldQuery } from '@/store';
+import { Link } from 'react-router-dom';
+
+import { userParamsState, userByIdFieldQuery } from '@/store';
 
 export const ProfileMid = () => {
-  const username = useRecoilValue(userFieldQuery('name'));
-  const description = useRecoilValue(userFieldQuery('description'));
+  const userId = useRecoilValue(userParamsState);
+  const username = useRecoilValue(userByIdFieldQuery('name'));
+  const description = useRecoilValue(userByIdFieldQuery('description'));
   console.log(description);
 
   const newDescription = description || `${username}님의 지도입니다.`;
@@ -14,6 +16,9 @@ export const ProfileMid = () => {
     <StyledProfileMid>
       <span className="introduction">나의 지도를 소개합니다 ✨</span>
       <span className="content">{newDescription as React.ReactNode}</span>
+      <Link className="map-btn" to={`/feedmap/${userId}`}>
+        지도 보러가기
+      </Link>
     </StyledProfileMid>
   );
 };
@@ -24,7 +29,7 @@ const StyledProfileMid = styled.div`
   justify-content: center;
   align-items: center;
   gap: 5px;
-  padding: 16px 10px;
+  padding: 16px 14px;
 
   .introduction {
     color: whitesmoke;
@@ -45,6 +50,18 @@ const StyledProfileMid = styled.div`
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   }
 
+  .map-btn {
+    font-weight: bold;
+    font-size: 1.6rem;
+    color: #343434;
+    margin-top: 10px;
+    background-color: #ddcb51;
+    cursor: pointer;
+    border-radius: 3px;
+    border: none;
+    padding: 10px 16px;
+  }
+
   @media screen and (min-width: 768px) {
     .introduction {
       font-size: 1.6rem;
@@ -52,8 +69,8 @@ const StyledProfileMid = styled.div`
 
     .content {
       font-size: 1.5rem;
-      min-width: 500px;
-      max-width: 750px;
+      min-width: 400px;
+      max-width: 500px;
     }
   }
 
@@ -64,8 +81,8 @@ const StyledProfileMid = styled.div`
 
     .content {
       font-size: 1.55rem;
-      min-width: 750px;
-      max-width: 1000px;
+      min-width: 500px;
+      max-width: 650px;
     }
   }
 `;
