@@ -10,68 +10,19 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Loading from '@/components/Loading/Loading';
 import * as ReviewApi from '@/api/review';
 import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
+import { FeedProps, ReviewListProps, ReviewProps } from '@/types/feed';
 interface FeedDetailContainerProps {
   boxShadow: boolean;
   // dropDownVisible: boolean;
 }
 
-interface CenterLatLng {
-  lat: number;
-  lng: number;
-}
-
-interface ReviewProps {
-  userId: string;
-  userName: string;
-  contents: string;
-  feedId: string;
-  createdAt?: string;
-}
-
-interface ReviewListProps extends Array<ReviewProps> { }
-
-const REVIEW_MOCK: ReviewListProps = [
-  {
-    userId: 'bCJcG23WB',
-    userName: 'Kim Ji Hwan11111',
-    contents: '정말 멋있는 댓글이군요!1111',
-    feedId: 'xcgv3L5Uc',
-
-    createdAt: 'Today at 5:42PM Today at 5:42PM Today at 5:42PM',
-  },
-  {
-    userId: 'bCJcG23WB',
-    userName: 'Kim Ji Hwan222222',
-    contents: '정말 멋있는 댓글이군요!2222222',
-    feedId: 'xcgv3L5Uc',
-    createdAt: 'Today at 5:42PM Today at 5:42PM Today at 5:42PM',
-  },
-  {
-    userId: 'bCJcG23WB',
-    userName: 'Kim Ji Hwan333333',
-    contents: '정말 멋있는 댓글이군요!3333',
-    feedId: 'xcgv3L5Uc',
-    createdAt: 'Today at 5:42PM Today at 5:42PM Today at 5:42PM',
-  },
-];
-
 const FeedDetail = ({
-  name,
-  image,
-  title,
-  desc,
   isModal,
-  userId,
-  feedId,
-  feedUser,
-  feedImg,
-  feedLocation,
-}: UserInfoProps & { userId: string; } & { title: string; } & { feedImg?: Array<string>; } & {
-  feedUser?: string;
-} & {
-  feedLocation?: CenterLatLng;
-} & { feedId?: string; } & { desc: string; } & { isModal: boolean; }) => {
-  const [reviewList, setReviewList] = useState<ReviewListProps>(REVIEW_MOCK);
+  currentUserId,
+  image,
+  feedList
+}: UserInfoProps & { currentUserId: string; } & { isModal: boolean; } & { feedList: FeedProps; }) => {
+  const [reviewList, setReviewList] = useState<ReviewListProps>();
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [textarea, setTextarea] = useState<string>('');
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -79,41 +30,17 @@ const FeedDetail = ({
   const [clickedReview, setClickedReview] = useState<string>('');
   const [dropDownVisible, setDropDownVisible] = useState<boolean>(false);
 
-  useEffect(() => {
-    get();
-  }, []);
-
   async function get() {
-    // console.log('reviewList.length : ', reviewList.length);
-
-    // const getReviewList: ReviewListProps = await ReviewApi.getAllReviews();
-    // const getReviewByReviewID: ReviewListProps = await ReviewApi.getOneReviewByReviewID('q3BN51RU-');
-    // const getReviewByUserID: ReviewListProps = await ReviewApi.getReviewsByUserID('lGl0AOVlG');
-    // console.log('getReviewList : ', getReviewList);
-    // console.log('getReviewByReviewID : ', getReviewByReviewID);
-    // console.log('getReviewByFeedID : ', getReviewByFeedID);
-
-    // 해당 피드에 저장된 댓글들만 가져오기
-    const getReviewByFeedID: ReviewListProps = await ReviewApi.getReviewsByFeedID(feedId);
-    console.log('feedId, getReviewByFeedID : ', feedId, getReviewByFeedID);
+    // 해당 Feed 에 있는 Review들만 가져오기
+    const getReviewByFeedID: ReviewListProps = await ReviewApi.getReviewsByFeedID(feedList._id);
+    // console.log('feedId, getReviewByFeedID : ', feedId, getReviewByFeedID);
     setReviewList(getReviewByFeedID);
   }
 
-  const fetchMoreData = async () => {
-    // alert('fetchMoreData 함수 실행!');
-
-    // 페이지네이션 처리된 이후에 이 코드 부분 리팩토링하기
-    console.log('reviewList.length : ', reviewList.length);
-    if (reviewList.length >= 15) {
-      setHasMore(false);
-      return;
-    }
-    setTimeout(() => {
-      const newItems = reviewList.concat(REVIEW_MOCK);
-      setReviewList(newItems);
-    }, 1000);
-  };
-
+  useEffect(() => {
+    get();
+  }, []);
+  // console.log('reviewList : ', reviewList);
   const textAreaContent = useRef<any>();
 
   const onChange = (e) => {
@@ -136,9 +63,9 @@ const FeedDetail = ({
     if (!confirm('댓글을 등록하시겠습니까?')) return;
 
     const review: ReviewProps = {
-      userName: name,
+      userName: feedList.userName,
       contents: textAreaContent.current?.ref.current.value,
-      feedId,
+      feedId: feedList._id,
     };
     console.log('review 등록! ', review);
 
@@ -188,21 +115,20 @@ const FeedDetail = ({
   return (
     <StyledFeedDetailContainer boxShadow={isModal}>
       <FeedHeader
-        feedId={feedId}
-        feedLocation={feedLocation}
-        feedUser={feedUser}
+        feedLocation={feedList.location}
+        feedUser={feedList.userId}
         isUser={false}
         isFolded={isModal}
-        name={name}
+        name={feedList.userName}
         image={image}
-        title={title}
+        title={feedList.title}
       ></FeedHeader>
       <StyledFeedDetailBody>
         {/* <StyledTitle>👍🏽 {title}</StyledTitle> */}
-        <StyledFeedDetailDescription>{desc}</StyledFeedDetailDescription>
+        <StyledFeedDetailDescription>{feedList.description}</StyledFeedDetailDescription>
         <StyledFeedDetailSlide>
           <Carousel className={'carousel'} indicators={false} navButtonsAlwaysVisible={true}>
-            {feedImg?.map((item, index) => (
+            {feedList.imageUrl?.map((item, index) => (
               <StyledSlide key={index} src={item}></StyledSlide>
             ))}
           </Carousel>
@@ -210,7 +136,7 @@ const FeedDetail = ({
         <StyledFeedDetailInfo>
           <div>Like 10개</div>
           <div>
-            댓글 {reviewList.length}개
+            댓글 {reviewList?.length}개
             {dropDownVisible ? (
               <MdArrowDropUp
                 className="dropBtn"
@@ -236,150 +162,138 @@ const FeedDetail = ({
               Comment
             </Header>
 
-            {/* 여기다가 scrollableTarget을 걸면 안되나? 왜 한참 더 내려가야 fetchMoreData 가 실행되는지 알아내기! */}
-            <StyledCommentBody id="main-styled">
-              <InfiniteScroll
-                style={{ overflow: 'visibility' }}
-                dataLength={reviewList.length}
-                next={fetchMoreData}
-                hasMore={hasMore}
-                endMessage={<span>"Loading end!"</span>}
-                loader={<span>"Loading ..."</span>}
-                scrollableTarget="main-styled"
-              >
-                {reviewList?.map((review, index) => (
-                  // <Comment key={index} className={'comment'}>
-                  <Comment
-                    key={index}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '10px',
-                      margin: '15px',
-                      border: '0',
-                      // border: '1px solid white',
-                      backgroundColor: 'white',
-                      borderRadius: '10px',
-                      overflow: 'hidden',
-                      padding: '5px',
-                    }}
+            <StyledCommentBody>
+              {reviewList?.map((review, index) => (
+                <Comment
+                  key={index}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '10px',
+                    margin: '15px',
+                    border: '0',
+                    // border: '1px solid white',
+                    backgroundColor: 'white',
+                    borderRadius: '10px',
+                    overflow: 'hidden',
+                    padding: '5px',
+                  }}
+                >
+                  <div
+                    style={{ display: 'flex', gap: '10px', height: '50px', position: 'relative' }}
                   >
-                    <div
-                      style={{ display: 'flex', gap: '10px', height: '50px', position: 'relative' }}
+                    <Comment.Avatar
+                      src="https://react.semantic-ui.com/images/avatar/small/matt.jpg"
+                      alt="User"
+                    />
+                    <Comment.Author
+                      as="a"
+                      style={{
+                        fontSize: '1.5rem',
+                        fontWeight: '600',
+                        width: '50%',
+                        position: 'relative',
+                        height: '100%',
+                        lineHeight: '50px',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}
                     >
-                      <Comment.Avatar
-                        src="https://react.semantic-ui.com/images/avatar/small/matt.jpg"
-                        alt="User"
-                      />
-                      <Comment.Author
-                        as="a"
-                        style={{
-                          fontSize: '1.5rem',
-                          fontWeight: '600',
-                          width: '50%',
-                          position: 'relative',
-                          height: '100%',
-                          lineHeight: '50px',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        {review.userName + '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'}
-                      </Comment.Author>
-                      <Comment.Metadata
-                        style={{
-                          fontSize: '1.2rem',
-                          width: '40%',
-                          position: 'relative',
-                          height: '100%',
-                          lineHeight: '50px',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        {review.createdAt?.substr(0, 10)}
-                      </Comment.Metadata>
+                      {review.userName}
+                    </Comment.Author>
+                    <Comment.Metadata
+                      style={{
+                        fontSize: '1.2rem',
+                        width: '40%',
+                        position: 'relative',
+                        height: '100%',
+                        lineHeight: '50px',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {review.createdAt?.substr(0, 10)}
+                    </Comment.Metadata>
+                  </div>
+                  <div>
+                    <Comment.Content style={{ margin: 0, padding: 0 }}>
+                      {isEdit && review._id === clickedReview ? (
+                        <input
+                          style={{
+                            width: '100%',
+                            // backgroundColor: 'red',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
+                          type="text"
+                          placeholder={review.contents}
+                          onChange={onChangeReview}
+                        />
+                      ) : (
+                        <Comment.Text
+                          style={{
+                            // backgroundColor: 'red',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {review.contents}
+                        </Comment.Text>
+                      )}
+                    </Comment.Content>
+                  </div>
+                  {review.userId === currentUserId ? (
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                      {isEdit && review._id === clickedReview ? (
+                        <Button
+                          content="반영"
+                          // labelPosition="right"
+                          primary
+                          onClick={() => {
+                            updateReview(review._id, updatedReview);
+                          }}
+                        />
+                      ) : (
+                        <Button
+                          content="수정"
+                          // labelPosition="right"
+                          primary
+                          onClick={() => {
+                            setIsEdit((prev) => !prev);
+                            setClickedReview(review._id);
+                          }}
+                        />
+                      )}
+                      {isEdit && review._id === clickedReview ? (
+                        <Button
+                          content="취소"
+                          // labelPosition="right"
+                          primary
+                          onClick={() => {
+                            setIsEdit((prev) => !prev);
+                          }}
+                        />
+                      ) : (
+                        <Button
+                          content="삭제"
+                          // labelPosition="right"
+                          primary
+                          onClick={() => {
+                            deleteReview(review._id);
+                          }}
+                        />
+                      )}
                     </div>
-                    <div>
-                      <Comment.Content style={{ margin: 0, padding: 0 }}>
-                        {isEdit && review._id === clickedReview ? (
-                          <input
-                            style={{
-                              width: '100%',
-                              // backgroundColor: 'red',
-                              whiteSpace: 'nowrap',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                            }}
-                            type="text"
-                            placeholder={review.contents}
-                            onChange={onChangeReview}
-                          />
-                        ) : (
-                          <Comment.Text
-                            style={{
-                              // backgroundColor: 'red',
-                              whiteSpace: 'nowrap',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                            }}
-                          >
-                            {review.contents}
-                          </Comment.Text>
-                        )}
-                      </Comment.Content>
-                    </div>
-                    {review.userId === userId ? (
-                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                        {isEdit && review._id === clickedReview ? (
-                          <Button
-                            content="반영"
-                            // labelPosition="right"
-                            primary
-                            onClick={() => {
-                              updateReview(review._id, updatedReview);
-                            }}
-                          />
-                        ) : (
-                          <Button
-                            content="수정"
-                            // labelPosition="right"
-                            primary
-                            onClick={() => {
-                              setIsEdit((prev) => !prev);
-                              setClickedReview(review._id);
-                            }}
-                          />
-                        )}
-                        {isEdit && review._id === clickedReview ? (
-                          <Button
-                            content="취소"
-                            // labelPosition="right"
-                            primary
-                            onClick={() => {
-                              setIsEdit((prev) => !prev);
-                            }}
-                          />
-                        ) : (
-                          <Button
-                            content="삭제"
-                            // labelPosition="right"
-                            primary
-                            onClick={() => {
-                              deleteReview(review._id);
-                            }}
-                          />
-                        )}
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                  </Comment>
-                ))}
-              </InfiniteScroll>
-            </StyledCommentBody>
+                  ) : (
+                    <></>
+                  )}
+                </Comment>
+              ))}
+            </StyledCommentBody >
             <StyledCommentInput>
               <TextArea
                 ref={textAreaContent}
@@ -389,7 +303,7 @@ const FeedDetail = ({
                 placeholder="댓글 작성..."
               />
               <Button
-                content="댓글 달기"
+                content="작성"
                 labelPosition="left"
                 icon="edit"
                 style={{ width: '20%' }}
@@ -399,12 +313,12 @@ const FeedDetail = ({
                 }}
               />
             </StyledCommentInput>
-          </Comment.Group>
-        </StyledFeedDetailReview>
+          </Comment.Group >
+        </StyledFeedDetailReview >
       ) : (
         <></>
       )}
-    </StyledFeedDetailContainer>
+    </StyledFeedDetailContainer >
   );
 };
 
@@ -436,12 +350,12 @@ const StyledFeedDetailHeader = styled.div`
 `;
 const StyledFeedDetailBody = styled.div`
   // width: 90%;
-  height: 420px;
+  height: 320px;
   position: relative;
   box-sizing: border-box;
   z-index: 2;
   padding: 10px;
-
+  border-radius: 15px;
   background-color: whitesmoke;
   display: flex;
   flex-direction: column;
@@ -452,7 +366,7 @@ const StyledFeedDetailBody = styled.div`
 
 const StyledFeedDetailDescription = styled.div`
   width: 100%;
-  height: 40px;
+  min-height: 40px;
   // position: relative;
   // background-color: red;
 
@@ -467,7 +381,7 @@ const StyledFeedDetailDescription = styled.div`
 `;
 const StyledFeedDetailSlide = styled.div`
   width: 100%;
-  height: 300px;
+  min-height: 200px;
   position: relative;
   background-color: green;
 
@@ -479,7 +393,9 @@ const StyledFeedDetailSlide = styled.div`
     width: 100%;
     height: 100%;
     position: relative;
-    height: 300px;
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
     background-color: black;
   }
 `;
@@ -501,7 +417,7 @@ const StyledSlide = styled.div<{ src: string; }>`
 
 const StyledFeedDetailInfo = styled.div`
   width: 100%;
-  height: 40px;
+  min-height: 40px;
   line-height: 40px;
   // background-color: whitesmoke;
   padding: 0 10px;
@@ -527,7 +443,7 @@ const dropAnimation = keyframes`
 `;
 const StyledFeedDetailReview = styled.div`
   // width: 100%;
-  height: 300px;
+  height: 250px;
   margin: 10px;
   padding: 10px;
   background-color: #a2c4f3;
@@ -568,7 +484,7 @@ const StyledFeedDetailReview = styled.div`
             line-height: 1.6rem;
 
             .author {
-              width: 70px; // 반응형 처리 필요함
+              width: 70px;
               font-size: 1.6rem;
               font-weight: 600;
               margin-right: 15px;
@@ -577,7 +493,7 @@ const StyledFeedDetailReview = styled.div`
               text-overflow: ellipsis;
             }
             .metaData {
-              width: 120px; // 반응형 처리 필요함
+              width: 120px;
               color: rgba(0, 0, 0, 0.4);
               white-space: nowrap;
               overflow: hidden;
@@ -586,7 +502,7 @@ const StyledFeedDetailReview = styled.div`
           }
 
           .text {
-            width: 200px; // 반응형 처리 필요함. 퍼센트로 해도 되고!
+            width: 200px;
 
             white-space: nowrap;
             overflow: hidden;
@@ -611,6 +527,7 @@ const StyledCommentBody = styled.div`
 
 const StyledCommentInput = styled.div`
   width: 100%;
+  height: 40px;
   // position: relative;
   gap: 20px;
   display: flex;

@@ -1,30 +1,7 @@
 import { atom } from 'recoil';
+import { FeedProps } from '@/types/feed';
 
-interface Review {
-  userName: string;
-  contents: string;
-  timestamp: Date;
-}
-
-interface CenterLatLng {
-  lat: number;
-  lng: number;
-}
-
-interface CurrentFeedAtom {
-  _id: string;
-  userName: string;
-  title: string;
-  description: string;
-  imageUrl: Array<string>;
-  review: Array<Review>;
-  address: string;
-  location: CenterLatLng;
-  createdAt: string;
-  updatedAt: string;
-}
-
-const currentFeedDefaultState: CurrentFeedAtom = {
+const currentFeedDefaultState: FeedProps = {
   _id: '',
   userName: '',
   title: '',
