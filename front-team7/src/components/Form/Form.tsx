@@ -12,7 +12,7 @@ import { MdShareLocation } from 'react-icons/md';
 import { TiDelete } from 'react-icons/ti';
 import { FiExternalLink } from 'react-icons/fi';
 import { FcAddImage, FcSearch } from 'react-icons/fc';
-
+import * as FeedApi from '@/api/feeds';
 interface PlaceProps {
   address_name: 'string';
   category_group_code: 'string';
@@ -40,7 +40,7 @@ interface FromInputs {
 
 type PlaceListProps = Array<PlaceProps>;
 
-const Form = ({ isEdit }: { isEdit: boolean; }) => {
+const Form = ({ isEdit }: { isEdit: boolean }) => {
   const currentUser = useRecoilValue(userState);
   const currentFeedState = useRecoilValue(currentFeedAtom);
   const [searchState, setSearchState] = useState(false);
@@ -137,9 +137,11 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     }
 
     try {
-      await axios.post(`/api/feeds`, fd);
+      await FeedApi.createOneFeed(fd);
+      // await axios.post(`/api/feeds`, fd);
       alert('성공적으로 추가되었습니다.');
     } catch (err) {
+      alert('Error 발생. console 확인');
       console.log(err);
     }
     reset();
@@ -181,9 +183,11 @@ const Form = ({ isEdit }: { isEdit: boolean; }) => {
     }
 
     try {
-      await axios.put(`/api/feeds/${currentFeedState._id}`, fd);
+      await FeedApi.updateOneFeed(currentFeedState._id, fd);
+      // await axios.put(`/api/feeds/${currentFeedState._id}`, fd);
       alert('피드가 수정되었습니다.');
     } catch (err) {
+      alert('Error 발생. console 확인');
       console.log(err);
     }
 
