@@ -1,5 +1,12 @@
 import { axios } from '@/lib';
 import { UserResponse } from '@/store';
+export interface UserByIdDto {
+  email: string;
+  name: string;
+  profileImage?: string[];
+  description?: string;
+}
+
 export const getMyUserInfo = async () => {
   // try {
   //   let res = await axios.get('/api/users/user');
@@ -8,7 +15,7 @@ export const getMyUserInfo = async () => {
   // } catch (err) {
   //   return err;
   // }
-  return await axios.get('/api/users/user');
+  return await axios.get<never, UserResponse>('/api/users/user');
 };
 
 export const getAllUsers = async () => {
@@ -22,7 +29,7 @@ export const getAllUsers = async () => {
   return await axios.get('/api/users/list');
 };
 
-export const getOneUser = async (id) => {
+export const getOneUser = async (userId?: string | null) => {
   // try {
   //   let res = await axios.get(`/api/users/${id}`);
   //   // console.log('res : ', res);
@@ -30,7 +37,7 @@ export const getOneUser = async (id) => {
   // } catch (err) {
   //   return err;
   // }
-  return await axios.get(`/api/users/${id}`);
+  return await axios.get<never, UserByIdDto>(`/api/users/${userId}`);
 };
 
 // 본인의 아이디로 로그인을 해야 TEST 가능한 메소드 : updateUser, deleteUser
