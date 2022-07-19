@@ -11,6 +11,9 @@ import Loading from '@/components/Loading/Loading';
 import * as ReviewApi from '@/api/review';
 import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
 import { FeedProps, ReviewListProps, ReviewProps } from '@/types/feed';
+import { useRecoilValue } from 'recoil';
+import { userState } from '@/store';
+
 interface FeedDetailContainerProps {
   boxShadow: boolean;
   // dropDownVisible: boolean;
@@ -20,8 +23,8 @@ const FeedDetail = ({
   isModal,
   currentUserId,
   image,
-  feedList
-}: UserInfoProps & { currentUserId: string; } & { isModal: boolean; } & { feedList: FeedProps; }) => {
+  feedList,
+}: UserInfoProps & { currentUserId: string } & { isModal: boolean } & { feedList: FeedProps }) => {
   const [reviewList, setReviewList] = useState<ReviewListProps>();
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [textarea, setTextarea] = useState<string>('');
@@ -29,6 +32,7 @@ const FeedDetail = ({
   const [updatedReview, setUpdatedReview] = useState<string>('');
   const [clickedReview, setClickedReview] = useState<string>('');
   const [dropDownVisible, setDropDownVisible] = useState<boolean>(false);
+  const currentUser = useRecoilValue(userState);
 
   async function get() {
     // 해당 Feed 에 있는 Review들만 가져오기
@@ -63,7 +67,7 @@ const FeedDetail = ({
     if (!confirm('댓글을 등록하시겠습니까?')) return;
 
     const review: ReviewProps = {
-      userName: feedList.userName,
+      userName: currentUser?.name,
       contents: textAreaContent.current?.ref.current.value,
       feedId: feedList._id,
     };
@@ -81,11 +85,10 @@ const FeedDetail = ({
     get();
   };
 
-  const updateReview = async (review_id, updatedContent) => {
-    const updatedData = { contents: updatedContent };
+  const updateReview = async (review_id, updatedContent, user_id) => {
     if (!confirm('이 수정내용을 반영하시겠습니까?')) return;
     try {
-      const res = await ReviewApi.updateOneReview(review_id, updatedData);
+      const res = await ReviewApi.updateOneReview(review_id, updatedContent, user_id);
       alert('댓글이 수정되었습니다!');
       console.log('updatedReview : ', res);
     } catch (err) {
@@ -96,10 +99,10 @@ const FeedDetail = ({
     get();
   };
 
-  const deleteReview = async (review_id) => {
+  const deleteReview = async (review_id, currentUserId) => {
     if (!confirm('이 댓글을 삭제하시겠습니까?')) return;
     try {
-      const res = await ReviewApi.deleteOneReview(review_id);
+      const res = await ReviewApi.deleteOneReview(review_id, currentUserId);
       alert('댓글이 삭제되었습니다!');
       console.log('deletedReview : ', res);
 
@@ -254,7 +257,7 @@ const FeedDetail = ({
                           // labelPosition="right"
                           primary
                           onClick={() => {
-                            updateReview(review._id, updatedReview);
+                            updateReview(review._id, updatedReview, currentUserId);
                           }}
                         />
                       ) : (
@@ -283,7 +286,7 @@ const FeedDetail = ({
                           // labelPosition="right"
                           primary
                           onClick={() => {
-                            deleteReview(review._id);
+                            deleteReview(review._id, currentUserId);
                           }}
                         />
                       )}
@@ -293,7 +296,7 @@ const FeedDetail = ({
                   )}
                 </Comment>
               ))}
-            </StyledCommentBody >
+            </StyledCommentBody>
             <StyledCommentInput>
               <TextArea
                 ref={textAreaContent}
@@ -313,12 +316,12 @@ const FeedDetail = ({
                 }}
               />
             </StyledCommentInput>
-          </Comment.Group >
-        </StyledFeedDetailReview >
+          </Comment.Group>
+        </StyledFeedDetailReview>
       ) : (
         <></>
       )}
-    </StyledFeedDetailContainer >
+    </StyledFeedDetailContainer>
   );
 };
 
@@ -407,7 +410,7 @@ const StyledFeedDetailSlide = styled.div`
 //   background-color: yellow;
 // `;
 
-const StyledSlide = styled.div<{ src: string; }>`
+const StyledSlide = styled.div<{ src: string }>`
   width: 100%;
   height: 100%;
   position: absolute;
