@@ -36,9 +36,8 @@ export function ws(server: http.Server) {
       const resource = 'likes';
       const key = `feeds:${resource}`;
       const users = await redisClient.hGet(key, feedId);
-      const likes = users ? JSON.parse(users).length : 0;
-      socket.emit('likeListResponse', likes);
-      socket.broadcast.emit('likeListResponse', likes);
+      const usersArr = users ? JSON.parse(users) : [];
+      io.emit('likeListResponse', usersArr);
     });
     socket.on('likeRequest', async (userId, feedId) => {
       const resource = 'likes';
@@ -57,8 +56,7 @@ export function ws(server: http.Server) {
       }
       await redisClient.hSet(key, feedId, JSON.stringify(usersArr));
 
-      socket.emit('likeResponse', usersArr);
-      socket.broadcast.emit('likeResponse', usersArr);
+      io.emit('likeResponse', usersArr);
     });
     socket.on('disconnect', () => {});
   });
