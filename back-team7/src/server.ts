@@ -44,7 +44,7 @@ app.use(errorHandler);
 const server = app.listen(PORT, () => {
   console.log(`server is running ${PORT}`);
   schedule.scheduleJob('*/1 * * * *', likesScheduler);
-  schedule.scheduleJob('* * * * * *', friendsScheduler);
+  // schedule.scheduleJob('* * * * * *', friendsScheduler);
 });
 
 // app.use(express.static(path.join(__dirname, '/../frontend/build'))); // 리액트 정적 파일 제공
