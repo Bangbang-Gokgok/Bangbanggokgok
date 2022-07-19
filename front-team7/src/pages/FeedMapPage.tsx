@@ -8,7 +8,7 @@ import ModalFrame from '@/components/Layout/ModalFrame/ModalFrame';
 import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
 import Form from '@/components/Form/Form';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { userFieldQuery } from '@/store';
+import { userState } from '@/store';
 import { mapAtom } from '@/store/map';
 import { currentFeedAtom } from '@/store/currentFeed';
 import { FeedListProps, FeedProps, LocationProps } from '@/types/feed';
@@ -27,7 +27,7 @@ const FeedMapPage = () => {
   const [feedList, setFeedList] = useState<FeedListProps>([]);
   const [stateModal, setStateModal] = useState(false);
   const [modalChildrenState, setModalChildrenState] = useState('');
-  const userIdAtom = useRecoilValue(userFieldQuery('id'));
+  const currentUser = useRecoilValue(userState);
   const [currentFeedState, setCurrentFeedState] = useRecoilState(currentFeedAtom);
   const [_mapValue, setMapValue] = useRecoilState(mapAtom);
 
@@ -38,12 +38,12 @@ const FeedMapPage = () => {
       try {
         const result = await axios.get<never, FeedListProps>(`/api/feeds/list/${userId}`);
         setFeedList(result);
+
         if (result.length > 0) {
           initializeMapCenterLatLng(result[0]);
         }
       } catch (err) {
-        // alert(err);
-        // window.location.reload();
+        window.location.reload();
         console.log(err);
       }
     }
@@ -51,23 +51,24 @@ const FeedMapPage = () => {
   }, []);
 
   const initializeMapCenterLatLng = (result: FeedProps) => {
+    let lat = 0;
+    let lng = 0;
+
     if (Object.keys(feedIdQueryString).length > 0) {
-      setMapValue((currMapValue) => ({
-        ...currMapValue,
-        centerLatLng: {
-          lat: Number(feedIdQueryString.lat),
-          lng: Number(feedIdQueryString.lng),
-        },
-      }));
+      lat = Number(feedIdQueryString.lat);
+      lng = Number(feedIdQueryString.lng);
     } else {
-      setMapValue((currMapValue) => ({
-        ...currMapValue,
-        centerLatLng: {
-          lat: result.location.lat,
-          lng: result.location.lng,
-        },
-      }));
+      lat = result.location.lat;
+      lng = result.location.lng;
     }
+
+    setMapValue((currMapValue) => ({
+      ...currMapValue,
+      centerLatLng: {
+        lat,
+        lng
+      },
+    }));
   };
 
   const onClickModal = () => {
@@ -109,7 +110,7 @@ const FeedMapPage = () => {
       case ModalState.FEED:
         return (
           <FeedDetail
-            currentUserId={userIdAtom as string}
+            currentUserId={currentUser?.id as string}
             isModal={true}
             feedList={currentFeedState}
           />
@@ -146,8 +147,8 @@ const FeedMapPage = () => {
     <Main>
       <StyledWrapper>
         <Map feedList={feedList} toggleModal={onClickMapFeed}></Map>
-        {userIdAtom === userId && (
-          <Button onClick={onClickModal}>
+        {currentUser?.id === userId && (
+          <Button onClick={onClickModal} feedLength={feedList.length}>
             <BsPlus />
           </Button>
         )}
@@ -158,7 +159,7 @@ const FeedMapPage = () => {
               onClickEditFeedModal={() => onClickEditFeedModal(item)}
               onClickDeleteFeed={() => onClickDeleteFeed(item._id, item.userId)}
               isFolded={true}
-              isUser={userIdAtom === userId}
+              isUser={currentUser.id === userId}
               key={idx}
               name={item.userName}
               title={item.title}
@@ -182,10 +183,10 @@ const StyledWrapper = styled.div`
   align-items: center;
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ feedLength: number; }>`
   position: absolute;
   z-index: 4;
-  bottom: 160px;
+  bottom: ${(props) => props.feedLength >= 3 ? '170px' : `${props.feedLength * 60 + 20}px`};
   right: 5%;
   font-size: 4.5rem;
   width: 56px;
