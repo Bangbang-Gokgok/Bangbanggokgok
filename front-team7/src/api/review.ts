@@ -55,7 +55,7 @@ export const updateOneReview = async (id, updatedContent, user_id) => {
   try {
     let res = await axios.put(`/api/reviews/${id}`, {
       headers: { 'Content-Type': `application/json` },
-      body: {
+      data: {
         userId: user_id,
         contents: updatedContent,
       },
