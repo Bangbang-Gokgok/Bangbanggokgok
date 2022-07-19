@@ -21,13 +21,15 @@ type userDataList = Array<userData>;
 
 const SearchPage = () => {
   const [currentUsersFriends, setCurrentUsersFriends] = useState<friendList>([]);
-  const [searchUserList, setSearchUserList] = useState<userDataList>([]);
+  const [followerList, setFollowerList] = useState<userDataList>([]);
+  const [notAFollowerList, setNotAFollowerList] = useState<userDataList>([]);
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchState, setSearchState] = useState(false);
   const userIdAtom = useRecoilValue(userFieldQuery('id'));
 
   useEffect(() => {
     getCurrentUsersFriends();
-  }, []);
+  }, [followerList, notAFollowerList]);
 
   const getCurrentUsersFriends = async () => {
     try {
@@ -46,12 +48,32 @@ const SearchPage = () => {
     searchUser(searchKeyword);
   };
 
-  const onClickFollow = async (selectedUserId: string) => {
+  const onClickFollow = async (e: React.MouseEvent<HTMLButtonElement>, selectedUser: userData) => {
+    const target = e.target as HTMLButtonElement;
+
     try {
-      const result = await axios.put(`api/users/friends/${selectedUserId}`);
-      console.log(result);
+      await axios.put(`api/users/friends/${selectedUser._id}`);
+      renderNewResult(target.name, selectedUser);
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const renderNewResult = (target: string, user: userData) => {
+    if (target === 'follow') {
+      setNotAFollowerList((prev) => {
+        return prev.filter(item => item._id !== user._id);
+      });
+      setFollowerList((prev) => {
+        return [...prev, user];
+      });
+    } else if (target === 'unFollow') {
+      setNotAFollowerList((prev) => {
+        return [...prev, user];
+      });
+      setFollowerList((prev) => {
+        return prev.filter(item => item._id !== user._id);
+      });
     }
   };
 
@@ -59,15 +81,14 @@ const SearchPage = () => {
     const validatedKeyword = keyword.trim();
     try {
       const result = await axios.get<never, userDataList>(`/api/users/list?keyword=${validatedKeyword}`);
-      console.log(currentUsersFriends);
 
-      const validatedResult = result.filter(value => (value._id !== userIdAtom)); // 나를 제외한 결과
+      const validatedResult = result.filter(value => (value._id !== userIdAtom));
+      const myFollowerList = validatedResult.filter(friend => currentUsersFriends.hasOwnProperty(friend._id));
+      const notMyFollowerList = validatedResult.filter(friend => !currentUsersFriends.hasOwnProperty(friend._id));
 
-      const aa = result.filter(value => value.friends); // 상대방 친구 목록에 내가 있는지 (맞팔로우)
-
-      console.log(validatedResult);
-
-      setSearchUserList(validatedResult);
+      setFollowerList(myFollowerList);
+      setNotAFollowerList(notMyFollowerList);
+      setSearchState(true);
     } catch (err) {
       console.log(err);
     }
@@ -85,17 +106,42 @@ const SearchPage = () => {
           handleInput={(e) => handleInput(e)}
           onClickSearch={() => onClickSearch()}
         />
-        {searchUserList.length > 0
-          ?
-          searchUserList.map((user, idx) => (
-            <StyledUserInfoWrapper key={idx}>
-              <UserInfo name={user.name} image={user.profileImage[0] || unknownUser as string}></UserInfo>
-              <StyledFollowButton onClick={() => onClickFollow(user._id)} isfollowed={false} />
-            </StyledUserInfoWrapper>
-          ))
-          :
-          <StyledNoSearchResult />
-        }
+        {searchState ? <>
+          {
+            followerList.length > 0
+            &&
+            <StyledFollowerListContainer>
+              <StyledListHeader>
+                <span>내 팔로잉</span>
+              </StyledListHeader>
+              <StyledFollowerList>
+                {followerList.map((user, idx) => (
+                  <StyledUserInfoWrapper key={idx}>
+                    <UserInfo name={user.name} image={user.profileImage[0] || unknownUser as string}></UserInfo>
+                    <StyledFollowButton name='unFollow' onClick={(e) => onClickFollow(e, user)} isfollowed={true} />
+                  </StyledUserInfoWrapper>
+                ))}
+              </StyledFollowerList>
+            </StyledFollowerListContainer>
+          }
+          {notAFollowerList.length > 0
+            &&
+            <StyledNotFollowerListContainer>
+              <StyledListHeader>
+                <span>검색 결과</span>
+              </StyledListHeader>
+              <StyledNotFollowerList>
+                {notAFollowerList.map((user, idx) => (
+                  <StyledUserInfoWrapper key={idx}>
+                    <UserInfo name={user.name} image={user.profileImage[0] || unknownUser as string}></UserInfo>
+                    <StyledFollowButton name='follow' onClick={(e) => onClickFollow(e, user)} isfollowed={false} />
+                  </StyledUserInfoWrapper>
+                ))}
+              </StyledNotFollowerList>
+            </StyledNotFollowerListContainer>
+          }
+        </>
+          : <StyledNoSearchResult />}
       </StyledSearchContainer>
     </Main>
   );
@@ -139,6 +185,47 @@ const StyledNoSearchResult = styled.div`
   &::after{
     content: '검색 결과가 없습니다.'
   }
+`;
+
+const StyledFollowerListContainer = styled.div`
+  width: 100%;
+  max-height: 25%;
+  overflow-y: scroll;
+  border-bottom: 1px solid rgb(219, 219, 219);
+`;
+
+const StyledNotFollowerListContainer = styled(StyledFollowerListContainer)`
+  width: 100%;
+  max-height: 75%;
+  height: 75%;
+  border: none;
+`;
+
+const StyledFollowerList = styled.div`
+  padding: 5px 5px 20px 5px;
+  gap: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+`;
+
+const StyledNotFollowerList = styled(StyledFollowerList)`
+  padding: 5px;
+`;
+
+const StyledListHeader = styled.div`
+  display: flex;
+  position: sticky;
+  top: 0;
+  left: 0;
+  transform: translateY(-10%);
+  width: 100%;
+  align-items: center;
+  justify-content: left;
+  background-color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
 `;
 
 export default SearchPage;
