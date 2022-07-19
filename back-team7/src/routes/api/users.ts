@@ -46,8 +46,8 @@ userRouter.get('/user', async (req: Request, res: Response, next: NextFunction) 
       const user = await userService.getUserDataByRefreshToken(req.cookies.refreshToken);
       res.json(user);
     } else {
-      const error = new Error('user 정보가 없습니다.');
-      error.name = 'NotFound';
+      const error = new Error('refreshToken이 없습니다.');
+      error.name = 'Unauthorized';
       throw error;
     }
   } catch (error) {
@@ -66,7 +66,7 @@ userRouter.get('/friends', async (req: Request, res: Response, next: NextFunctio
       const friendsObject = friends ? JSON.parse(friends) : {};
       res.status(200).json(friendsObject);
     } else {
-      const error = new Error('user 정보가 없습니다.');
+      const error = new Error('login된 user 정보가 없습니다.');
       error.name = 'NotFound';
       throw error;
     }
@@ -106,7 +106,7 @@ userRouter.put('/friends/:_id', async (req: Request, res: Response, next: NextFu
       await redisClient.hSet(key, userId, JSON.stringify(friendsObject));
       res.status(200).json();
     } else {
-      const error = new Error('user 정보가 없습니다.');
+      const error = new Error('login된 user 정보가 없습니다.');
       error.name = 'NotFound';
       throw error;
     }
@@ -118,9 +118,15 @@ userRouter.put('/friends/:_id', async (req: Request, res: Response, next: NextFu
 //전체 회원 조회 API
 userRouter.get('/list', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const keyword = req.query.keyword ? req.query.keyword.toString() : '';
-    const users = await userService.getUsers(keyword);
-    res.status(200).json(users);
+    if (req.user) {
+      const keyword = req.query.keyword ? req.query.keyword.toString() : '';
+      const users = await userService.getUsers(keyword, req.user.authority);
+      res.status(200).json(users);
+    } else {
+      const error = new Error('login된 user 정보가 없습니다.');
+      error.name = 'NotFound';
+      throw error;
+    }
   } catch (error) {
     next(error);
   }
@@ -162,7 +168,7 @@ userRouter.put(
 
         res.status(200).json(updatedUser);
       } else {
-        const error = new Error('user 정보가 없습니다.');
+        const error = new Error('login된 user 정보가 없습니다.');
         error.name = 'NotFound';
         throw error;
       }
@@ -186,7 +192,7 @@ userRouter.delete('/user', async (req: Request, res: Response, next: NextFunctio
 
       res.status(200).json(deleteResult);
     } else {
-      const error = new Error('user 정보가 없습니다.');
+      const error = new Error('login된 user 정보가 없습니다.');
       error.name = 'NotFound';
       throw error;
     }
