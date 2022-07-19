@@ -41,7 +41,7 @@ const UserSchema = new Schema(
       required: false,
     },
     friends: {
-      type: Array,
+      type: Object,
       required: false,
     },
     refreshToken: {
