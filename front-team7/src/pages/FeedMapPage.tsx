@@ -38,10 +38,12 @@ const FeedMapPage = () => {
       try {
         const result = await axios.get<never, FeedListProps>(`/api/feeds/list/${userId}`);
         setFeedList(result);
-        initializeMapCenterLatLng(result[0]);
+        if (result.length > 0) {
+          initializeMapCenterLatLng(result[0]);
+        }
       } catch (err) {
-        alert(err);
         window.location.reload();
+        console.log(err);
       }
     }
     getFeedList();
@@ -123,11 +125,19 @@ const FeedMapPage = () => {
     toggleModal();
   };
 
-  const onClickDeleteFeed = async (feedId: string) => {
+  const onClickDeleteFeed = async (feedId: string, feedUserId: string) => {
     if (!window.confirm('피드를 정말로 삭제하시겠습니까 ?')) return;
 
     try {
+<<<<<<< HEAD
       await axios.delete(`/api/feeds/${feedId}`);
+=======
+      await axios.delete(`/api/feeds/${feedId}`, {
+        data: {
+          userId: feedUserId,
+        },
+      });
+>>>>>>> dev
       alert('피드가 삭제되었습니다.');
       window.location.reload();
     } catch (err) {
@@ -149,7 +159,7 @@ const FeedMapPage = () => {
             <FeedHeader
               onClickFeedModal={() => onClickMapFeed(item)}
               onClickEditFeedModal={() => onClickEditFeedModal(item)}
-              onClickDeleteFeed={() => onClickDeleteFeed(item._id)}
+              onClickDeleteFeed={() => onClickDeleteFeed(item._id, item.userId)}
               isFolded={true}
               isUser={userIdAtom === userId}
               key={idx}

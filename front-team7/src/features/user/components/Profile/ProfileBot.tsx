@@ -1,35 +1,38 @@
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
-import { userFieldQuery } from '@/store';
+import { userByIdFieldQuery } from '@/store';
+
+import { RecentPosts } from './RecentPosts';
 
 export const ProfileBot = () => {
-  const userId = useRecoilValue(userFieldQuery('id')); // 임시로 자기 지도로만 가도록 설정
-
+  const username = useRecoilValue(userByIdFieldQuery('name'));
   return (
     <StyledProfileBot>
-      <Link to={`/feedmap/${userId}`}>
-        <button className="btn">지도 보러가기</button>
-      </Link>
+      <div className="recent-post-container">
+        <span>{username}</span>
+        <span>님의 최신글 목록</span>
+      </div>
+      <RecentPosts />
     </StyledProfileBot>
   );
 };
 
 const StyledProfileBot = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  padding: 30px;
 
-  .btn {
-    font-weight: bold;
-    font-size: 1.6rem;
-    color: #343434;
-    background-color: #ddcb51;
-    cursor: pointer;
-    border-radius: 3px;
-    border: none;
-    padding: 10px 16px;
+  .recent-post-container {
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+
+    span:nth-child(1) {
+      color: gold;
+      font-size: 1.7rem;
+    }
+    span:nth-child(2) {
+      color: whitesmoke;
+      font-size: 1.3rem;
+    }
   }
 `;

@@ -16,9 +16,11 @@ export const FeedHeader = ({
   title,
   feedUser,
   feedLocation,
-}: UserInfoProps & { title: string; } & { feedLocation?: LocationProps; } & {
+}: UserInfoProps & { title: string } & { feedLocation?: LocationProps } & {
   feedUser?: string;
-} & { isFolded: boolean; } & { isUser: boolean; } & { onClickFeedModal?: () => void; } & { onClickEditFeedModal?: () => void; } & { onClickDeleteFeed?: () => void; }) => {
+} & { isFolded: boolean } & { isUser: boolean } & { onClickFeedModal?: () => void } & {
+  onClickEditFeedModal?: () => void;
+} & { onClickDeleteFeed?: () => void }) => {
   return (
     <StyledFeedHeader isModal={isFolded}>
       <span className="user-info-container">
@@ -34,12 +36,8 @@ export const FeedHeader = ({
       ) : (
         isUser && (
           <>
-            <StyleEditIcon
-              onClick={onClickEditFeedModal}
-            />
-            <StyleDeleteIcon
-              onClick={onClickDeleteFeed}
-            />
+            <StyleEditIcon onClick={onClickEditFeedModal} />
+            <StyleDeleteIcon onClick={onClickDeleteFeed} />
           </>
         )
       )}
@@ -64,7 +62,7 @@ const StyleDeleteIcon = styled(AiFillDelete)`
   font-size: 1.8rem;
 `;
 
-const StyledFeedHeader = styled.div<{ isModal: boolean; }>`
+const StyledFeedHeader = styled.div<{ isModal: boolean }>`
   display: flex;
   height: 60px;
   align-items: center;
@@ -76,7 +74,7 @@ const StyledFeedHeader = styled.div<{ isModal: boolean; }>`
   ${(props) => (props.isModal ? 'border-radius: 10px;' : 'border-radius: 10px 10px 0 0;')}
   box-shadow: 0 0.3rem 0.4rem rgba(0, 0, 0, 25%);
   background-color: white;
-  
+
   .user-info-container {
     width: 35%;
     word-break: break-all;

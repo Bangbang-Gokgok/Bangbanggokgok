@@ -86,7 +86,7 @@ export const ProfileEditForm = () => {
     console.log(newUser);
     setCurrentUser(newUser);
 
-    navigate('/profile');
+    navigate(`/profile/${newUser.id}`);
   }
 
   return (
@@ -147,6 +147,7 @@ const StyledForm = styled.form`
   padding: 20px 30px;
   overflow-y: auto;
   background-color: whitesmoke;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 
   li {
     list-style-type: none;
@@ -177,6 +178,7 @@ const StyledForm = styled.form`
       border-radius: 3px;
       padding: 6px 12px;
       color: whitesmoke;
+      cursor: pointer;
     }
 
     .address-find-btn {

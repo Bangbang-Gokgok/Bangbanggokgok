@@ -12,7 +12,7 @@ const ProfileEditPage = () => {
 
   return (
     <Main
-      bg="#282b37"
+      bg="#222"
       display="flex"
       justifyContent="center"
       alignItems="center"
@@ -33,16 +33,16 @@ const ProfileEditPage = () => {
 
 const StyledProfileEditPage = styled.div`
   width: 100%;
-  max-width: 850px;
-  margin-top: 20px;
-  margin-bottom: 40px;
 
   .profile-edit-top {
-    display: inline-flex;
-    align-items: center;
+    display: none;
     padding: 20px 25px;
-    background-color: #36334e;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+    background-color: #3f3144;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    filter: grayscale(30%);
+
     span {
       &:nth-child(1) {
         color: gold;
@@ -56,6 +56,30 @@ const StyledProfileEditPage = styled.div`
         font-weight: bold;
         font-style: italic;
       }
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    width: 80%;
+    max-width: 700px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+
+    .profile-edit-top {
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+
+  @media screen and (min-width: 1024px) {
+    width: 70%;
+    max-width: 850px;
+    margin-top: 20px;
+    margin-bottom: 40px;
+
+    .profile-edit-top {
+      display: inline-flex;
+      align-items: center;
     }
   }
 `;
