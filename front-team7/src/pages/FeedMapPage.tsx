@@ -38,7 +38,9 @@ const FeedMapPage = () => {
       try {
         const result = await axios.get<never, FeedListProps>(`/api/feeds/list/${userId}`);
         setFeedList(result);
-        initializeMapCenterLatLng(result[0]);
+        if (result.length > 0) {
+          initializeMapCenterLatLng(result[0]);
+        }
       } catch (err) {
         // alert(err);
         // window.location.reload();
