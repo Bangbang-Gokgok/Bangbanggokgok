@@ -29,7 +29,7 @@ const FeedDetail = ({
   const [dropDownVisible, setDropDownVisible] = useState<boolean>(false);
   const [currentFeedList, setCurrentFeedList] = useState<FeedProps>(feedList);
 
-  const [likesState, setLikesState] = useState(currentFeedList.likes.length);
+  const [likesState, setLikesState] = useState(Object.keys(currentFeedList.likes).length);
 
   async function get() {
     // 해당 Feed 에 있는 Review들만 가져오기
@@ -54,7 +54,7 @@ const FeedDetail = ({
   useEffect(() => {
     get();
     socket.on('likeResponse', (users) => {
-      setLikesState(users.length);
+      setLikesState(Object.keys(users).length);
     });
   }, []);
 
