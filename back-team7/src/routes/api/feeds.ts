@@ -58,42 +58,42 @@ feedRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction) 
 });
 
 //좋아요 API(테스트용으로 GET, PUT으로 변경할 것)
-feedRouter.get('/:_id/like', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (req.user) {
-      const userId = req.user._id;
-      const feedId = req.params._id;
-      const resource = 'likes';
-      const key = `feeds:${resource}`;
-      const users = await redisClient.hGet(key, feedId);
-      let usersArr: string[];
-      let likes = 0;
-      if (users) {
-        usersArr = JSON.parse(users);
-        likes = usersArr.length;
-        usersArr = usersArr.filter((e) => e !== userId);
-        if (likes === usersArr.length) {
-          usersArr.push(`${userId}`);
-          likes += 1;
-        } else {
-          likes -= 1;
-        }
-      } else {
-        usersArr = [`${userId}`];
-        likes = 1;
-      }
-      await redisClient.hSet(key, feedId, JSON.stringify(usersArr));
+// feedRouter.get('/:_id/like', async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     if (req.user) {
+//       const userId = req.user._id;
+//       const feedId = req.params._id;
+//       const resource = 'likes';
+//       const key = `feeds:${resource}`;
+//       const users = await redisClient.hGet(key, feedId);
+//       let usersObject: string[];
+//       let likes = 0;
+//       if (users) {
+//         usersObject = JSON.parse(users);
+//         likes = usersObject.length;
+//         usersObject = usersObject.filter((e) => e !== userId);
+//         if (likes === usersObject.length) {
+//           usersObject.push(`${userId}`);
+//           likes += 1;
+//         } else {
+//           likes -= 1;
+//         }
+//       } else {
+//         usersObject = [`${userId}`];
+//         likes = 1;
+//       }
+//       await redisClient.hSet(key, feedId, JSON.stringify(usersObject));
 
-      res.status(200).json(likes);
-    } else {
-      const error = new Error('user 정보가 없습니다.');
-      error.name = 'NotFound';
-      throw error;
-    }
-  } catch (error) {
-    next(error);
-  }
-});
+//       res.status(200).json(likes);
+//     } else {
+//       const error = new Error('user 정보가 없습니다.');
+//       error.name = 'NotFound';
+//       throw error;
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 feedRouter.get('/list/:userId', async (req: Request, res: Response, next: NextFunction) => {
   try {

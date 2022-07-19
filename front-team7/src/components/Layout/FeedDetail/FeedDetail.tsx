@@ -24,12 +24,12 @@ const FeedDetail = ({
   currentUserId,
   image,
   feedList,
-}: UserInfoProps & { currentUserId: string } & { isModal: boolean } & { feedList: FeedProps }) => {
+}: UserInfoProps & { currentUserId: string; } & { isModal: boolean; } & { feedList: FeedProps; }) => {
   const [reviewList, setReviewList] = useState<ReviewListProps>();
   const [dropDownVisible, setDropDownVisible] = useState<boolean>(false);
   const [currentFeedList, setCurrentFeedList] = useState<FeedProps>(feedList);
 
-  const [likesState, setLikesState] = useState(currentFeedList.likes.length);
+  const [likesState, setLikesState] = useState(Object.keys(currentFeedList.likes).length);
 
   async function get() {
     // 해당 Feed 에 있는 Review들만 가져오기
@@ -54,7 +54,7 @@ const FeedDetail = ({
   useEffect(() => {
     get();
     socket.on('likeResponse', (users) => {
-      setLikesState(users.length);
+      setLikesState(Object.keys(users).length);
     });
   }, []);
 
@@ -214,7 +214,7 @@ const StyledFeedDetailSlide = styled.div`
 //   background-color: yellow;
 // `;
 
-const StyledSlide = styled.div<{ src: string }>`
+const StyledSlide = styled.div<{ src: string; }>`
   width: 100%;
   height: 100%;
   position: absolute;

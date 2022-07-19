@@ -20,8 +20,8 @@ export const loginCheckAndRefreshToken = async (
       res.cookie('accessToken', accessToken, { maxAge: accessExp * 60 * 1000, httpOnly: true });
     }
   } else {
-    const error = new Error('로그인해주세요.');
-    error.name = 'NotAcceptable';
+    const error = new Error('refreshToken이 없습니다.');
+    error.name = 'Unauthorized';
     res.redirect(DOMAIN);
     next(error);
   }
@@ -31,10 +31,10 @@ export const loginCheckAndRefreshToken = async (
 export const adminCheck = (req: Request, res: Response, next: NextFunction) => {
   loginCheckAndRefreshToken(req, res, next);
   if (req.user!.authority !== 'admin') {
-    const error = new Error('관리자가 아닙니다.');
-    error.name = 'NotAcceptable';
+    const error = new Error('관리자만 접근 가능합니다.');
+    error.name = 'Forbidden';
     res.redirect(DOMAIN);
-    throw error;
+    next(error);
   }
 };
 
