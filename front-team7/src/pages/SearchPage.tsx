@@ -4,95 +4,39 @@ import { UserInfo } from '@/components/UserInfo';
 import Input from '@/components/Input/Input';
 import unknownUser from '@/assets/images/unknown-user.png';
 import React, { useEffect, useState } from 'react';
-import { userState } from '@/store';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { axios } from '@/lib';
-// import import io from 'socket.io-client';
-
-
-
-// 아래는 User Schema의 CRUD 가 정상적으로 작동하는지 확인하는 임시 코드
-
-// interface User {
-//   _id: Types.ObjectId | string;
-//   authority: string;
-//   email: string;
-//   name: string;
-//   // profileImage?: string | undefined;
-//   // contactNumber?: number | undefined;
-//   // location?: object | undefined;
-//   // friends?: Array<string> | undefined;
-//   iat: Number;
-//   exp: Number;
-// }
-
-// 유저 기능
-
-/*
-async function getMyInfo() {
-  const usersData: User = await UserApiByUser.getMyUserInfo();
-  console.log('내 userData 가져오기 : ', usersData);
-}
-
-async function getAll() {
-  const usersData: User = await UserApiByUser.getAllUsers();
-  console.log('모든 usersData 가져오기 : ', usersData);
-}
-
-async function updateMyInfo() {
-  const updateData = {
-    name: '수정된 김지환',
-    email: 'updateKJH@naver.com',
-  };
-  const myupdatedData: User = await UserApiByUser.updateUser(updateData);
-  console.log('update 된 내 userData 가져오기 : ', myupdatedData);
-}
-
-async function deleteMyInfo() {
-  const mydeletedData: User = await UserApiByUser.deleteUser();
-  console.log('delete 결과 message : ', mydeletedData);
-}
-*/
-
-// 관리자 기능
-
-/*
-async function updateByAdmin() {
-  const updateData = {
-    name: '알!루',
-    email: 'allu!@naver.com',
-  };
-  const id = '62c414db2fbbf977d491ab5d';
-  const usersData: User = await UserApiByAdmin.updateOneUserByAdmin(id, updateData);
-  console.log('유저 업데이트 : ', usersData);
-}
-
-
-async function deleteByAdmin() {
-  if (confirm('정말 삭제?')) {
-    const id = '62cce79f7819b1c5142e074c';
-    const result: User = await UserApiByAdmin.deleteOneUserByAdmin(id);
-    console.log('유저 삭제 : ', result);
-  }
-}
-*/
+import { userFieldQuery } from '@/store';
+import { useRecoilValue } from 'recoil';
 
 interface userData {
   _id: string,
   name: string,
   profileImage: Array<string>;
-  friends: Array<string>;
+  friends: friendList;
 }
+
+type friendList = Array<string>;
 
 type userDataList = Array<userData>;
 
 const SearchPage = () => {
+  const [currentUsersFriends, setCurrentUsersFriends] = useState<friendList>([]);
   const [searchUserList, setSearchUserList] = useState<userDataList>([]);
   const [searchKeyword, setSearchKeyword] = useState('');
-  const currentUser = useRecoilValue(userState);
-  useEffect(() => {
+  const userIdAtom = useRecoilValue(userFieldQuery('id'));
 
+  useEffect(() => {
+    getCurrentUsersFriends();
   }, []);
+
+  const getCurrentUsersFriends = async () => {
+    try {
+      const result = await axios.get<never, friendList>('api/users/friends');
+      setCurrentUsersFriends(result);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
@@ -106,10 +50,8 @@ const SearchPage = () => {
     try {
       const result = await axios.put(`api/users/friends/${selectedUserId}`);
       console.log(result);
-
     } catch (err) {
       console.log(err);
-
     }
   };
 
@@ -117,7 +59,15 @@ const SearchPage = () => {
     const validatedKeyword = keyword.trim();
     try {
       const result = await axios.get<never, userDataList>(`/api/users/list?keyword=${validatedKeyword}`);
-      setSearchUserList(result);
+      console.log(currentUsersFriends);
+
+      const validatedResult = result.filter(value => (value._id !== userIdAtom)); // 나를 제외한 결과
+
+      const aa = result.filter(value => value.friends); // 상대방 친구 목록에 내가 있는지 (맞팔로우)
+
+      console.log(validatedResult);
+
+      setSearchUserList(validatedResult);
     } catch (err) {
       console.log(err);
     }
