@@ -19,6 +19,7 @@ export interface FeedProps {
   title: string;
   description: string;
   imageUrl: Array<string>;
+  likes: Array<string>;
   review: Array<ReviewProps>;
   address: string;
   location: LocationProps;

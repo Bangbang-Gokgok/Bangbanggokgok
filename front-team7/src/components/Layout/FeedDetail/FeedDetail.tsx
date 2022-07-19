@@ -40,21 +40,29 @@ const FeedDetail = ({
   const [updatedReview, setUpdatedReview] = useState<string>('');
   const [clickedReview, setClickedReview] = useState<string>('');
   const [dropDownVisible, setDropDownVisible] = useState<boolean>(false);
-
+  const [currentFeedList, setCurrentFeedList] = useState<FeedProps>(feedList);
   const currentUser = useRecoilValue(userState);
 
-  const [likesState, setLikesState] = useState(feedList.likes.length);
+  const [likesState, setLikesState] = useState(currentFeedList.likes.length);
 
   async function get() {
     // 해당 Feed 에 있는 Review들만 가져오기
-    const getReviewByFeedID: ReviewListProps = await ReviewApi.getReviewsByFeedID(feedList._id);
-    socket.emit('likeListRequest', feedList._id);
-    socket.on('likeListResponse', (likes) => {
-      feedList.likes = likes;
-    });
-    // console.log('feedId, getReviewByFeedID : ', feedId, getReviewByFeedID);
-
-    setReviewList(getReviewByFeedID);
+    try {
+      const getReviewByFeedID: ReviewListProps = await ReviewApi.getReviewsByFeedID(
+        currentFeedList._id
+      );
+      socket.emit('likeListRequest', currentFeedList._id);
+      socket.on('likeListResponse', (likes) => {
+        setCurrentFeedList((prev) => ({
+          ...prev,
+          likes,
+        }));
+      });
+      setReviewList(getReviewByFeedID);
+    } catch (err) {
+      alert('Error 발생 ');
+      console.log(err);
+    }
   }
 
   useEffect(() => {
@@ -88,14 +96,14 @@ const FeedDetail = ({
     const review: ReviewProps = {
       userName: currentUser?.name,
       contents: textAreaContent.current?.ref.current.value,
-      feedId: feedList._id,
+      feedId: currentFeedList._id,
     };
     console.log('review 등록! ', review);
 
     try {
       const createdReview = await ReviewApi.createOneReview(review);
       alert('성공적으로 댓글이 등록되었습니다!');
-      console.log('createdReview : ', createdReview);
+      // console.log('createdReview : ', createdReview);
     } catch (err) {
       alert('Error 발생 ');
       console.log(err);
@@ -107,9 +115,9 @@ const FeedDetail = ({
   const updateReview = async (review_id, updatedContent, user_id) => {
     if (!confirm('이 수정내용을 반영하시겠습니까?')) return;
     try {
-      const res = await ReviewApi.updateOneReview(review_id, updatedContent, user_id);
+      const updatedReview = await ReviewApi.updateOneReview(review_id, updatedContent, user_id);
       alert('댓글이 수정되었습니다!');
-      console.log('updatedReview : ', res);
+      // console.log('updatedReview : ', res);
     } catch (err) {
       alert('Error 발생 ');
       console.log(err);
@@ -121,9 +129,9 @@ const FeedDetail = ({
   const deleteReview = async (review_id, currentUserId) => {
     if (!confirm('이 댓글을 삭제하시겠습니까?')) return;
     try {
-      const res = await ReviewApi.deleteOneReview(review_id, currentUserId);
+      const deletedReview = await ReviewApi.deleteOneReview(review_id, currentUserId);
       alert('댓글이 삭제되었습니다!');
-      console.log('deletedReview : ', res);
+      // console.log('deletedReview : ', res);
 
       // setReviewList((prev) => [...prev, createdReview]);
       // console.log('reviewList : ', reviewList);
@@ -136,26 +144,26 @@ const FeedDetail = ({
 
   const LikeFeed = () => {
     // setLikesState((prev) => prev + 1);
-    socket.emit('likeRequest', currentUserId, feedList._id);
+    socket.emit('likeRequest', currentUserId, currentFeedList._id);
   };
 
   return (
     <StyledFeedDetailContainer boxShadow={isModal}>
       <FeedHeader
-        feedLocation={feedList.location}
-        feedUser={feedList.userId}
+        feedLocation={currentFeedList.location}
+        feedUser={currentFeedList.userId}
         isUser={false}
         isFolded={isModal}
-        name={feedList.userName}
+        name={currentFeedList.userName}
         image={image}
-        title={feedList.title}
+        title={currentFeedList.title}
       ></FeedHeader>
       <StyledFeedDetailBody>
         {/* <StyledTitle>👍🏽 {title}</StyledTitle> */}
-        <StyledFeedDetailDescription>{feedList.description}</StyledFeedDetailDescription>
+        <StyledFeedDetailDescription>{currentFeedList.description}</StyledFeedDetailDescription>
         <StyledFeedDetailSlide>
           <Carousel className={'carousel'} indicators={false} navButtonsAlwaysVisible={true}>
-            {feedList.imageUrl?.map((item, index) => (
+            {currentFeedList.imageUrl?.map((item, index) => (
               <StyledSlide key={index} src={item}></StyledSlide>
             ))}
           </Carousel>
