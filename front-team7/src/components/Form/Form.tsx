@@ -9,7 +9,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import styled from 'styled-components';
 import { TbRoad } from 'react-icons/tb';
 import { MdShareLocation } from 'react-icons/md';
-import { TiDelete } from 'react-icons/ti';
 import { FiExternalLink } from 'react-icons/fi';
 import { FcAddImage, FcSearch } from 'react-icons/fc';
 import * as FeedApi from '@/api/feeds';
