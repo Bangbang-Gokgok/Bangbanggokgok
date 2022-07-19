@@ -9,7 +9,7 @@ import { useEffect, useState, CSSProperties } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Loading from '@/components/Loading/Loading';
 import { FeedListProps } from '@/types/feed';
-
+import * as FeedApi from '@/api/feeds';
 
 const StyledFeedListContainer = styled.div`
   width: 100%;
@@ -48,24 +48,28 @@ const HomePage = () => {
 
   useEffect(() => {
     async function get() {
-      const result = await axios.get('/api/feeds/page/list', {
-        params: {
-          page: page,
-          perPage: perPage,
-        },
-      });
-      const initialList = result.feedList;
-      const totalPage = result.totalPage;
+      try {
+        const result = await FeedApi.getFeedListUsingPagination(page, perPage);
+        const initialList = result.feedList;
+        const totalPage = result.totalPage;
 
-      setTotalPage(totalPage);
-      setPage((page) => page + 1);
+        setTotalPage(totalPage);
+        setPage((page) => page + 1);
 
-      setFeedList(initialList);
+        setFeedList(initialList);
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     async function getMyUserId() {
-      const myInfo = await UserApi.getMyUserInfo();
-      setMyUserId(myInfo._id);
+      try {
+        const myInfo = await UserApi.getMyUserInfo();
+        setMyUserId(myInfo._id);
+      } catch (err) {
+        alert('Error 발생! console 확인');
+        console.log(err);
+      }
     }
 
     get();
@@ -73,19 +77,14 @@ const HomePage = () => {
   }, []);
 
   const fetchMoreData = () => {
-
     if (page > totalPage) {
       setHasMore(false);
       return;
     }
 
     setTimeout(async () => {
-      const newItems = await axios.get('/api/feeds/page/list', {
-        params: {
-          page: page,
-          perPage: perPage,
-        },
-      });
+      const newItems = await FeedApi.getFeedListUsingPagination(page, perPage);
+
       setPage((page) => page + 1);
 
       setFeedList([...feedList, ...newItems.feedList]);

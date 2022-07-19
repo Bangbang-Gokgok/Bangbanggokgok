@@ -11,6 +11,7 @@ import { useDaumAddress, getLocation } from '@/features/user/api';
 import { profileEditSchema } from '@/features/user/schemas';
 
 import { AvartarEdit, Field, type kindType, type RegisterProps } from '@/features/user/components';
+import * as UserApi from '@/api/users';
 
 const FIELD_DATA: { kind: kindType; labelName: string; inputType: string }[] = [
   { kind: 'email', labelName: '💌 이메일', inputType: 'text' },
@@ -72,21 +73,27 @@ export const ProfileEditForm = () => {
     formData.append('location', JSON.stringify(location));
     if (profileImage) formData.append('profileImage', profileImage);
 
-    const user = await axios.put<never, UserResponse>('/api/users/user', formData);
+    // const user = await axios.put<never, UserResponse>('/api/users/user', formData);
+    try {
+      const user = await UserApi.updateUser(formData);
+      console.log('user : ', user);
+      const newUser: UserState & { _id?: string; updatedAt?: string; refreshToken?: string } = {
+        ...user,
+        id: user._id,
+      };
 
-    const newUser: UserState & { _id?: string; updatedAt?: string; refreshToken?: string } = {
-      ...user,
-      id: user._id,
-    };
+      delete newUser._id;
+      delete newUser.updatedAt;
+      delete newUser.refreshToken;
 
-    delete newUser._id;
-    delete newUser.updatedAt;
-    delete newUser.refreshToken;
+      console.log('newUser : ', newUser);
+      setCurrentUser(newUser);
 
-    console.log(newUser);
-    setCurrentUser(newUser);
-
-    navigate(`/profile/${newUser.id}`);
+      navigate(`/profile/${newUser.id}`);
+    } catch (err) {
+      alert('Error 발생! console 확인');
+      console.log(err);
+    }
   }
 
   return (
