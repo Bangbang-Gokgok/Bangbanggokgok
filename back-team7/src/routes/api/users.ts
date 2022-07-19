@@ -84,7 +84,7 @@ userRouter.put('/friends/:_id', async (req: Request, res: Response, next: NextFu
       const resource = 'friends';
       const key = `users:${resource}`;
       const friends = await redisClient.hGet(key, userId);
-      let friendsObject: RedisHashValue;
+      let friendsObject: RedisHashValue = {};
       if (friends) {
         friendsObject = JSON.parse(friends);
         if (friendsObject[friendId]) {
@@ -101,7 +101,6 @@ userRouter.put('/friends/:_id', async (req: Request, res: Response, next: NextFu
         //   friendNum -= 1;
         // }
       } else {
-        friendsObject = {};
         friendsObject[friendId] = true;
       }
       await redisClient.hSet(key, userId, JSON.stringify(friendsObject));
