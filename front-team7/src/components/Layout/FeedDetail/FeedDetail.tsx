@@ -41,6 +41,10 @@ const FeedDetail = ({
   async function get() {
     // 해당 Feed 에 있는 Review들만 가져오기
     const getReviewByFeedID: ReviewListProps = await ReviewApi.getReviewsByFeedID(feedList._id);
+    socket.emit('likeListRequest', feedList._id);
+    socket.on('likeListResponse', (likes) => {
+      feedList.likes = likes;
+    });
     // console.log('feedId, getReviewByFeedID : ', feedId, getReviewByFeedID);
 
     setReviewList(getReviewByFeedID);
@@ -48,6 +52,9 @@ const FeedDetail = ({
 
   useEffect(() => {
     get();
+    socket.on('likeResponse', (users) => {
+      setLikesState(users.length);
+    });
   }, []);
   // console.log('reviewList : ', reviewList);
   const textAreaContent = useRef<any>();
@@ -124,10 +131,6 @@ const FeedDetail = ({
   const LikeFeed = () => {
     // setLikesState((prev) => prev + 1);
     socket.emit('likeRequest', currentUserId, feedList._id);
-    socket.on('likeResponse', (users) => {
-      console.log('users : ', users);
-      setLikesState(users.length);
-    });
   };
 
   return (
