@@ -59,17 +59,18 @@ class FeedService {
   // 피드 정보 수정
   async setFeed(_id: string, update: Partial<FeedInfo>, user: any) {
     // 업데이트 진행
+    if (user._id !== update.userId && user.authority !== 'admin') {
+      const error = new Error('작성자만 수정할 수 있습니다.');
+      error.name = 'Access Denied';
+      throw error;
+    }
     const updatedFeed = await Feed.findOneAndUpdate({ _id }, update, { returnOriginal: false });
     if (!updatedFeed) {
       const error = new Error('업데이트에 실패하였습니다.');
       error.name = 'NotFound';
       throw error;
     }
-    if (user._id !== update.userId && user.authority !== 'admin') {
-      const error = new Error('작성자만 수정할 수 있습니다.');
-      error.name = 'Access Denied';
-      throw error;
-    }
+
     return updatedFeed;
   }
 
@@ -83,16 +84,16 @@ class FeedService {
     user: any,
     userId: string | undefined
   ): Promise<{ result: string }> {
+    if (user._id !== userId && user.authority !== 'admin') {
+      const error = new Error('작성자만 수정할 수 있습니다.');
+      error.name = 'Access Denied';
+      throw error;
+    }
     const { deletedCount } = await Feed.deleteOne({ _id });
     // 삭제에 실패한 경우, 에러 메시지 반환
     if (deletedCount === 0) {
       const error = new Error(`${_id} 피드 삭제에 실패하였습니다`);
       error.name = 'NotFound';
-      throw error;
-    }
-    if (user._id !== userId && user.authority !== 'admin') {
-      const error = new Error('작성자만 수정할 수 있습니다.');
-      error.name = 'Access Denied';
       throw error;
     }
 
