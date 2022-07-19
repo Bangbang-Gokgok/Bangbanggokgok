@@ -129,15 +129,11 @@ const FeedMapPage = () => {
     if (!window.confirm('피드를 정말로 삭제하시겠습니까 ?')) return;
 
     try {
-<<<<<<< HEAD
-      await axios.delete(`/api/feeds/${feedId}`);
-=======
       await axios.delete(`/api/feeds/${feedId}`, {
         data: {
           userId: feedUserId,
         },
       });
->>>>>>> dev
       alert('피드가 삭제되었습니다.');
       window.location.reload();
     } catch (err) {
