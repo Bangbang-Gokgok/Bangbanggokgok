@@ -28,6 +28,7 @@
     "passport-kakao": "^1.0.1",
     "redis": "^4.2.0",
     "shortid": "^2.2.16",
+    "socket.io": "^4.5.1",
     "ts-node": "^10.8.2"
   },
   "devDependencies": {

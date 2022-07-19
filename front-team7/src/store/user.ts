@@ -38,6 +38,23 @@ export interface UserResponse {
   updatedAt?: string;
 }
 
+export interface FeedsResponse {
+  _id: string;
+  userId: string;
+  userName: string;
+  title: string;
+  description: string;
+  address: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+  likes: [];
+  imageUrl: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 export const userState = atom<UserState | null>({
   key: 'User',
   default: null,
@@ -61,11 +78,11 @@ export const userFieldQuery = selectorFamily({
 
 export const userFeedsQuery = selectorFamily({
   key: 'UserFeedsQuery',
-  get: (userId: string) => async () => {
+  get: (userId?: string | null) => async () => {
     if (!userId) return;
 
     try {
-      const feeds = await axios.get<never, string[]>(`/api/feeds/list/${userId}`);
+      const feeds = await axios.get<never, FeedsResponse[]>(`/api/feeds/list/${userId}`);
       return feeds;
     } catch (e) {
       console.log(e);

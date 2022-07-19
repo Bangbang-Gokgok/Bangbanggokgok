@@ -1,19 +1,20 @@
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import queryString from 'query-string';
 import { FeedHeader } from '@/components/FeedHeader';
 import { Main } from '@/components/Layout';
 import Map from '@/components/Map/Map';
-import { useEffect, useState } from 'react';
-import { BsPlus } from 'react-icons/bs';
-import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { mapAtom } from '@/store/map';
 import ModalFrame from '@/components/Layout/ModalFrame/ModalFrame';
 import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
-import { currentFeedAtom } from '@/store/currentFeed';
-import * as Api from '@/api/feeds';
 import Form from '@/components/Form/Form';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userFieldQuery } from '@/store';
-import queryString from 'query-string';
+import { mapAtom } from '@/store/map';
+import { currentFeedAtom } from '@/store/currentFeed';
+import { FeedListProps, FeedProps, LocationProps } from '@/types/feed';
+import { BsPlus } from 'react-icons/bs';
+import styled from 'styled-components';
+import { axios } from '@/lib';
 
 enum ModalState {
   CREATE = 'CREATE',
@@ -21,47 +22,10 @@ enum ModalState {
   FEED = 'FEED',
 }
 
-interface CenterLatLng {
-  lat: number;
-  lng: number;
-}
-
-interface Review {
-  userName: string;
-  contents: string;
-  timestamp: Date;
-}
-
-interface FeedProps {
-  _id: string;
-  userName: string;
-  title: string;
-  description: string;
-  imageUrl: Array<string>;
-  review: Array<Review>;
-  address: string;
-  location: CenterLatLng;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface FeedDetail {
-  userName: string;
-  title: string;
-  description: string;
-  review: Array<Review>;
-  address: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface FeedListProps extends Array<FeedProps> {}
-
 const FeedMapPage = () => {
   const { userId } = useParams();
   const [feedList, setFeedList] = useState<FeedListProps>([]);
   const [stateModal, setStateModal] = useState(false);
-
   const [modalChildrenState, setModalChildrenState] = useState('');
   const userIdAtom = useRecoilValue(userFieldQuery('id'));
   const [currentFeedState, setCurrentFeedState] = useRecoilState(currentFeedAtom);
@@ -70,35 +34,43 @@ const FeedMapPage = () => {
   const feedIdQueryString = queryString.parse(window.location.search);
 
   useEffect(() => {
-    // userId를 사용한 API Call -> feedList를 useState로 관리
     async function getFeedList() {
-      const result = await Api.getUserFeedList(userId);
-
-      setFeedList(result);
-
-      if (Object.keys(feedIdQueryString).length > 0) {
-        setMapValue((currMapValue) => ({
-          ...currMapValue,
-          centerLatLng: {
-            lat: Number(feedIdQueryString.lat),
-            lng: Number(feedIdQueryString.lng),
-          },
-        }));
-      } else if (result.length > 0) {
-        setMapValue((currMapValue) => ({
-          ...currMapValue,
-          centerLatLng: {
-            lat: result[0].location.lat,
-            lng: result[0].location.lng,
-          },
-        }));
+      try {
+        const result = await axios.get<never, FeedListProps>(`/api/feeds/list/${userId}`);
+        setFeedList(result);
+        if (result.length > 0) {
+          initializeMapCenterLatLng(result[0]);
+        }
+      } catch (err) {
+        // alert(err);
+        // window.location.reload();
+        console.log(err);
       }
     }
-
     getFeedList();
   }, []);
 
-  const onClickModal = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const initializeMapCenterLatLng = (result: FeedProps) => {
+    if (Object.keys(feedIdQueryString).length > 0) {
+      setMapValue((currMapValue) => ({
+        ...currMapValue,
+        centerLatLng: {
+          lat: Number(feedIdQueryString.lat),
+          lng: Number(feedIdQueryString.lng),
+        },
+      }));
+    } else {
+      setMapValue((currMapValue) => ({
+        ...currMapValue,
+        centerLatLng: {
+          lat: result.location.lat,
+          lng: result.location.lng,
+        },
+      }));
+    }
+  };
+
+  const onClickModal = () => {
     setModalChildrenState(ModalState.CREATE);
     toggleModal();
   };
@@ -113,7 +85,7 @@ const FeedMapPage = () => {
     toggleModal();
   };
 
-  const changeCenterLatLng = (newCenterLatLng: CenterLatLng) => {
+  const changeCenterLatLng = (newCenterLatLng: LocationProps) => {
     setMapValue((currMapValue) => ({
       ...currMapValue,
       centerLatLng: {
@@ -137,10 +109,9 @@ const FeedMapPage = () => {
       case ModalState.FEED:
         return (
           <FeedDetail
+            currentUserId={userIdAtom as string}
             isModal={true}
-            name={currentFeedState.userName}
-            title={currentFeedState.title}
-            desc={currentFeedState.description}
+            feedList={currentFeedState}
           />
         );
     }
@@ -155,12 +126,20 @@ const FeedMapPage = () => {
     toggleModal();
   };
 
-  const onClickDeleteFeed = async (feedId: string) => {
+  const onClickDeleteFeed = async (feedId: string, feedUserId: string) => {
     if (!window.confirm('피드를 정말로 삭제하시겠습니까 ?')) return;
 
-    const result = await Api.deleteOneFeed(feedId);
-
-    if (result.result === 'success') alert('피드가 삭제되었습니다.'); // re-rendering 구현
+    try {
+      await axios.delete(`/api/feeds/${feedId}`, {
+        data: {
+          userId: feedUserId,
+        },
+      });
+      alert('피드가 삭제되었습니다.');
+      window.location.reload();
+    } catch (err) {
+      alert(err);
+    }
   };
 
   return (
@@ -177,11 +156,10 @@ const FeedMapPage = () => {
             <FeedHeader
               onClickFeedModal={() => onClickMapFeed(item)}
               onClickEditFeedModal={() => onClickEditFeedModal(item)}
-              onClickDeleteFeed={() => onClickDeleteFeed(item._id)}
+              onClickDeleteFeed={() => onClickDeleteFeed(item._id, item.userId)}
               isFolded={true}
               isUser={userIdAtom === userId}
               key={idx}
-              feedId={item._id}
               name={item.userName}
               title={item.title}
             />

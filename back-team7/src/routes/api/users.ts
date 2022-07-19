@@ -72,7 +72,7 @@ userRouter.get('/friends', async (req: Request, res: Response, next: NextFunctio
 });
 
 // 친구 추가 및 취소 API(테스트용으로 GET, PUT으로 변경할 것)
-userRouter.get('/friends/:_id', async (req: Request, res: Response, next: NextFunction) => {
+userRouter.put('/friends/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.user) {
       const userId = req.user._id;
@@ -111,7 +111,8 @@ userRouter.get('/friends/:_id', async (req: Request, res: Response, next: NextFu
 //전체 회원 조회 API
 userRouter.get('/list', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const users = await userService.getUsers();
+    const keyword = req.query.keyword ? req.query.keyword.toString() : '';
+    const users = await userService.getUsers(keyword);
     res.status(200).json(users);
   } catch (error) {
     next(error);

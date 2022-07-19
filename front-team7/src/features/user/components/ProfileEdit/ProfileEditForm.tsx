@@ -1,6 +1,6 @@
 import { type MouseEvent } from 'react';
 import styled from 'styled-components';
-import { useRecoilState, useRecoilRefresher_UNSTABLE } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -22,7 +22,6 @@ const FIELD_DATA: { kind: kindType; labelName: string; inputType: string }[] = [
 
 export const ProfileEditForm = () => {
   const [currentUser, setCurrentUser] = useRecoilState(userState);
-  const refreshCurrentUser = useRecoilRefresher_UNSTABLE(userState);
   const navigate = useNavigate();
 
   const {
@@ -87,7 +86,7 @@ export const ProfileEditForm = () => {
     console.log(newUser);
     setCurrentUser(newUser);
 
-    navigate('/profile');
+    navigate(`/profile/${newUser.id}`);
   }
 
   return (
@@ -148,6 +147,7 @@ const StyledForm = styled.form`
   padding: 20px 30px;
   overflow-y: auto;
   background-color: whitesmoke;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 
   li {
     list-style-type: none;
@@ -168,6 +168,8 @@ const StyledForm = styled.form`
   }
 
   .address-btn-container {
+    display: flex;
+    justify-content: flex-end;
     margin-top: 13px;
 
     button {
@@ -176,6 +178,7 @@ const StyledForm = styled.form`
       border-radius: 3px;
       padding: 6px 12px;
       color: whitesmoke;
+      cursor: pointer;
     }
 
     .address-find-btn {

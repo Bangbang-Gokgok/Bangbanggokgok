@@ -40,7 +40,7 @@ interface FromInputs {
 
 type PlaceListProps = Array<PlaceProps>;
 
-const Form = ({ isEdit }: { isEdit: boolean }) => {
+const Form = ({ isEdit }: { isEdit: boolean; }) => {
   const currentUser = useRecoilValue(userState);
   const currentFeedState = useRecoilValue(currentFeedAtom);
   const [searchState, setSearchState] = useState(false);
@@ -150,11 +150,14 @@ const Form = ({ isEdit }: { isEdit: boolean }) => {
     if (!confirm('피드를 수정하시겠습니까?')) return;
 
     const { title, description, image, address, lat, lng } = data;
+    console.log(currentUser);
 
     const userName = currentUser?.name || 'undefined';
+    const userId = currentUser?.id || 'null';
 
     const dummy = {
       userName,
+      userId,
       title,
       description,
       address: address,
@@ -168,6 +171,7 @@ const Form = ({ isEdit }: { isEdit: boolean }) => {
 
     fd.append('userName', dummy.userName);
     fd.append('title', dummy.title);
+    fd.append('userId', dummy.userId);
     fd.append('description', dummy.description);
     fd.append('address', dummy.address);
     fd.append('location', JSON.stringify(dummy.location));

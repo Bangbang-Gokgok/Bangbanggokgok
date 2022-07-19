@@ -51,11 +51,14 @@ export const getReviewsByUserID = async (userId) => {
   }
 };
 
-export const updateOneReview = async (id, sendData) => {
-  console.log('JSON.stringify(sendData) : ', JSON.stringify(sendData));
+export const updateOneReview = async (id, updatedContent, user_id) => {
   try {
-    let res = await axios.put(`/api/reviews/${id}`, JSON.stringify(sendData), {
+    let res = await axios.put(`/api/reviews/${id}`, {
       headers: { 'Content-Type': `application/json` },
+      body: {
+        userId: user_id,
+        contents: updatedContent,
+      },
     });
     // console.log('updated res : ', res);
     return res;
@@ -64,9 +67,9 @@ export const updateOneReview = async (id, sendData) => {
   }
 };
 
-export const deleteOneReview = async (id) => {
+export const deleteOneReview = async (id, user_id) => {
   try {
-    const res = await axios.delete(`/api/reviews/${id}`);
+    const res = await axios.delete(`/api/reviews/${id}`, { data: { userId: user_id } });
     // console.log('deleted res : ', res);
     return res;
   } catch (err) {
