@@ -14,7 +14,7 @@ interface FeedInfo {
   description: string;
   address: string;
   location: newLocation;
-  likes?: string[] | undefined;
+  likes?: object | undefined;
   imageUrl?: string[] | undefined;
 }
 interface FeedData extends FeedInfo {

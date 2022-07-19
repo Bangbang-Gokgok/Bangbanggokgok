@@ -33,7 +33,7 @@ const FeedSchema = new Schema(
       required: true,
     },
     likes: {
-      type: Array,
+      type: Object,
       required: false,
     },
     report: {
