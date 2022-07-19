@@ -1,12 +1,12 @@
 import { type MouseEvent } from 'react';
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilRefresher_UNSTABLE } from 'recoil';
 import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { axios } from '@/lib';
-import { UserResponse, UserState, userState } from '@/store';
+import { UserResponse, UserState, userState, userByIdQuery } from '@/store';
 import { useDaumAddress, getLocation } from '@/features/user/api';
 import { profileEditSchema } from '@/features/user/schemas';
 
@@ -23,6 +23,7 @@ const FIELD_DATA: { kind: kindType; labelName: string; inputType: string }[] = [
 
 export const ProfileEditForm = () => {
   const [currentUser, setCurrentUser] = useRecoilState(userState);
+  const refreshUserById = useRecoilRefresher_UNSTABLE(userByIdQuery);
   const navigate = useNavigate();
 
   const {
@@ -65,8 +66,6 @@ export const ProfileEditForm = () => {
 
     delete data.profileImage;
 
-    console.log(data);
-
     const formData = new FormData();
 
     for (const [key, value] of Object.entries(data)) formData.append(key, value as string | Blob);
@@ -88,6 +87,7 @@ export const ProfileEditForm = () => {
 
       console.log('newUser : ', newUser);
       setCurrentUser(newUser);
+      refreshUserById();
 
       navigate(`/profile/${newUser.id}`);
     } catch (err) {
