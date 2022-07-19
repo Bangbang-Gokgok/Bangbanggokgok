@@ -8,7 +8,7 @@ import { Post } from '@/features/user/components';
 export const RecentPosts = () => {
   const feeds = useRecoilValue(userByIdFeedsQuery);
 
-  if (feeds!.length === 0) return <div>게시글이 존재하지 않습니다.</div>;
+  if (feeds!.length === 0) return <div style={{ color: '#ccc' }}>게시글이 존재하지 않습니다.</div>;
 
   return (
     <StyledRecentPosts>
