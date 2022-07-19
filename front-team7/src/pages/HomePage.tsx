@@ -8,7 +8,7 @@ import { axios } from '@/lib';
 import { useEffect, useState, CSSProperties } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Loading from '@/components/Loading/Loading';
-import { FeedListProps } from '@/types/feed';
+import { FeedListProps, FeedProps } from '@/types/feed';
 import * as FeedApi from '@/api/feeds';
 
 const StyledFeedListContainer = styled.div`
@@ -19,23 +19,6 @@ const StyledFeedListContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin: 50px 0;
-
-  // .grid-group {
-  //   display: grid;
-  //   grid-template-columns: 1fr;
-  //   row-gap: 30px;
-  //   // column-gap: 30px;
-  //   @media only screen and (min-width: 1024px) {
-  //     // display: grid;
-  //     grid-template-columns: repeat(2, 1fr);
-  //     row-gap: 30px;
-  //     column-gap: 30px;
-  //   }
-
-  //   .grid-item {
-  //     margin-bottom: 30px;
-  //   }
-  // }
 `;
 
 const HomePage = () => {
@@ -50,6 +33,7 @@ const HomePage = () => {
     async function get() {
       try {
         const result = await FeedApi.getFeedListUsingPagination(page, perPage);
+
         const initialList = result.feedList;
         const totalPage = result.totalPage;
 
