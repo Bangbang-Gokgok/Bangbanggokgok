@@ -9,7 +9,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import styled from 'styled-components';
 import { TbRoad } from 'react-icons/tb';
 import { MdShareLocation } from 'react-icons/md';
-import { TiDelete } from 'react-icons/ti';
 import { FiExternalLink } from 'react-icons/fi';
 import { FcAddImage, FcSearch } from 'react-icons/fc';
 import * as FeedApi from '@/api/feeds';
@@ -40,7 +39,7 @@ interface FromInputs {
 
 type PlaceListProps = Array<PlaceProps>;
 
-const Form = ({ isEdit }: { isEdit: boolean }) => {
+const Form = ({ isEdit }: { isEdit: boolean; }) => {
   const currentUser = useRecoilValue(userState);
   const currentFeedState = useRecoilValue(currentFeedAtom);
   const [searchState, setSearchState] = useState(false);
@@ -64,23 +63,10 @@ const Form = ({ isEdit }: { isEdit: boolean }) => {
       setValue('lat', currentFeedState.location.lat);
       setValue('lng', currentFeedState.location.lng);
       if (currentFeedState.imageUrl.length > 0) {
-        // setFeedImageState(currentFeedState.imageUrl);
         setPreviewImages(currentFeedState.imageUrl);
       }
     }
   }, []);
-
-  // const setFeedImageState = (imageArray) => {
-  //   const dataTranster = new DataTransfer();
-
-  //   imageArray
-  //     .forEach((item: any) => {
-  //       dataTranster.items.add(item);
-  //     });
-
-  //   setValue('image', dataTranster.files);
-
-  // };
 
   const searchPlace = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -138,8 +124,8 @@ const Form = ({ isEdit }: { isEdit: boolean }) => {
 
     try {
       await FeedApi.createOneFeed(fd);
-      // await axios.post(`/api/feeds`, fd);
       alert('성공적으로 추가되었습니다.');
+      window.location.reload();
     } catch (err) {
       alert('Error 발생. console 확인');
       console.log(err);
@@ -152,7 +138,6 @@ const Form = ({ isEdit }: { isEdit: boolean }) => {
     if (!confirm('피드를 수정하시겠습니까?')) return;
 
     const { title, description, image, address, lat, lng } = data;
-    console.log(currentUser);
 
     const userName = currentUser?.name || 'undefined';
     const userId = currentUser?.id || 'null';
@@ -184,8 +169,8 @@ const Form = ({ isEdit }: { isEdit: boolean }) => {
 
     try {
       await FeedApi.updateOneFeed(currentFeedState._id, fd);
-      // await axios.put(`/api/feeds/${currentFeedState._id}`, fd);
       alert('피드가 수정되었습니다.');
+      window.location.reload();
     } catch (err) {
       alert('Error 발생. console 확인');
       console.log(err);
@@ -204,6 +189,7 @@ const Form = ({ isEdit }: { isEdit: boolean }) => {
 
   const handleAddPreviewImages = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
+
     const imageList: FileList = e.target.files;
     let previewUrlList: string[] = [...previewImages];
 
@@ -219,8 +205,9 @@ const Form = ({ isEdit }: { isEdit: boolean }) => {
     setPreviewImages(previewUrlList);
   };
 
-  const handleDeleteImage = (e: React.MouseEvent<HTMLButtonElement>, id: number) => {
+  const handleDeletePreviewImage = (e: any, id: number) => {
     e.preventDefault();
+
     const dataTranster = new DataTransfer();
 
     Array.from(imageData)
@@ -231,14 +218,9 @@ const Form = ({ isEdit }: { isEdit: boolean }) => {
 
     setValue('image', dataTranster.files);
 
-    // setValue('images', imageData.filter((_, index) => index !== id));
     setPreviewImages(previewImages.filter((_, index) => index !== id));
   };
 
-  // <추가과제>
-  // 빈 값을 넣고 엔터를 쳤을 때 axios Error 처리 하기
-  // 성공적으로 값을 추가한 뒤 값을 초기화해서 빈 값으로 바꾸기
-  // 여러 에러 발생 가능 => 에러 메세지 백엔드에서 구현되면, 프론트에서 보여주는 로직 추가하기 (useForm의 에러 처리 검색해보기)
   return (
     <StyledModalForm>
       <form onSubmit={isEdit ? handleSubmit(editSubmitForm) : handleSubmit(submitForm)}>
@@ -279,9 +261,7 @@ const Form = ({ isEdit }: { isEdit: boolean }) => {
               {previewImages.map((image, id) => (
                 <StyledPreviewImg key={id}>
                   <StyledPreviewImgSrc src={image} alt={`${image}-${id}`} />
-                  <StyledPreviewDeleteButton onClick={(e) => handleDeleteImage(e, id)}>
-                    <TiDelete />
-                  </StyledPreviewDeleteButton>
+                  <StyledPreviewDeleteButton type='button' value="x" onClick={(e) => handleDeletePreviewImage(e, id)} />
                 </StyledPreviewImg>
               ))}
             </StyledPreviewImgWrapper>
@@ -485,12 +465,12 @@ const StyledPreviewImgSrc = styled.img`
   object-fit: cover;
 `;
 
-const StyledPreviewDeleteButton = styled.button`
+const StyledPreviewDeleteButton = styled.input`
   position: absolute;
   right: 0;
   top: 0;
   transform: translate(50%, -50%);
-  font-size: 2.2rem;
+  font-size: 1.5rem;
   background-color: transparent;
   border: none;
 `;
