@@ -81,6 +81,7 @@ interface userData {
   _id: string,
   name: string,
   profileImage: Array<string>;
+  friends: Array<string>;
 }
 
 type userDataList = Array<userData>;
