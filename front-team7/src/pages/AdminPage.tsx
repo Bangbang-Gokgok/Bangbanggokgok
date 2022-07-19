@@ -5,7 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { userFieldQuery } from '@/store';
 
 import { Main } from '@/components/Layout';
-import { AdminTap } from '@/features/admin/components';
+import { AdminTap, AdminSection } from '@/features/admin/components';
 
 const AdminPage = () => {
   const username = useRecoilValue(userFieldQuery('name'));
@@ -19,6 +19,7 @@ const AdminPage = () => {
           <span>관리자님 환영합니다.</span>
         </div>
         <AdminTap />
+        <AdminSection />
       </StyledAdminPage>
     </Main>
   );
@@ -29,7 +30,7 @@ const StyledAdminPage = styled.div`
   flex-direction: column;
   margin: 0 auto;
   width: 100%;
-  height: 100%;
+  height: auto;
   padding: 20px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
