@@ -68,7 +68,7 @@ const FeedDetail = ({
   useEffect(() => {
     get();
     socket.on('likeResponse', (users) => {
-      setLikesState(users.length);
+      setLikesState(Object.keys(users).length);
     });
   }, []);
   // console.log('reviewList : ', reviewList);
