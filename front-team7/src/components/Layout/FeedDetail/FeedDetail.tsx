@@ -43,7 +43,7 @@ const FeedDetail = ({
   const [currentFeedList, setCurrentFeedList] = useState<FeedProps>(feedList);
   const currentUser = useRecoilValue(userState);
 
-  const [likesState, setLikesState] = useState(currentFeedList.likes.length);
+  const [likesState, setLikesState] = useState(Object.keys(currentFeedList.likes).length);
 
   async function get() {
     // 해당 Feed 에 있는 Review들만 가져오기

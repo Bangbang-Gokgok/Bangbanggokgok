@@ -34,7 +34,8 @@ const FeedSchema = new Schema(
     },
     likes: {
       type: Object,
-      required: false,
+      required: true,
+      default: {},
     },
     report: {
       type: Object,
@@ -48,6 +49,7 @@ const FeedSchema = new Schema(
   {
     collection: 'feeds',
     timestamps: true,
+    minimize: false,
   }
 );
 export { FeedSchema };
