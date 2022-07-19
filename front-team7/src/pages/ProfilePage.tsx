@@ -27,6 +27,7 @@ const StyledProfilePage = styled.div`
   flex-direction: column;
   height: auto;
   margin: 0 auto;
+  min-height: 100%;
   max-width: 850px;
   background-color: #2e2930;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -35,6 +36,7 @@ const StyledProfilePage = styled.div`
     width: 80%;
     max-width: 700px;
     margin: 40px auto;
+    min-height: auto;
   }
 
   @media screen and (min-width: 1024px) {

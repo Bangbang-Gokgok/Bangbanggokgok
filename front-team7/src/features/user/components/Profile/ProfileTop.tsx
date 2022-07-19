@@ -6,19 +6,24 @@ import { BiEditAlt } from 'react-icons/bi';
 import profileBackground from '@/assets/images/profile-background.jpg';
 
 import { Avartar } from '@/components/Avatar';
-import { userByIdQuery, userByIdFeedsQuery } from '@/store';
+import { userFieldQuery, userParamsState, userByIdQuery, userByIdFeedsQuery } from '@/store';
 
 export const ProfileTop = () => {
+  const currentUserId = useRecoilValue(userFieldQuery('id'));
   const user = useRecoilValue(userByIdQuery);
+  const userId = useRecoilValue(userParamsState);
   const feeds = useRecoilValue(userByIdFeedsQuery);
 
   return (
     <StyledProfileTop image={profileBackground as string}>
-      <div className="profile-icon">
-        <StyledLinkButton to="/profile-edit">
-          <BiEditAlt />
-        </StyledLinkButton>
-      </div>
+      {currentUserId === userId && (
+        <div className="profile-icon">
+          <StyledLinkButton to="/profile-edit">
+            <BiEditAlt />
+          </StyledLinkButton>
+        </div>
+      )}
+
       <div className="profile-main">
         <Avartar size="xl" src={user?.profileImage ? user.profileImage[0] : undefined} />
         <span className="username">{user?.name}</span>
