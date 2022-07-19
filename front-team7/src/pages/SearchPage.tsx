@@ -44,6 +44,12 @@ const SearchPage = () => {
     setSearchKeyword(e.target.value);
   };
 
+  const onKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'Enter') {
+      onClickSearch();
+    }
+  };
+
   const onClickSearch = () => {
     searchUser(searchKeyword);
   };
@@ -103,6 +109,7 @@ const SearchPage = () => {
     >
       <StyledSearchContainer>
         <Input
+          onKeyPressSearch={onKeyPress}
           handleInput={(e) => handleInput(e)}
           onClickSearch={() => onClickSearch()}
         />

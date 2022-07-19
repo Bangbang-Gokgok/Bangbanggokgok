@@ -30,14 +30,15 @@ const StyledSearchIconContainer = styled.button`
 
 const Input = (
   {
+    onKeyPressSearch,
     handleInput,
     onClickSearch
   }
-    : { handleInput: (e: React.ChangeEvent<HTMLInputElement>) => void; } & { onClickSearch: () => void; }
+    : { handleInput: (e: React.ChangeEvent<HTMLInputElement>) => void; } & { onClickSearch: () => void; } & { onKeyPressSearch: (e: React.KeyboardEvent<HTMLElement>) => void; }
 ) => {
   return (
     <StyledInputContainer>
-      <StyledInput onChange={handleInput}></StyledInput>
+      <StyledInput onKeyPress={onKeyPressSearch} onChange={handleInput}></StyledInput>
 
       <StyledSearchIconContainer onClick={onClickSearch}>
         <IconContext.Provider value={{ size: '20px' }}>
