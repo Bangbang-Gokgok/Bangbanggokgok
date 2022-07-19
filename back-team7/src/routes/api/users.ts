@@ -7,6 +7,10 @@ import { redisClient } from '../../server';
 
 const userRouter = Router();
 
+type RedisHashValue = {
+  [key: string]: boolean;
+};
+
 declare global {
   namespace Express {
     interface User {
@@ -59,8 +63,8 @@ userRouter.get('/friends', async (req: Request, res: Response, next: NextFunctio
       const resource = 'friends';
       const key = `users:${resource}`;
       const friends = await redisClient.hGet(key, userId);
-      const friendsArr = friends ? JSON.parse(friends) : [];
-      res.status(200).json(friendsArr);
+      const friendsObject = friends ? JSON.parse(friends) : {};
+      res.status(200).json(friendsObject);
     } else {
       const error = new Error('user 정보가 없습니다.');
       error.name = 'NotFound';
@@ -72,7 +76,7 @@ userRouter.get('/friends', async (req: Request, res: Response, next: NextFunctio
 });
 
 // 친구 추가 및 취소 API(테스트용으로 GET, PUT으로 변경할 것)
-userRouter.put('/friends/:_id', async (req: Request, res: Response, next: NextFunction) => {
+userRouter.get('/friends/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.user) {
       const userId = req.user._id;
@@ -80,24 +84,28 @@ userRouter.put('/friends/:_id', async (req: Request, res: Response, next: NextFu
       const resource = 'friends';
       const key = `users:${resource}`;
       const friends = await redisClient.hGet(key, userId);
-      let friendsArr: string[];
-      let friendNum;
+      let friendsObject: RedisHashValue;
       if (friends) {
-        friendsArr = JSON.parse(friends);
-        friendNum = friendsArr.length;
-        friendsArr = friendsArr.filter((e) => e !== friendId);
-        if (friendNum === friendsArr.length) {
-          friendsArr.push(friendId);
-          friendNum += 1;
+        friendsObject = JSON.parse(friends);
+        if (friendsObject[friendId]) {
+          delete friendsObject[friendId];
         } else {
-          friendNum -= 1;
+          friendsObject[friendId] = true;
         }
+        // friendNum = friendsArr.length;
+        // friendsArr = friendsArr.filter((e) => e !== friendId);
+        // if (friendNum === friendsArr.length) {
+        //   friendsArr.push(friendId);
+        //   friendNum += 1;
+        // } else {
+        //   friendNum -= 1;
+        // }
       } else {
-        friendsArr = [friendId];
-        friendNum = 1;
+        friendsObject = {};
+        friendsObject[friendId] = true;
       }
-      await redisClient.hSet(key, userId, JSON.stringify(friendsArr));
-      res.status(200).json(friendNum);
+      await redisClient.hSet(key, userId, JSON.stringify(friendsObject));
+      res.status(200).json();
     } else {
       const error = new Error('user 정보가 없습니다.');
       error.name = 'NotFound';

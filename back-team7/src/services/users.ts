@@ -9,7 +9,7 @@ export interface UserInfo {
   profileImage?: string[] | undefined;
   contactNumber?: string | undefined;
   location?: object | undefined;
-  friends?: string[] | undefined;
+  friends?: object | undefined;
 }
 
 export interface UserData extends UserInfo {
