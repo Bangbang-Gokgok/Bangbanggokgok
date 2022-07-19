@@ -44,7 +44,7 @@ app.use(errorHandler);
 const server = app.listen(PORT, () => {
   console.log(`server is running ${PORT}`);
   schedule.scheduleJob('*/1 * * * *', likesScheduler);
-  // schedule.scheduleJob('* * * * * *', friendsScheduler);
+  schedule.scheduleJob('* * * * * *', friendsScheduler);
 });
 
 // app.use(express.static(path.join(__dirname, '/../frontend/build'))); // 리액트 정적 파일 제공
@@ -64,8 +64,8 @@ db.on('error', (error: Error) =>
   console.error(`\nMongoDB 연결에 실패하였습니다...\n ${DB_URL} \n  ${error}`)
 );
 
-// export const redisClient = createClient({ url: process.env.REDIS_URL });
-export const redisClient = createClient();
+export const redisClient = createClient({ url: process.env.REDIS_URL });
+// export const redisClient = createClient();
 
 redisClient.on('ready', (err) => console.log('정상적으로 Redis 서버에 연결되었습니다.'));
 redisClient.on('error', (error: Error) =>
