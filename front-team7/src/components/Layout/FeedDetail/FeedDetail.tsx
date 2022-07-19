@@ -24,7 +24,7 @@ const FeedDetail = ({
   currentUserId,
   image,
   feedList,
-}: UserInfoProps & { currentUserId: string } & { isModal: boolean } & { feedList: FeedProps }) => {
+}: UserInfoProps & { currentUserId: string; } & { isModal: boolean; } & { feedList: FeedProps; }) => {
   const [reviewList, setReviewList] = useState<ReviewListProps>();
   const [dropDownVisible, setDropDownVisible] = useState<boolean>(false);
   const [currentFeedList, setCurrentFeedList] = useState<FeedProps>(feedList);
@@ -214,7 +214,7 @@ const StyledFeedDetailSlide = styled.div`
 //   background-color: yellow;
 // `;
 
-const StyledSlide = styled.div<{ src: string }>`
+const StyledSlide = styled.div<{ src: string; }>`
   width: 100%;
   height: 100%;
   position: absolute;
