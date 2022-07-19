@@ -11,8 +11,16 @@ import Loading from '@/components/Loading/Loading';
 import * as ReviewApi from '@/api/review';
 import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
 import { FeedProps, ReviewListProps, ReviewProps } from '@/types/feed';
+
 import { useRecoilValue } from 'recoil';
 import { userState } from '@/store';
+
+import io from 'socket.io-client';
+
+const socket = io.connect('http://localhost:5030/', {
+  autoConnect: true,
+  transports: ['websocket'],
+});
 
 interface FeedDetailContainerProps {
   boxShadow: boolean;
@@ -32,17 +40,28 @@ const FeedDetail = ({
   const [updatedReview, setUpdatedReview] = useState<string>('');
   const [clickedReview, setClickedReview] = useState<string>('');
   const [dropDownVisible, setDropDownVisible] = useState<boolean>(false);
+
   const currentUser = useRecoilValue(userState);
+
+  const [likesState, setLikesState] = useState(feedList.likes.length);
 
   async function get() {
     // 해당 Feed 에 있는 Review들만 가져오기
     const getReviewByFeedID: ReviewListProps = await ReviewApi.getReviewsByFeedID(feedList._id);
+    socket.emit('likeListRequest', feedList._id);
+    socket.on('likeListResponse', (likes) => {
+      feedList.likes = likes;
+    });
     // console.log('feedId, getReviewByFeedID : ', feedId, getReviewByFeedID);
+
     setReviewList(getReviewByFeedID);
   }
 
   useEffect(() => {
     get();
+    socket.on('likeResponse', (users) => {
+      setLikesState(users.length);
+    });
   }, []);
   // console.log('reviewList : ', reviewList);
   const textAreaContent = useRef<any>();
@@ -115,6 +134,11 @@ const FeedDetail = ({
     get();
   };
 
+  const LikeFeed = () => {
+    // setLikesState((prev) => prev + 1);
+    socket.emit('likeRequest', currentUserId, feedList._id);
+  };
+
   return (
     <StyledFeedDetailContainer boxShadow={isModal}>
       <FeedHeader
@@ -137,7 +161,11 @@ const FeedDetail = ({
           </Carousel>
         </StyledFeedDetailSlide>
         <StyledFeedDetailInfo>
-          <div>Like 10개</div>
+          <div>
+            <button onClick={LikeFeed}>Like</button>
+            <span> {likesState}개</span>
+          </div>
+
           <div>
             댓글 {reviewList?.length}개
             {dropDownVisible ? (

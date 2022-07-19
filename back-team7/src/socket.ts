@@ -32,6 +32,13 @@ export function ws(server: http.Server) {
     //   await redisClient.hSet(key, userId, JSON.stringify(friendsArr));
     //   socket.emit('followResponse', friendsArr);
     // });
+    socket.on('likeListRequest', async (feedId) => {
+      const resource = 'likes';
+      const key = `feeds:${resource}`;
+      const users = await redisClient.hGet(key, feedId);
+      const usersArr = users ? JSON.parse(users) : [];
+      io.emit('likeListResponse', usersArr);
+    });
     socket.on('likeRequest', async (userId, feedId) => {
       const resource = 'likes';
       const key = `feeds:${resource}`;
@@ -49,7 +56,7 @@ export function ws(server: http.Server) {
       }
       await redisClient.hSet(key, feedId, JSON.stringify(usersArr));
 
-      socket.emit('likeResponse', usersArr);
+      io.emit('likeResponse', usersArr);
     });
     socket.on('disconnect', () => {});
   });

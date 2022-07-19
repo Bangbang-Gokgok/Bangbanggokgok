@@ -58,15 +58,15 @@ class ReviewService {
   // 리뷰 정보 수정
   async setReview(_id: string, update: Partial<ReviewInfo>, user: any) {
     // 업데이트 진행
+    if (user._id !== update.userId && user.authority !== 'admin') {
+      const error = new Error('작성자만 수정할 수 있습니다.');
+      error.name = 'Access Denied';
+      throw error;
+    }
     const updatedReview = await Review.findOneAndUpdate({ _id }, update, { returnOriginal: false });
     if (!updatedReview) {
       const error = new Error('업데이트에 실패하였습니다.');
       error.name = 'NotFound';
-      throw error;
-    }
-    if (user._id !== update.userId && user.authority !== 'admin') {
-      const error = new Error('작성자만 수정할 수 있습니다.');
-      error.name = 'Access Denied';
       throw error;
     }
     return updatedReview;
@@ -78,16 +78,16 @@ class ReviewService {
     user: any,
     userId: string | undefined
   ): Promise<{ result: string }> {
+    if (user._id !== userId && user.authority !== 'admin') {
+      const error = new Error('작성자만 수정할 수 있습니다.');
+      error.name = 'Access Denied';
+      throw error;
+    }
     const { deletedCount } = await Review.deleteOne({ _id });
     // 삭제에 실패한 경우, 에러 메시지 반환
     if (deletedCount === 0) {
       const error = new Error(`${_id} 리뷰 삭제에 실패하였습니다`);
       error.name = 'NotFound';
-      throw error;
-    }
-    if (user._id !== userId && user.authority !== 'admin') {
-      const error = new Error('작성자만 수정할 수 있습니다.');
-      error.name = 'Access Denied';
       throw error;
     }
     return { result: 'success' };
