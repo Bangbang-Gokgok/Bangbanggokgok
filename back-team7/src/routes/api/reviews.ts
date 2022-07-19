@@ -65,12 +65,12 @@ reviewRouter.get('/list/user/:userId', async (req: Request, res: Response, next:
 
 reviewRouter.put('/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.user?._id;
+    const user = req.user;
     const _id = req.params._id;
     const update = req.body;
 
     // 리뷰를 업데이트함.
-    const updatedReview = await reviewService.setReview(_id, update, userId);
+    const updatedReview = await reviewService.setReview(_id, update, user);
 
     res.status(200).json(updatedReview);
   } catch (error) {
@@ -80,11 +80,11 @@ reviewRouter.put('/:_id', async (req: Request, res: Response, next: NextFunction
 
 reviewRouter.delete('/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user_id = req.user?._id;
+    const user = req.user;
     const userId = req.body.userId;
     const _id = req.params._id;
     //리뷰 삭제
-    const deleteResult = await reviewService.deleteReviewData(_id, user_id, userId);
+    const deleteResult = await reviewService.deleteReviewData(_id, user, userId);
     res.status(200).json(deleteResult);
   } catch (error) {
     next(error);
