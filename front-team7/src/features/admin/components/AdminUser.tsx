@@ -1,30 +1,40 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { AiFillSetting } from 'react-icons/ai';
+import { useSetRecoilState } from 'recoil';
 
+import { adminModal } from '@/store';
 import { useGetAllUsers } from '@/features/admin/api';
 
 import { AdminModal, UserInfo } from '@/features/admin/components';
 
 export const AdminUser = () => {
   const userInfoData = useGetAllUsers();
-  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const setAdminModalState = useSetRecoilState(adminModal);
   const [userInfoDataIndex, setUserInfoDataIndex] = useState(0);
+
+  if (!userInfoData || userInfoData.length === 0) return <div>유저 정보가 없습니다.</div>;
+
+  const filteredUserInfoData = userInfoData?.filter((userInfo) => userInfo.authority !== 'admin');
 
   function onOpenAdminModalHandler(index: number) {
     setUserInfoDataIndex(index);
-    setIsAdminModalOpen(true);
+    setAdminModalState(true);
   }
 
   return (
     <StyledAdminUser>
       <ul className="userInfo-ul">
-        {userInfoData?.map((userInfo, index) => {
+        {filteredUserInfoData?.map((userInfo, index) => {
           const profileImage = userInfo?.profileImage ? userInfo?.profileImage[0] : undefined;
 
           return (
             <li className="userInfo-list" key={userInfo._id}>
-              <UserInfo name={userInfo.name as string} image={profileImage} />
+              <UserInfo
+                id={userInfo._id as string}
+                name={userInfo.name as string}
+                image={profileImage}
+              />
               <button onClick={() => onOpenAdminModalHandler(index)} className="icon-setting">
                 <AiFillSetting />
               </button>
@@ -32,7 +42,7 @@ export const AdminUser = () => {
           );
         })}
       </ul>
-      <AdminModal isOpen={isAdminModalOpen} userInfo={userInfoData![userInfoDataIndex]} />
+      <AdminModal userInfo={filteredUserInfoData[userInfoDataIndex]} />
     </StyledAdminUser>
   );
 };
@@ -63,6 +73,12 @@ const StyledAdminUser = styled.div`
         border: none;
         padding: 3px 6px;
         color: #a3a3a3;
+        transition: color 0.3s ease;
+        cursor: pointer;
+
+        &:hover {
+          color: gold;
+        }
       }
     }
   }

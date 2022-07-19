@@ -50,6 +50,7 @@ const StyledAdminTap = styled.nav`
         transition: color 0.3s ease;
 
         &.selected {
+          color: gold;
           background-color: #2e2930;
         }
       }
