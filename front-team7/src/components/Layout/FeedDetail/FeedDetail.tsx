@@ -7,6 +7,7 @@ import { FeedHeader } from '@/components/FeedHeader/FeedHeader';
 import * as ReviewApi from '@/api/review';
 import Carousel from 'react-material-ui-carousel';
 import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
+import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
 import io from 'socket.io-client';
 
 const socket = io.connect('http://localhost:5030/', {
@@ -28,7 +29,6 @@ const FeedDetail = ({
   const [reviewList, setReviewList] = useState<ReviewListProps>();
   const [dropDownVisible, setDropDownVisible] = useState<boolean>(false);
   const [currentFeedList, setCurrentFeedList] = useState<FeedProps>(feedList);
-
   const [likesState, setLikesState] = useState(Object.keys(currentFeedList.likes).length);
 
   async function get() {
@@ -80,36 +80,51 @@ const FeedDetail = ({
       <StyledFeedDetailBody>
         {/* <StyledTitle>👍🏽 {title}</StyledTitle> */}
         <StyledFeedDetailDescription>{currentFeedList.description}</StyledFeedDetailDescription>
-        <StyledFeedDetailSlide>
-          <Carousel className={'carousel'} indicators={false} navButtonsAlwaysVisible={true}>
-            {currentFeedList.imageUrl?.map((item, index) => (
-              <StyledSlide key={index} src={item}></StyledSlide>
-            ))}
-          </Carousel>
-        </StyledFeedDetailSlide>
+        {feedList.imageUrl.length > 0 &&
+          <StyledFeedDetailImage>
+            <StyledFeedDetailSlide>
+              {feedList.imageUrl.length === 1 ?
+                <StyledSlide src={currentFeedList.imageUrl[0]} />
+                :
+                <Carousel
+                  className={'carousel'}
+                  indicators={false}
+                  navButtonsAlwaysVisible={true}
+                >
+                  {currentFeedList.imageUrl?.map((item, index) => (
+                    <StyledSlide key={index} src={item}></StyledSlide>
+                  ))}
+                </Carousel>}
+
+            </StyledFeedDetailSlide>
+          </StyledFeedDetailImage>}
         <StyledFeedDetailInfo>
-          <div>
-            <button onClick={LikeFeed}>Like</button>
-            <span> {likesState}개</span>
-          </div>
+          <StyledLikeWrapper>
+            <StyledLikeButton onClick={LikeFeed}>{
+              <AiOutlineHeart />//<AiFillHeart />
+            }</StyledLikeButton>
+            <span>{likesState} like</span>
+          </StyledLikeWrapper>
 
           <div>
-            댓글 {reviewList?.length}개
-            {dropDownVisible ? (
-              <MdArrowDropUp
-                className="dropBtn"
-                onClick={() => {
-                  toggleDropDownVisible();
-                }}
-              ></MdArrowDropUp>
-            ) : (
-              <MdArrowDropDown
-                className="dropBtn"
-                onClick={() => {
-                  toggleDropDownVisible();
-                }}
-              ></MdArrowDropDown>
-            )}
+            {reviewList?.length}개의 댓글
+            {!!reviewList?.length && <>
+              {dropDownVisible ? (
+                <MdArrowDropUp
+                  className="dropBtn"
+                  onClick={() => {
+                    toggleDropDownVisible();
+                  }}
+                ></MdArrowDropUp>
+              ) : (
+                <MdArrowDropDown
+                  className="dropBtn"
+                  onClick={() => {
+                    toggleDropDownVisible();
+                  }}
+                ></MdArrowDropDown>
+              )}
+            </>}
           </div>
         </StyledFeedDetailInfo>
       </StyledFeedDetailBody>
@@ -131,15 +146,11 @@ const FeedDetail = ({
 
 const StyledFeedDetailContainer = styled.div<FeedDetailContainerProps>`
   width: 330px;
-  // height: ${(props) => (props.dropDownVisible ? '780px' : '480px')};
-  // background-color: blue;
   display: flex;
-  // position: absolute;
   flex-direction: column;
   border-radius: 10px;
   gap: 10px;
-  box-shadow: ${(props) => (props.boxShadow ? '' : '0 0 10px 5px #c2c2c2')};
-  // margin-top: ${(props) => (props.boxShadow ? '' : '30px')};
+  box-shadow: ${(props) => (props.boxShadow ? '' : '5px 5px 10px 2px #c2c2c2')};
 
   @media only screen and (min-width: 768px) {
     width: 450px;
@@ -149,37 +160,30 @@ const StyledFeedDetailContainer = styled.div<FeedDetailContainerProps>`
     width: 500px;
   }
 `;
-const StyledFeedDetailHeader = styled.div`
-  width: 100%;
-  height: 32px;
-  background-color: #d9d9d9;
-  border-radius: 10px 10px 0px 0px;
-`;
 const StyledFeedDetailBody = styled.div`
-  // width: 90%;
-  height: 320px;
-  position: relative;
   box-sizing: border-box;
   z-index: 2;
-  padding: 10px;
   border-radius: 15px;
-  background-color: whitesmoke;
+  gap: 10px;
+`;
+
+const StyledFeedDetailImage = styled.div`
+  position: relative;
+  width: 100%;
+  height: 200px;
+  padding: 10px;
+  
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  gap: 10px;
 `;
 
 const StyledFeedDetailDescription = styled.div`
   width: 100%;
   min-height: 40px;
-  // position: relative;
-  // background-color: red;
-
-  padding: 0 10px;
-  font-size: 2rem;
-  font-weight: 600;
+  padding: 0 20px;
+  font-size: 1.5rem;
+  font-weight: 400;
   line-height: 40px;
 
   white-space: nowrap;
@@ -190,8 +194,6 @@ const StyledFeedDetailSlide = styled.div`
   width: 100%;
   min-height: 200px;
   position: relative;
-  background-color: green;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -200,25 +202,16 @@ const StyledFeedDetailSlide = styled.div`
     width: 100%;
     height: 100%;
     position: relative;
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
     background-color: black;
   }
 `;
 
-// const StyledSlide = styled.img<{ src: string }>`
-//   position: absolute;
-//   width: 100%;
-//   height: 100%;
-//   background-color: yellow;
-// `;
 
-const StyledSlide = styled.div<{ src: string; }>`
+const StyledSlide = styled.img<{ src: string; }>`
   width: 100%;
   height: 100%;
   position: absolute;
-  background-size: cover;
+  object-fit: cover;
   background-image: url(${(props) => props.src});
 `;
 
@@ -226,16 +219,20 @@ const StyledFeedDetailInfo = styled.div`
   width: 100%;
   min-height: 40px;
   line-height: 40px;
-  // background-color: whitesmoke;
   padding: 0 10px;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   display: flex;
   justify-content: space-between;
-  // margin-bottom: 10px;
   .dropBtn {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     cursor: pointer;
   }
+`;
+
+const StyledLikeButton = styled.button`
+  background-color: transparent;
+  border: none;
+  font-size: 2.2rem;
 `;
 
 const dropAnimation = keyframes`
@@ -245,19 +242,24 @@ const dropAnimation = keyframes`
 }
 100% {
   transform : translateY(0);
-  // display : block;
 }
 `;
 const StyledFeedDetailReview = styled.div`
-  // width: 100%;
   height: 250px;
   margin: 10px;
   padding: 10px;
   background-color: #a2c4f3;
   border-radius: 10px;
   z-index: 1;
-
   animation: ${dropAnimation} 1s alternate;
+`;
+
+const StyledLikeWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 `;
 
 export default FeedDetail;
