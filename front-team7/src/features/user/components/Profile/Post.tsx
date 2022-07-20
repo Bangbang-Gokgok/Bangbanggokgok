@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { BsCalendar3 } from 'react-icons/bs';
 
 import { type FeedsResponse } from '@/store';
+import noImage from '@/assets/images/no-image.png';
 
 interface PostProps {
   feeds: Partial<FeedsResponse>;
@@ -11,14 +11,16 @@ interface PostProps {
 export const Post = ({ feeds }: PostProps) => {
   const { userId, title, description, address, location, imageUrl, createdAt } = feeds;
 
+  const image = imageUrl![0] ?? noImage;
+
   return (
-    <StyledPost>
+    <StyledPost image={image}>
       <Link
         to={`/feedmap/${userId}?lat=${location?.lat}&lng=${location?.lng}`}
         className="post-link"
       >
         <div className="img-container">
-          <img className="post-image" src={imageUrl![0]} alt={title} />
+          <img className="post-image" src={image} alt={title} />
         </div>
         <div className="post-info-container">
           <div className="post-info">
@@ -26,7 +28,7 @@ export const Post = ({ feeds }: PostProps) => {
             <h2 className="description">{description}</h2>
           </div>
           <div className="post-sub-info">
-            <span className="address">{address}</span>
+            <span className="address">🌎 {address}</span>
             <div className="post-date">
               <span>📅 {createdAt} 작성</span>
             </div>
@@ -37,7 +39,7 @@ export const Post = ({ feeds }: PostProps) => {
   );
 };
 
-const StyledPost = styled.article`
+const StyledPost = styled.article<{ image: string }>`
   border-radius: 8px;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
   background: #f3f6fb;
@@ -65,7 +67,7 @@ const StyledPost = styled.article`
     .post-image {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: ${({ image }) => (image === noImage ? 'contain' : 'cover')};
       border-top-right-radius: 7px;
       border-top-left-radius: 7px;
     }
@@ -89,7 +91,12 @@ const StyledPost = styled.article`
       margin: 0rem;
       padding: 3px 6px;
       border-radius: 5px;
+      width: 150px;
       word-break: break-all;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .description {
@@ -115,13 +122,20 @@ const StyledPost = styled.article`
 
     .address {
       font-size: 1.3rem;
+      width: 150px;
+      word-break: break-all;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .post-date {
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
       align-items: center;
       font-size: 1.3rem;
+      bottom: 0;
 
       .date-icon {
         margin-top: 0.1rem;
