@@ -11,39 +11,8 @@ import { MdShareLocation } from 'react-icons/md';
 import { FiExternalLink } from 'react-icons/fi';
 import { FcAddImage, FcSearch } from 'react-icons/fc';
 import * as FeedApi from '@/api/feeds';
-// import * as SC from '@/components/Form/StyleForm';
-import {
-  StyledInputError,
-  StyledSubmitButton,
-  StyledSubmitButtonWrapper,
-  StyledInputAddress,
-  StyledSearchInfoData,
-  StyledAddressName,
-  StyledFiExternalLink,
-  StyledSearchInfoTitle,
-  StyledSearchInfoHeader,
-  StyledSearchData,
-  StyledSearchContainer,
-  StyledSearchResultContainer,
-  StyledButtonSearchAddress,
-  StyledInputSearchAddress,
-  StyledSearchAddress,
-  StyledPreviewDeleteButton,
-  StyledPreviewImgSrc,
-  StyledPreviewImg,
-  StyledPreviewImgWrapper,
-  StyledInputImg,
-  StyledImgLabel,
-  StyledInputText,
-  StyledInputTitle,
-  StyledField,
-  StyledImgInputContainer,
-  StyledInputContainer,
-  StyledTitleSpan,
-  StyledTitle,
-  StyledFormContainer,
-  StyledModalForm,
-} from '@/components/Form/StyleForm';
+import * as SC from '@/components/Form/StyleForm';
+
 interface PlaceProps {
   address_name: 'string';
   category_group_code: 'string';
@@ -254,242 +223,124 @@ const Form = ({ isEdit }: { isEdit: boolean }) => {
   };
 
   return (
-    <StyledModalForm>
+    <SC.StyledModalForm>
       <form onSubmit={isEdit ? handleSubmit(editSubmitForm) : handleSubmit(submitForm)}>
-        <StyledFormContainer>
-          <StyledTitle>
-            <StyledTitleSpan>{isEdit ? '내 피드 수정하기' : '새로운 피드 만들기'}</StyledTitleSpan>
-          </StyledTitle>
+        <SC.StyledFormContainer>
+          <SC.StyledTitle>
+            <SC.StyledTitleSpan>
+              {isEdit ? '내 피드 수정하기' : '새로운 피드 만들기'}
+            </SC.StyledTitleSpan>
+          </SC.StyledTitle>
 
-          <StyledInputContainer>
-            <StyledField>제목</StyledField>
-            <StyledInputTitle
+          <SC.StyledInputContainer>
+            <SC.StyledField>제목</SC.StyledField>
+            <SC.StyledInputTitle
               defaultValue={isEdit ? currentFeedState.title : ''}
               {...register('title')}
             />
-            <StyledInputError>{errors.title?.message}</StyledInputError>
-          </StyledInputContainer>
+            <SC.StyledInputError>{errors.title?.message}</SC.StyledInputError>
+          </SC.StyledInputContainer>
 
-          <StyledInputContainer>
-            <StyledField>설명</StyledField>
-            <StyledInputText
+          <SC.StyledInputContainer>
+            <SC.StyledField>설명</SC.StyledField>
+            <SC.StyledInputText
               defaultValue={isEdit ? currentFeedState.description : ''}
               {...register('description')}
             />
-            <StyledInputError>{errors.description?.message}</StyledInputError>
-          </StyledInputContainer>
-          <StyledImgInputContainer>
-            <StyledField>사진</StyledField>
-            <StyledImgLabel>
+            <SC.StyledInputError>{errors.description?.message}</SC.StyledInputError>
+          </SC.StyledInputContainer>
+          <SC.StyledImgInputContainer>
+            <SC.StyledField>사진</SC.StyledField>
+            <SC.StyledImgLabel>
               <FcAddImage />
-            </StyledImgLabel>
-            <StyledInputImg
+            </SC.StyledImgLabel>
+            <SC.StyledInputImg
               {...register('image', {
                 onChange: (e) => handleAddPreviewImages(e),
               })}
             />
-          </StyledImgInputContainer>
+          </SC.StyledImgInputContainer>
           {previewImages.length > 0 && (
-            <StyledPreviewImgWrapper>
+            <SC.StyledPreviewImgWrapper>
               {previewImages.map((image, id) => (
-                <StyledPreviewImg key={id}>
-                  <StyledPreviewImgSrc src={image} alt={`${image}-${id}`} />
-                  <StyledPreviewDeleteButton
+                <SC.StyledPreviewImg key={id}>
+                  <SC.StyledPreviewImgSrc src={image} alt={`${image}-${id}`} />
+                  <SC.StyledPreviewDeleteButton
                     type="button"
                     value="x"
                     onClick={(e) => handleDeletePreviewImage(e, id)}
                   />
-                </StyledPreviewImg>
+                </SC.StyledPreviewImg>
               ))}
-            </StyledPreviewImgWrapper>
+            </SC.StyledPreviewImgWrapper>
           )}
-          <StyledInputContainer>
-            <StyledField>장소</StyledField>
-            <StyledSearchAddress>
-              <StyledInputSearchAddress {...register('searching')} />
-              <StyledButtonSearchAddress
+          <SC.StyledInputContainer>
+            <SC.StyledField>장소</SC.StyledField>
+            <SC.StyledSearchAddress>
+              <SC.StyledInputSearchAddress {...register('searching')} />
+              <SC.StyledButtonSearchAddress
                 onClick={(e) => {
                   searchPlace(e);
                 }}
               >
                 <FcSearch />
-              </StyledButtonSearchAddress>
-            </StyledSearchAddress>
-            <StyledInputError>{errors.address?.message}</StyledInputError>
-          </StyledInputContainer>
-          <StyledSearchResultContainer>
+              </SC.StyledButtonSearchAddress>
+            </SC.StyledSearchAddress>
+            <SC.StyledInputError>{errors.address?.message}</SC.StyledInputError>
+          </SC.StyledInputContainer>
+          <SC.StyledSearchResultContainer>
             {searchState && (
-              <StyledSearchContainer>
+              <SC.StyledSearchContainer>
                 {placeInfoList?.map((place, index) => (
-                  <StyledSearchData
+                  <SC.StyledSearchData
                     key={`${index}-${place.x}-${place.y}`}
                     onClick={() =>
                       handleAddressState(place.address_name, Number(place.y), Number(place.x))
                     }
                   >
-                    <StyledFiExternalLink href={place.place_url}>
+                    <SC.StyledFiExternalLink href={place.place_url}>
                       <FiExternalLink />
-                    </StyledFiExternalLink>
-                    <StyledSearchInfoHeader>
-                      <StyledSearchInfoTitle>{place.place_name}</StyledSearchInfoTitle>
-                    </StyledSearchInfoHeader>
+                    </SC.StyledFiExternalLink>
+                    <SC.StyledSearchInfoHeader>
+                      <SC.StyledSearchInfoTitle>{place.place_name}</SC.StyledSearchInfoTitle>
+                    </SC.StyledSearchInfoHeader>
                     {place.road_address_name && (
-                      <StyledSearchInfoData>
+                      <SC.StyledSearchInfoData>
                         <TbRoad />
-                        <StyledAddressName>{place.road_address_name}</StyledAddressName>
-                      </StyledSearchInfoData>
+                        <SC.StyledAddressName>{place.road_address_name}</SC.StyledAddressName>
+                      </SC.StyledSearchInfoData>
                     )}
-                    <StyledSearchInfoData>
+                    <SC.StyledSearchInfoData>
                       <MdShareLocation />
-                      <StyledAddressName>{place.address_name}</StyledAddressName>
-                    </StyledSearchInfoData>
-                  </StyledSearchData>
+                      <SC.StyledAddressName>{place.address_name}</SC.StyledAddressName>
+                    </SC.StyledSearchInfoData>
+                  </SC.StyledSearchData>
                 ))}
-              </StyledSearchContainer>
+              </SC.StyledSearchContainer>
             )}
-          </StyledSearchResultContainer>
-          <StyledInputContainer>
-            <StyledField>주소</StyledField>
-            <StyledInputAddress {...register('address')} disabled />
-            <StyledInputError>{errors.address?.message}</StyledInputError>
-          </StyledInputContainer>
+          </SC.StyledSearchResultContainer>
+          <SC.StyledInputContainer>
+            <SC.StyledField>주소</SC.StyledField>
+            <SC.StyledInputAddress {...register('address')} disabled />
+            <SC.StyledInputError>{errors.address?.message}</SC.StyledInputError>
+          </SC.StyledInputContainer>
           <input type="hidden" {...register('lat')} />
           <input type="hidden" {...register('lng')} />
-          <StyledSubmitButtonWrapper>
+          <SC.StyledSubmitButtonWrapper>
             {isEdit ? (
-              <StyledSubmitButton name="edit" type="submit">
+              <SC.StyledSubmitButton name="edit" type="submit">
                 수정
-              </StyledSubmitButton>
+              </SC.StyledSubmitButton>
             ) : (
-              <StyledSubmitButton name="add" type="submit">
+              <SC.StyledSubmitButton name="add" type="submit">
                 추가
-              </StyledSubmitButton>
+              </SC.StyledSubmitButton>
             )}
-          </StyledSubmitButtonWrapper>
-        </StyledFormContainer>
+          </SC.StyledSubmitButtonWrapper>
+        </SC.StyledFormContainer>
       </form>
-    </StyledModalForm>
+    </SC.StyledModalForm>
   );
 };
 
 export default Form;
-
-{
-  /* <SC.StyledModalForm>
-<form onSubmit={isEdit ? handleSubmit(editSubmitForm) : handleSubmit(submitForm)}>
-  <SC.StyledFormContainer>
-    <SC.StyledTitle>
-      <SC.StyledTitleSpan>
-        {isEdit ? '내 피드 수정하기' : '새로운 피드 만들기'}
-      </SC.StyledTitleSpan>
-    </SC.StyledTitle>
-
-    <SC.StyledInputContainer>
-      <SC.StyledField>제목</SC.StyledField>
-      <SC.StyledInputTitle
-        defaultValue={isEdit ? currentFeedState.title : ''}
-        {...register('title')}
-      />
-      <SC.StyledInputError>{errors.title?.message}</SC.StyledInputError>
-    </SC.StyledInputContainer>
-
-    <SC.StyledInputContainer>
-      <SC.StyledField>설명</SC.StyledField>
-      <SC.StyledInputText
-        defaultValue={isEdit ? currentFeedState.description : ''}
-        {...register('description')}
-      />
-      <SC.StyledInputError>{errors.description?.message}</SC.StyledInputError>
-    </SC.StyledInputContainer>
-    <SC.StyledImgInputContainer>
-      <SC.StyledField>사진</SC.StyledField>
-      <SC.StyledImgLabel>
-        <FcAddImage />
-      </SC.StyledImgLabel>
-      <SC.StyledInputImg
-        {...register('image', {
-          onChange: (e) => handleAddPreviewImages(e),
-        })}
-      />
-    </SC.StyledImgInputContainer>
-    {previewImages.length > 0 && (
-      <SC.StyledPreviewImgWrapper>
-        {previewImages.map((image, id) => (
-          <SC.StyledPreviewImg key={id}>
-            <SC.StyledPreviewImgSrc src={image} alt={`${image}-${id}`} />
-            <SC.StyledPreviewDeleteButton
-              type="button"
-              value="x"
-              onClick={(e) => handleDeletePreviewImage(e, id)}
-            />
-          </SC.StyledPreviewImg>
-        ))}
-      </SC.StyledPreviewImgWrapper>
-    )}
-    <SC.StyledInputContainer>
-      <SC.StyledField>장소</SC.StyledField>
-      <SC.StyledSearchAddress>
-        <SC.StyledInputSearchAddress {...register('searching')} />
-        <SC.StyledButtonSearchAddress
-          onClick={(e) => {
-            searchPlace(e);
-          }}
-        >
-          <FcSearch />
-        </SC.StyledButtonSearchAddress>
-      </SC.StyledSearchAddress>
-      <SC.StyledInputError>{errors.address?.message}</SC.StyledInputError>
-    </SC.StyledInputContainer>
-    <SC.StyledSearchResultContainer>
-      {searchState && (
-        <SC.StyledSearchContainer>
-          {placeInfoList?.map((place, index) => (
-            <SC.StyledSearchData
-              key={`${index}-${place.x}-${place.y}`}
-              onClick={() =>
-                handleAddressState(place.address_name, Number(place.y), Number(place.x))
-              }
-            >
-              <SC.StyledFiExternalLink href={place.place_url}>
-                <FiExternalLink />
-              </SC.StyledFiExternalLink>
-              <SC.StyledSearchInfoHeader>
-                <SC.StyledSearchInfoTitle>{place.place_name}</SC.StyledSearchInfoTitle>
-              </SC.StyledSearchInfoHeader>
-              {place.road_address_name && (
-                <SC.StyledSearchInfoData>
-                  <TbRoad />
-                  <SC.StyledAddressName>{place.road_address_name}</SC.StyledAddressName>
-                </SC.StyledSearchInfoData>
-              )}
-              <SC.StyledSearchInfoData>
-                <MdShareLocation />
-                <SC.StyledAddressName>{place.address_name}</SC.StyledAddressName>
-              </SC.StyledSearchInfoData>
-            </SC.StyledSearchData>
-          ))}
-        </SC.StyledSearchContainer>
-      )}
-    </SC.StyledSearchResultContainer>
-    <SC.StyledInputContainer>
-      <SC.StyledField>주소</SC.StyledField>
-      <SC.StyledInputAddress {...register('address')} disabled />
-      <SC.StyledInputError>{errors.address?.message}</SC.StyledInputError>
-    </SC.StyledInputContainer>
-    <input type="hidden" {...register('lat')} />
-    <input type="hidden" {...register('lng')} />
-    <SC.StyledSubmitButtonWrapper>
-      {isEdit ? (
-        <SC.StyledSubmitButton name="edit" type="submit">
-          수정
-        </SC.StyledSubmitButton>
-      ) : (
-        <SC.StyledSubmitButton name="add" type="submit">
-          추가
-        </SC.StyledSubmitButton>
-      )}
-    </SC.StyledSubmitButtonWrapper>
-  </SC.StyledFormContainer>
-</form>
-</SC.StyledModalForm> */
-}
