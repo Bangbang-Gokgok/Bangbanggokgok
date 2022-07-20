@@ -25,7 +25,7 @@ const FeedDetail = ({
   currentUserId,
   image,
   feedList,
-}: UserInfoProps & { currentUserId: string; } & { isModal: boolean; } & { feedList: FeedProps; }) => {
+}: UserInfoProps & { currentUserId: string } & { isModal: boolean } & { feedList: FeedProps }) => {
   const [reviewList, setReviewList] = useState<ReviewListProps>();
   const [dropDownVisible, setDropDownVisible] = useState<boolean>(false);
   const [currentFeedList, setCurrentFeedList] = useState<FeedProps>(feedList);
@@ -80,51 +80,50 @@ const FeedDetail = ({
       <StyledFeedDetailBody>
         {/* <StyledTitle>👍🏽 {title}</StyledTitle> */}
         <StyledFeedDetailDescription>{currentFeedList.description}</StyledFeedDetailDescription>
-        {feedList.imageUrl.length > 0 &&
+        {feedList.imageUrl.length > 0 && (
           <StyledFeedDetailImage>
             <StyledFeedDetailSlide>
-              {feedList.imageUrl.length === 1 ?
+              {feedList.imageUrl.length === 1 ? (
                 <StyledSlide src={currentFeedList.imageUrl[0]} />
-                :
-                <Carousel
-                  className={'carousel'}
-                  indicators={false}
-                  navButtonsAlwaysVisible={true}
-                >
+              ) : (
+                <Carousel className={'carousel'} indicators={false} navButtonsAlwaysVisible={true}>
                   {currentFeedList.imageUrl?.map((item, index) => (
                     <StyledSlide key={index} src={item}></StyledSlide>
                   ))}
-                </Carousel>}
-
+                </Carousel>
+              )}
             </StyledFeedDetailSlide>
-          </StyledFeedDetailImage>}
+          </StyledFeedDetailImage>
+        )}
         <StyledFeedDetailInfo>
           <StyledLikeWrapper>
-            <StyledLikeButton onClick={LikeFeed}>{
-              <AiOutlineHeart />//<AiFillHeart />
-            }</StyledLikeButton>
+            <StyledLikeButton onClick={LikeFeed}>
+              {
+                <AiOutlineHeart /> //<AiFillHeart />
+              }
+            </StyledLikeButton>
             <span>{likesState} like</span>
           </StyledLikeWrapper>
 
           <div>
             {reviewList?.length}개의 댓글
-            {!!reviewList?.length && <>
-              {dropDownVisible ? (
-                <MdArrowDropUp
-                  className="dropBtn"
-                  onClick={() => {
-                    toggleDropDownVisible();
-                  }}
-                ></MdArrowDropUp>
-              ) : (
-                <MdArrowDropDown
-                  className="dropBtn"
-                  onClick={() => {
-                    toggleDropDownVisible();
-                  }}
-                ></MdArrowDropDown>
-              )}
-            </>}
+            {/* {!!reviewList?.length && <> */}
+            {dropDownVisible ? (
+              <MdArrowDropUp
+                className="dropBtn"
+                onClick={() => {
+                  toggleDropDownVisible();
+                }}
+              ></MdArrowDropUp>
+            ) : (
+              <MdArrowDropDown
+                className="dropBtn"
+                onClick={() => {
+                  toggleDropDownVisible();
+                }}
+              ></MdArrowDropDown>
+            )}
+            {/* </>} */}
           </div>
         </StyledFeedDetailInfo>
       </StyledFeedDetailBody>
@@ -149,7 +148,7 @@ const StyledFeedDetailContainer = styled.div<FeedDetailContainerProps>`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  gap: 10px;
+  // gap: 10px;
   box-shadow: ${(props) => (props.boxShadow ? '' : '5px 5px 10px 2px #c2c2c2')};
 
   @media only screen and (min-width: 768px) {
@@ -163,6 +162,9 @@ const StyledFeedDetailContainer = styled.div<FeedDetailContainerProps>`
 const StyledFeedDetailBody = styled.div`
   box-sizing: border-box;
   z-index: 2;
+  background-color: #ffffff;
+  margin-top: 10px;
+  // background-color : white;
   border-radius: 15px;
   gap: 10px;
 `;
@@ -172,7 +174,7 @@ const StyledFeedDetailImage = styled.div`
   width: 100%;
   height: 200px;
   padding: 10px;
-  
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -206,8 +208,7 @@ const StyledFeedDetailSlide = styled.div`
   }
 `;
 
-
-const StyledSlide = styled.img<{ src: string; }>`
+const StyledSlide = styled.img<{ src: string }>`
   width: 100%;
   height: 100%;
   position: absolute;
@@ -237,21 +238,24 @@ const StyledLikeButton = styled.button`
 
 const dropAnimation = keyframes`
 0% {
-  transform : translateY(-300px);
+  // transform : translateY(-300px);
+  height : 0;
   display : none;
 }
 100% {
-  transform : translateY(0);
+  height : 250px;
+  background-color: #a2c4f3;
+  // transform : translateY(0);
 }
 `;
 const StyledFeedDetailReview = styled.div`
-  height: 250px;
-  margin: 10px;
+  // height: 250px;
+  margin: 0 10px 10px 10px;
   padding: 10px;
   background-color: #a2c4f3;
   border-radius: 10px;
   z-index: 1;
-  animation: ${dropAnimation} 1s alternate;
+  animation: ${dropAnimation} 0.4s alternate;
 `;
 
 const StyledLikeWrapper = styled.div`
