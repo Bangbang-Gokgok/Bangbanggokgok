@@ -41,7 +41,7 @@ app.use(errorHandler);
 
 const server = app.listen(PORT, () => {
   console.log(`server is running ${PORT}`);
-  schedule.scheduleJob('*/1 * * * *', likesScheduler);
+  schedule.scheduleJob('*/3 * * * * *', likesScheduler);
   schedule.scheduleJob('* * * * * *', friendsScheduler);
 });
 
