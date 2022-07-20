@@ -24,8 +24,8 @@ export const Post = ({ feeds }: PostProps) => {
         </div>
         <div className="post-info-container">
           <div className="post-info">
-            <h1 className="title">{title}</h1>
-            <h2 className="description">{description}</h2>
+            <span className="title">{title}</span>
+            <span className="description">{description}</span>
           </div>
           <div className="post-sub-info">
             <span className="address">🌎 {address}</span>
@@ -91,6 +91,7 @@ const StyledPost = styled.article<{ image: string }>`
       margin: 0rem;
       padding: 3px 6px;
       border-radius: 5px;
+      text-align: center;
       width: 150px;
       word-break: break-all;
       text-overflow: ellipsis;
@@ -104,8 +105,10 @@ const StyledPost = styled.article<{ image: string }>`
       width: 150px;
       font-size: 1.4rem;
       line-height: 1.5;
+      margin: 0;
+      padding-bottom: 5px;
       font-weight: normal;
-      margin: 5px 0;
+      text-align: center;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;

@@ -4,13 +4,14 @@ import { useRecoilValue } from 'recoil';
 import { userByIdFieldQuery } from '@/store';
 
 import { RecentPosts } from './RecentPosts';
+import { ReactNode } from 'react';
 
 export const ProfileBot = () => {
   const username = useRecoilValue(userByIdFieldQuery('name'));
   return (
     <StyledProfileBot>
       <div className="recent-post-container">
-        <span>{username}</span>
+        <span>{username as ReactNode}</span>
         <span>님의 최신글 목록</span>
       </div>
       <RecentPosts />

@@ -6,6 +6,9 @@ export interface UserByIdDto {
   name: string;
   profileImage?: string[];
   description?: string;
+  friends?: {
+    [key: string]: boolean;
+  };
 }
 
 export async function getCurrentUser() {

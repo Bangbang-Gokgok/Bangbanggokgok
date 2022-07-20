@@ -14,6 +14,8 @@ export const ProfileTop = () => {
   const userId = useRecoilValue(userParamsState);
   const feeds = useRecoilValue(userByIdFeedsQuery);
 
+  const friendsNumber = user.friends ? Object.keys(user.friends).length : 0;
+
   return (
     <StyledProfileTop image={profileBackground as string}>
       {currentUserId === userId && (
@@ -35,7 +37,7 @@ export const ProfileTop = () => {
           </div>
           <div className="profile-info">
             <span className="profile-info-title">팔로워</span>
-            <span className="profile-info-number">0</span>
+            <span className="profile-info-number">{friendsNumber}</span>
           </div>
         </div>
       </div>

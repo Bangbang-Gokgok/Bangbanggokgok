@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { TbReportSearch, TbTrash } from 'react-icons/tb';
@@ -10,7 +9,7 @@ import { deleteOneFeedByAdmin } from '@/api/feeds';
 export const AdminFeed = () => {
   const feeds = useGetAllFeeds();
 
-  if (!feeds || feeds.length === 0) return <div>피드 정보가 없습니다.</div>;
+  if (!feeds || feeds.length === 0) return <div></div>;
 
   return (
     <StyledAdminFeed>
