@@ -13,7 +13,6 @@ import * as FeedApi from '@/api/feeds';
 
 const StyledFeedListContainer = styled.div`
   width: 100%;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -93,7 +92,7 @@ const HomePage = () => {
           loader={<Loading text={'Loading...'}></Loading>}
           scrollableTarget="main-styled"
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '80px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
             {feedList?.map((feed, index) => (
               <FeedDetail
                 isModal={false}
