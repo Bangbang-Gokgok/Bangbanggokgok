@@ -1,23 +1,29 @@
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 import { Main } from '@/components/Layout';
 import { ProfileTop, ProfileMid, ProfileBot } from '@/features/user/components';
 import { userParamsState } from '@/store';
 
 const ProfilePage = () => {
-  const setUser = useSetRecoilState(userParamsState);
+  const [userParams, setuserParams] = useRecoilState(userParamsState);
   const { userId } = useParams();
-  setUser(userId);
+
+  useEffect(() => {
+    setuserParams(userId);
+  }, [userId]);
 
   return (
     <Main bg="#222">
-      <StyledProfilePage>
-        <ProfileTop />
-        <ProfileMid />
-        <ProfileBot />
-      </StyledProfilePage>
+      {userParams && (
+        <StyledProfilePage>
+          <ProfileTop />
+          <ProfileMid />
+          <ProfileBot />
+        </StyledProfilePage>
+      )}
     </Main>
   );
 };
