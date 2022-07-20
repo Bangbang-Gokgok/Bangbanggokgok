@@ -54,9 +54,9 @@ export const AdminModal = ({ userInfo }: AdminModalProps) => {
       <Backdrop
         isOpen={adminModalState}
         close={() => setAdminModalState(false)}
-        transitionSeconds={0.3}
+        transitionSeconds={0}
       />
-      <StyledAdminModal isOpen={adminModalState}>
+      <StyledAdminModal>
         <div className="user-info">
           <Avartar kind="circle" size="md" src={newProfileImage} alt={newProfileImage} />
           <h3>{name}</h3>
@@ -85,14 +85,12 @@ export const AdminModal = ({ userInfo }: AdminModalProps) => {
   );
 };
 
-const StyledAdminModal = styled.div<{ isOpen: boolean }>`
+const StyledAdminModal = styled.div`
   position: fixed;
   z-index: 999;
   top: 50%;
   left: 50%;
-  transform: ${({ isOpen }) => (isOpen ? 'translate(-50%, -50%)' : 'translate(-50%, -40%)')};
-  visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
-  opacity: ${({ isOpen }) => (isOpen ? '1' : '0')};
+  transform: translate(-50%, -50%);
   min-width: 200px;
   min-height: 200px;
   padding: 15px;
