@@ -13,7 +13,7 @@ export const AdminUser = () => {
   const [adminModalState, setAdminModalState] = useRecoilState(adminModal);
   const [userInfoDataIndex, setUserInfoDataIndex] = useState(0);
 
-  if (!userInfoData || userInfoData.length === 0) return <div>유저 정보가 없습니다.</div>;
+  if (!userInfoData || userInfoData.length === 0) return <div></div>;
 
   const filteredUserInfoData = userInfoData?.filter((userInfo) => userInfo.authority !== 'admin');
 
