@@ -67,7 +67,7 @@ userRouter.get('/friends', async (req: Request, res: Response, next: NextFunctio
       res.status(200).json(friendsObject);
     } else {
       const error = new Error('login된 user 정보가 없습니다.');
-      error.name = 'NotFound';
+      error.name = 'Unauthorized';
       throw error;
     }
   } catch (error) {
@@ -107,7 +107,7 @@ userRouter.put('/friends/:_id', async (req: Request, res: Response, next: NextFu
       res.status(200).json();
     } else {
       const error = new Error('login된 user 정보가 없습니다.');
-      error.name = 'NotFound';
+      error.name = 'Unauthorized';
       throw error;
     }
   } catch (error) {
@@ -124,7 +124,7 @@ userRouter.get('/list', async (req: Request, res: Response, next: NextFunction) 
       res.status(200).json(users);
     } else {
       const error = new Error('login된 user 정보가 없습니다.');
-      error.name = 'NotFound';
+      error.name = 'Unauthorized';
       throw error;
     }
   } catch (error) {
@@ -169,7 +169,7 @@ userRouter.put(
         res.status(200).json(updatedUser);
       } else {
         const error = new Error('login된 user 정보가 없습니다.');
-        error.name = 'NotFound';
+        error.name = 'Unauthorized';
         throw error;
       }
     } catch (error) {
@@ -193,7 +193,7 @@ userRouter.delete('/user', async (req: Request, res: Response, next: NextFunctio
       res.status(200).json(deleteResult);
     } else {
       const error = new Error('login된 user 정보가 없습니다.');
-      error.name = 'NotFound';
+      error.name = 'Unauthorized';
       throw error;
     }
   } catch (error) {
