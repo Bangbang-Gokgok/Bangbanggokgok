@@ -5,8 +5,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { axios } from '@/lib';
-import { UserResponse, UserState, userState, userByIdQuery } from '@/store';
+import { UserState, userState, userByIdQuery } from '@/store';
 import { useDaumAddress, getLocation } from '@/features/user/api';
 import { profileEditSchema } from '@/features/user/schemas';
 
@@ -34,6 +33,7 @@ export const ProfileEditForm = () => {
     formState: { errors },
   } = useForm<RegisterProps>({
     mode: 'onChange',
+    resolver: yupResolver(profileEditSchema),
     defaultValues: {
       profileImage: undefined,
       email: currentUser?.email,

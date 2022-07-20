@@ -22,13 +22,21 @@ export interface FieldProps {
 
 export const Field = ({ kind, labelName, inputType, register, errorMessage }: FieldProps) => {
   let disabled = false;
+  let isOptionField = false;
 
   if (kind === 'email' || kind === 'address') disabled = true;
+  if (kind === 'description' || kind === 'contactNumber' || kind === 'address')
+    isOptionField = true;
 
   return (
     <StyledField>
       <label className="field-label" htmlFor={kind}>
         {labelName}
+        <span className="option">
+          {' '}
+          {isOptionField && '(추가 정보)'}
+          {kind === 'contactNumber' && ` [ "-"는 제외하고 입력해주세요. ]`}
+        </span>
       </label>
       {kind !== 'description' && (
         <input
@@ -42,7 +50,7 @@ export const Field = ({ kind, labelName, inputType, register, errorMessage }: Fi
       {kind === 'description' && (
         <textarea className="field-textarea" id={kind} {...register}></textarea>
       )}
-      {errorMessage && <p className="field-error">{errorMessage}</p>}
+      {errorMessage && <p className="field-error">* {errorMessage}</p>}
     </StyledField>
   );
 };
@@ -96,5 +104,10 @@ const StyledField = styled.div`
     margin-top: 3px;
     color: #e75349;
     font-size: 1.3rem;
+  }
+
+  .option {
+    color: #b5b5b5;
+    font-size: 1.2rem;
   }
 `;
