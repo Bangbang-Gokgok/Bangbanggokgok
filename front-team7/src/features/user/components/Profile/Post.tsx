@@ -38,9 +38,8 @@ export const Post = ({ feeds }: PostProps) => {
 };
 
 const StyledPost = styled.article`
-  border: 1px solid rgba(0, 0, 0, 15%);
   border-radius: 8px;
-  box-shadow: 0 3px 4px rgba(0, 0, 0, 25%);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
   background: #f3f6fb;
   letter-spacing: 0.5px;
   width: 250px;
@@ -57,12 +56,18 @@ const StyledPost = styled.article`
   .img-container {
     width: 100%;
     height: 125px;
-    border-radius: 8px;
+    transition: filter 0.3s ease-in-out;
+
+    &:hover {
+      filter: brightness(0.7);
+    }
 
     .post-image {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
+      border-top-right-radius: 7px;
+      border-top-left-radius: 7px;
     }
   }
 
@@ -78,13 +83,12 @@ const StyledPost = styled.article`
     align-items: center;
 
     .title {
-      font-size: 1.55rem;
+      font-size: 1.5rem;
       font-weight: bold;
       line-height: 1.5;
       margin: 0rem;
-      padding: 6px 12px;
+      padding: 3px 6px;
       border-radius: 5px;
-      background-color: #e0e0e0;
       word-break: break-all;
     }
 

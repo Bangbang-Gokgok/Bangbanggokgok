@@ -13,7 +13,12 @@ export const AdminTap = () => {
       <ul>
         {ADMIN_TAP_ITEMS.map((item) => (
           <li key={item}>
-            <button className={selectedTap === item ? 'selected' : ''}>{item}</button>
+            <button
+              className={selectedTap === item ? 'selected' : ''}
+              onClick={() => setSelectedTap(item)}
+            >
+              {item}
+            </button>
           </li>
         ))}
       </ul>
@@ -44,12 +49,9 @@ const StyledAdminTap = styled.nav`
         cursor: pointer;
         transition: color 0.3s ease;
 
-        &:hover {
-          color: #ebcce3;
-        }
-
         &.selected {
-          background-color: #532f4e;
+          color: gold;
+          background-color: #2e2930;
         }
       }
     }

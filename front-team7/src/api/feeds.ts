@@ -1,8 +1,10 @@
 import { axios } from '@/lib';
 import { FeedListProps } from '@/types/feed';
 
+import { type FeedsResponse } from '@/store';
+
 export const getAllFeeds = async () => {
-  return await axios.get('/api/feeds/list');
+  return await axios.get<never, FeedsResponse[]>('/api/feeds/list');
 };
 
 export const getOneFeed = async (id) => {
@@ -36,6 +38,10 @@ export const deleteOneFeed = async (id) => {
 
 export const getUserFeedList = async (userId) => {
   return await axios.get(`/api/feeds/list/${userId}`);
+};
+
+export const deleteOneFeedByAdmin = async (id?: string) => {
+  return await axios.delete(`/api/admins/feeds/${id}`);
 };
 
 // export const getAllFeeds = async () => {

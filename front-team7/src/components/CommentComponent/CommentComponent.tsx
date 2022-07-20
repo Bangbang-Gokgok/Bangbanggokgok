@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { useState, useRef } from 'react';
 import { Button, Comment, Form, Header, TextArea } from 'semantic-ui-react';
 import { useRecoilValue } from 'recoil';
@@ -240,11 +240,23 @@ const CommentComponent = ({ reviewList, currentFeedList, get, currentUserId }) =
   );
 };
 
+const displayAnimation = keyframes`
+0% {
+  opacity: 0;
+}
+100% {
+  opacity : 1;
+  background-color: #a2c4f3;
+}
+`;
+
 const StyledCommentGroup = styled.div`
+  animation: ${displayAnimation} 2s alternate;
   display: flex;
   flex-direction: column;
   gap: 10px;
   position: relative;
+  background-color: #a2c4f3;
   height: 100%;
   // padding: 5px;
   .commentHeader {

@@ -7,12 +7,27 @@ export interface UserByIdDto {
   description?: string;
 }
 
+export interface AllUsers {
+  _id: string;
+  name: string;
+  authority: string;
+  profileImage: string[] | [];
+  friends?: string[];
+}
+
 export const getMyUserInfo = async () => {
   return await axios.get<never, UserResponse>('/api/users/user');
 };
 
 export const getAllUsers = async () => {
-  return await axios.get('/api/users/list');
+  // try {
+  //   let res = await axios.get('/api/users/list');
+  //   // console.log('res : ', res);
+  //   return res;
+  // } catch (err) {
+  //   return err;
+  // }
+  return await axios.get<never, AllUsers[]>('/api/users/list');
 };
 
 export const getOneUser = async (userId?: string | null) => {
