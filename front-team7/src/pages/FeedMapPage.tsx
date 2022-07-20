@@ -15,12 +15,19 @@ import { FeedListProps, FeedProps, LocationProps } from '@/types/feed';
 import { BsPlus } from 'react-icons/bs';
 import styled from 'styled-components';
 import { axios } from '@/lib';
+import io from 'socket.io-client';
 
 enum ModalState {
   CREATE = 'CREATE',
   EDIT = 'EDIT',
   FEED = 'FEED',
 }
+
+const socket = io.connect('http://localhost:5030/', {
+  autoConnect: true,
+  transports: ['websocket'],
+});
+
 
 const FeedMapPage = () => {
   const { userId } = useParams();
@@ -34,21 +41,34 @@ const FeedMapPage = () => {
   const feedIdQueryString = queryString.parse(window.location.search);
 
   useEffect(() => {
-    async function getFeedList() {
-      try {
-        const result = await axios.get<never, FeedListProps>(`/api/feeds/list/${userId}`);
-        setFeedList(result);
 
-        if (result.length > 0) {
-          initializeMapCenterLatLng(result[0]);
-        }
-      } catch (err) {
-        window.location.reload();
-        console.log(err);
-      }
-    }
     getFeedList();
+
+    socket.on('likeResponse', (users: Object) => {
+      setCurrentFeedState((prev) => ({
+        ...prev,
+        likes: users,
+      }));
+    });
+
+    return (() => {
+      socket.close();
+    });
   }, []);
+
+  async function getFeedList() {
+    try {
+      const result = await axios.get<never, FeedListProps>(`/api/feeds/list/${userId}`);
+      setFeedList(result);
+
+      if (result.length > 0) {
+        initializeMapCenterLatLng(result[0]);
+      }
+    } catch (err) {
+      window.location.reload();
+      console.log(err);
+    }
+  }
 
   const initializeMapCenterLatLng = (result: FeedProps) => {
     let lat = 0;
@@ -101,6 +121,10 @@ const FeedMapPage = () => {
     setStateModal((prev) => !prev);
   };
 
+  const handleFeedLike = (currentFeedList: FeedProps) => {
+    socket.emit('likeRequest', currentUser?.id, currentFeedList._id);
+  };
+
   const switchModalChildrenState = (modalChildrenState: string) => {
     switch (modalChildrenState) {
       case ModalState.CREATE:
@@ -113,6 +137,7 @@ const FeedMapPage = () => {
             currentUserId={currentUser?.id as string}
             isModal={true}
             feedList={currentFeedState}
+            handleFeedLike={() => handleFeedLike(currentFeedState)}
           />
         );
     }
@@ -159,7 +184,7 @@ const FeedMapPage = () => {
               onClickEditFeedModal={() => onClickEditFeedModal(item)}
               onClickDeleteFeed={() => onClickDeleteFeed(item._id, item.userId)}
               isFolded={true}
-              isUser={currentUser.id === userId}
+              isUser={currentUser?.id === userId}
               key={idx}
               name={item.userName}
               title={item.title}
