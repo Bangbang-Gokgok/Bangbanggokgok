@@ -177,14 +177,21 @@ const StyledUserInfoWrapper = styled.div`
 `;
 
 const StyledSearchContainer = styled.div`
-  width: 100%;
+  width: 330px;
   height: 100%;
   padding: 25px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-y: scroll;
   gap: 25px;
+
+  @media only screen and (min-width: 768px) {
+    width: 450px;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    width: 500px;
+  }
 `;
 
 const StyledNoSearchResult = styled.div`
@@ -192,12 +199,20 @@ const StyledNoSearchResult = styled.div`
   &::after{
     content: '검색 결과가 없습니다.'
   }
+
+  @media only screen and (min-width: 768px) {
+    font-size: 2.2rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 2.5rem;
+  }
 `;
 
 const StyledFollowerListContainer = styled.div`
   width: 100%;
   max-height: 25%;
-  overflow-y: scroll;
+  overflow-y: auto;
   border-bottom: 1px solid rgb(219, 219, 219);
 `;
 
