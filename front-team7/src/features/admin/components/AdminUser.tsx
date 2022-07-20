@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { AiFillSetting } from 'react-icons/ai';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 
 import { adminModal } from '@/store';
 import { useGetAllUsers } from '@/features/admin/api';
@@ -10,7 +10,7 @@ import { AdminModal, UserInfo } from '@/features/admin/components';
 
 export const AdminUser = () => {
   const userInfoData = useGetAllUsers();
-  const setAdminModalState = useSetRecoilState(adminModal);
+  const [adminModalState, setAdminModalState] = useRecoilState(adminModal);
   const [userInfoDataIndex, setUserInfoDataIndex] = useState(0);
 
   if (!userInfoData || userInfoData.length === 0) return <div>유저 정보가 없습니다.</div>;
@@ -42,7 +42,7 @@ export const AdminUser = () => {
           );
         })}
       </ul>
-      <AdminModal userInfo={filteredUserInfoData[userInfoDataIndex]} />
+      {adminModalState && <AdminModal userInfo={filteredUserInfoData[userInfoDataIndex]} />}
     </StyledAdminUser>
   );
 };
