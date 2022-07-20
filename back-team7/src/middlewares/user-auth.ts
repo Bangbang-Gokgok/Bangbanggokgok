@@ -22,7 +22,6 @@ export const loginCheckAndRefreshToken = async (
   } else {
     const error = new Error('refreshToken이 없습니다.');
     error.name = 'Unauthorized';
-    res.redirect(DOMAIN);
     next(error);
   }
   next();
