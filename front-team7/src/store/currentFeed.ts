@@ -9,7 +9,7 @@ const currentFeedDefaultState: FeedProps = {
   description: '',
   imageUrl: [],
   review: [],
-  likes: [],
+  likes: {},
   location: { lat: 0, lng: 0 },
   address: '',
   createdAt: '',

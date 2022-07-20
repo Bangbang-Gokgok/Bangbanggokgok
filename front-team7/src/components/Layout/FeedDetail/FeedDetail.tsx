@@ -7,13 +7,8 @@ import { FeedHeader } from '@/components/FeedHeader/FeedHeader';
 import * as ReviewApi from '@/api/review';
 import Carousel from 'react-material-ui-carousel';
 import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
-import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
-import io from 'socket.io-client';
+import { RiHeart3Fill, RiHeart3Line } from 'react-icons/ri';
 
-const socket = io.connect('http://localhost:5030/', {
-  autoConnect: true,
-  transports: ['websocket'],
-});
 
 interface FeedDetailContainerProps {
   boxShadow: boolean;
@@ -25,25 +20,18 @@ const FeedDetail = ({
   currentUserId,
   image,
   feedList,
-}: UserInfoProps & { currentUserId: string } & { isModal: boolean } & { feedList: FeedProps }) => {
+  handleFeedLike,
+}: { image?: string; } & { currentUserId: string; } & { isModal: boolean; } & { feedList: FeedProps; } & { handleFeedLike: () => void; }) => {
   const [reviewList, setReviewList] = useState<ReviewListProps>();
   const [dropDownVisible, setDropDownVisible] = useState<boolean>(false);
-  const [currentFeedList, setCurrentFeedList] = useState<FeedProps>(feedList);
-  const [likesState, setLikesState] = useState(Object.keys(currentFeedList.likes).length);
 
   async function get() {
     // 해당 Feed 에 있는 Review들만 가져오기
     try {
       const getReviewByFeedID: ReviewListProps = await ReviewApi.getReviewsByFeedID(
-        currentFeedList._id
+        feedList._id
       );
-      socket.emit('likeListRequest', currentFeedList._id);
-      socket.on('likeListResponse', (likes) => {
-        setCurrentFeedList((prev) => ({
-          ...prev,
-          likes,
-        }));
-      });
+
       setReviewList(getReviewByFeedID);
     } catch (err) {
       alert('Error 발생 ');
@@ -53,41 +41,37 @@ const FeedDetail = ({
 
   useEffect(() => {
     get();
-    socket.on('likeResponse', (users) => {
-      setLikesState(Object.keys(users).length);
-    });
   }, []);
+
 
   const toggleDropDownVisible = () => {
     setDropDownVisible((prev) => !prev);
   };
 
-  const LikeFeed = () => {
-    socket.emit('likeRequest', currentUserId, currentFeedList._id);
-  };
+
 
   return (
     <StyledFeedDetailContainer boxShadow={isModal}>
       <FeedHeader
-        feedLocation={currentFeedList.location}
-        feedUser={currentFeedList.userId}
+        feedLocation={feedList.location}
+        feedUser={feedList.userId}
         isUser={false}
         isFolded={isModal}
-        name={currentFeedList.userName}
+        name={feedList.userName}
         image={image}
-        title={currentFeedList.title}
+        title={feedList.title}
       ></FeedHeader>
       <StyledFeedDetailBody>
         {/* <StyledTitle>👍🏽 {title}</StyledTitle> */}
-        <StyledFeedDetailDescription>{currentFeedList.description}</StyledFeedDetailDescription>
+        <StyledFeedDetailDescription>{feedList.description}</StyledFeedDetailDescription>
         {feedList.imageUrl.length > 0 && (
           <StyledFeedDetailImage>
             <StyledFeedDetailSlide>
               {feedList.imageUrl.length === 1 ? (
-                <StyledSlide src={currentFeedList.imageUrl[0]} />
+                <StyledSlide src={feedList.imageUrl[0]} />
               ) : (
                 <Carousel className={'carousel'} indicators={false} navButtonsAlwaysVisible={true}>
-                  {currentFeedList.imageUrl?.map((item, index) => (
+                  {feedList.imageUrl?.map((item, index) => (
                     <StyledSlide key={index} src={item}></StyledSlide>
                   ))}
                 </Carousel>
@@ -97,12 +81,12 @@ const FeedDetail = ({
         )}
         <StyledFeedDetailInfo>
           <StyledLikeWrapper>
-            <StyledLikeButton onClick={LikeFeed}>
+            <StyledLikeButton onClick={handleFeedLike}>
               {
-                <AiOutlineHeart /> //<AiFillHeart />
+                feedList.likes.hasOwnProperty(currentUserId) ? <RiHeart3Fill /> : <RiHeart3Line />
               }
             </StyledLikeButton>
-            <span>{likesState} like</span>
+            <span>{Object.keys(feedList.likes).length} like</span>
           </StyledLikeWrapper>
 
           <div>
@@ -131,7 +115,7 @@ const FeedDetail = ({
         <StyledFeedDetailReview>
           <CommentComponent
             reviewList={reviewList}
-            currentFeedList={currentFeedList}
+            currentFeedList={feedList}
             get={get}
             currentUserId={currentUserId}
           ></CommentComponent>
@@ -208,7 +192,7 @@ const StyledFeedDetailSlide = styled.div`
   }
 `;
 
-const StyledSlide = styled.img<{ src: string }>`
+const StyledSlide = styled.img<{ src: string; }>`
   width: 100%;
   height: 100%;
   position: absolute;
@@ -234,6 +218,7 @@ const StyledLikeButton = styled.button`
   background-color: transparent;
   border: none;
   font-size: 2.2rem;
+  cursor: pointer;
 `;
 
 const dropAnimation = keyframes`

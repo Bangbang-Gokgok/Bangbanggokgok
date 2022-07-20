@@ -10,6 +10,12 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Loading from '@/components/Loading/Loading';
 import { FeedListProps, FeedProps } from '@/types/feed';
 import * as FeedApi from '@/api/feeds';
+import io from 'socket.io-client';
+
+const socket = io.connect('http://localhost:5030/', {
+  autoConnect: true,
+  transports: ['websocket'],
+});
 
 const StyledFeedListContainer = styled.div`
   width: 100%;
@@ -29,35 +35,49 @@ const HomePage = () => {
   const [totalPage, setTotalPage] = useState<number>(0);
 
   useEffect(() => {
-    async function get() {
-      try {
-        const result = await FeedApi.getFeedListUsingPagination(page, perPage);
-
-        const initialList = result.feedList;
-        const totalPage = result.totalPage;
-
-        setTotalPage(totalPage);
-        setPage((page) => page + 1);
-
-        setFeedList(initialList);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    async function getMyUserId() {
-      try {
-        const myInfo = await UserApi.getMyUserInfo();
-        setMyUserId(myInfo._id);
-      } catch (err) {
-        alert('Error 발생! console 확인');
-        console.log(err);
-      }
-    }
-
     get();
     getMyUserId();
+
+    socket.on('likeResponse', (users: Object, index: number) => {
+      setFeedList((prev) => {
+        const newFeed = [...prev];
+        newFeed[index].likes = users;
+        return newFeed;
+      });
+    });
+
+    return (() => {
+      socket.close();
+    });
   }, []);
+
+  const handleFeedLike = (currentFeedList: FeedProps, index: number) => {
+    socket.emit('likeRequest', myUserId, currentFeedList._id, index);
+  };
+
+  async function get() {
+    try {
+      const result = await FeedApi.getFeedListUsingPagination(page, perPage);
+      const initialList = result.feedList;
+      const totalPage = result.totalPage;
+      setTotalPage(totalPage);
+      setPage((page) => page + 1);
+
+      setFeedList(initialList);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function getMyUserId() {
+    try {
+      const myInfo = await UserApi.getMyUserInfo();
+      setMyUserId(myInfo._id);
+    } catch (err) {
+      alert('Error 발생! console 확인');
+      console.log(err);
+    }
+  }
 
   const fetchMoreData = () => {
     if (page > totalPage) {
@@ -67,9 +87,7 @@ const HomePage = () => {
 
     setTimeout(async () => {
       const newItems = await FeedApi.getFeedListUsingPagination(page, perPage);
-
       setPage((page) => page + 1);
-
       setFeedList([...feedList, ...newItems.feedList]);
     }, 1000);
   };
@@ -100,6 +118,7 @@ const HomePage = () => {
                 currentUserId={myUserId}
                 image={unknownUser as string}
                 feedList={feed}
+                handleFeedLike={() => handleFeedLike(feed, index)}
               ></FeedDetail>
             ))}
           </div>
