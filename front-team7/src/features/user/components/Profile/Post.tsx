@@ -57,7 +57,7 @@ const StyledPost = styled.article<{ image: string }>`
 
   .img-container {
     width: 100%;
-    height: 125px;
+    height: 190px;
     transition: filter 0.3s ease-in-out;
 
     &:hover {
@@ -151,25 +151,31 @@ const StyledPost = styled.article<{ image: string }>`
 
   @media screen and (min-width: 620px) {
     .img-container {
-      height: 150px;
+      height: 200px;
     }
   }
 
   @media screen and (min-width: 700px) {
     .img-container {
-      height: 110px;
+      height: 175px;
     }
   }
 
   @media screen and (min-width: 768px) {
     .img-container {
-      height: 150px;
+      height: 200px;
     }
   }
 
   @media screen and (min-width: 860px) {
     .img-container {
-      height: 125px;
+      height: 175px;
+    }
+  }
+
+  @media screen and (min-width: 1100px) {
+    .img-container {
+      height: 200px;
     }
   }
 `;
