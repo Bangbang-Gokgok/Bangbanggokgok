@@ -10,7 +10,7 @@ interface SocketProps {
 let URL = '';
 
 if (process.env.NODE_ENV !== 'development') {
-  URL = 'http://kdt-sw2-seoul-team07.elicecoding.com:5000';
+  URL = 'http://34.64.113.88:5000';
 } else {
   URL = 'http://localhost:5030';
 }
