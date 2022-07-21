@@ -351,16 +351,11 @@ const StyledFeeds = styled.div`
   position: absolute;
   max-height: 160px;
   width: 90%;
-  z-index: 3;
   bottom: 0;
   display: flex;
   flex-direction: column;
   overflow: scroll;
   gap: 5px;
-  -webkit-user-select:none;
-  -moz-user-select:none;
-  -ms-user-select:none;
-  user-select:none;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
   &::-webkit-scrollbar {
@@ -369,10 +364,10 @@ const StyledFeeds = styled.div`
 
   @media only screen and (min-width: 768px) {
     width: 350px;
-    height: 100%;
+    height: auto;
     max-height: 68%;
-    right: 2%;
-    top: 2%;
+    right: 5%;
+    top: 5%;
   }
 
   @media only screen and (min-width: 1024px) {
