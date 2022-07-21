@@ -37,6 +37,7 @@ const FeedSchema = new Schema(
       required: true,
       default: {},
     },
+
     report: {
       type: Object,
       required: false,
