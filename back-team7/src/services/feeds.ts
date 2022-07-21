@@ -18,7 +18,6 @@ interface FeedInfo {
   imageUrl?: string[] | undefined;
 }
 interface FeedData extends FeedInfo {
-  deleteOne(arg0: { _id: string }): { deletedCount: any } | PromiseLike<{ deletedCount: any }>;
   _id: string;
 }
 class FeedService {
