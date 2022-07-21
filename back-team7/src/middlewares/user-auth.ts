@@ -11,20 +11,24 @@ export const loginCheckAndRefreshToken = async (
   res: Response,
   next: NextFunction
 ) => {
-  if (req.cookies.refreshToken) {
-    if (!req.cookies.accessToken) {
-      const { _id, authority, email, name } = await userService.getUserDataByRefreshToken(
-        req.cookies.refreshToken
-      );
-      const accessToken = setAccessToken({ _id, authority, email, name });
-      res.cookie('accessToken', accessToken, { maxAge: accessExp * 60 * 1000, httpOnly: true });
+  try {
+    if (req.cookies.refreshToken) {
+      if (!req.cookies.accessToken) {
+        const { _id, authority, email, name } = await userService.getUserDataByRefreshToken(
+          req.cookies.refreshToken
+        );
+        const accessToken = setAccessToken({ _id, authority, email, name });
+        res.cookie('accessToken', accessToken, { maxAge: accessExp * 60 * 1000, httpOnly: true });
+      }
+    } else {
+      const error = new Error('refreshToken이 없습니다.');
+      error.name = 'Unauthorized';
+      next(error);
     }
-  } else {
-    const error = new Error('refreshToken이 없습니다.');
-    error.name = 'Unauthorized';
+    next();
+  } catch (error) {
     next(error);
   }
-  next();
 };
 
 export const adminCheck = (req: Request, res: Response, next: NextFunction) => {
