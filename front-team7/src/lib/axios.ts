@@ -3,7 +3,7 @@ import Axios, { type AxiosRequestConfig, type AxiosResponse, AxiosError } from '
 let API_URL = '';
 
 if (process.env.NODE_ENV !== 'development') {
-  API_URL = 'http://34.64.113.88:5000';
+  API_URL = 'http://34.64.113.88';
 }
 
 export const axios = Axios.create({
