@@ -35,5 +35,8 @@ module.exports = {
         process.env.SERVER_URL
       ),
     }),
+    new webpack.EnvironmentPlugin(['KAKAO_SEARCH_REST_API_KEY']),
+    new webpack.EnvironmentPlugin(['SERVER_PORT']),
+    new webpack.EnvironmentPlugin(['SERVER_URL']),
   ],
 };
