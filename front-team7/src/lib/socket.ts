@@ -7,11 +7,9 @@ interface SocketProps {
   index?: number;
 }
 
-export let socket = io('http://localhost:5030/', { transports: ["websocket"] });
+export let socket = io(`${process.env.SERVER_PORT}`, { transports: ["websocket"] });
 
 export const initSocketConnection = () => {
-  console.log('connect');
-  console.log(socket);
   if (socket.connected) return;
   socket.connect();
 };
@@ -34,8 +32,6 @@ export const socketInfoReceived = (cb) => {
 
 // 소켓 연결을 끊음
 export const disconnectSocket = () => {
-  console.log('disconnect');
-
   if (socket == null || socket.connected === false) {
     return;
   }
