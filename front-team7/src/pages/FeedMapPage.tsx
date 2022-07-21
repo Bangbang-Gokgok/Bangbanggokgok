@@ -15,12 +15,23 @@ import { FeedListProps, FeedProps, LocationProps } from '@/types/feed';
 import { BsPlus } from 'react-icons/bs';
 import styled from 'styled-components';
 import { axios } from '@/lib';
+import * as FeedApi from '@/api/feeds';
 import io from 'socket.io-client';
 
 enum ModalState {
   CREATE = 'CREATE',
   EDIT = 'EDIT',
   FEED = 'FEED',
+}
+
+interface FromInputs {
+  title: string;
+  description: string;
+  image: FileList;
+  searching: string;
+  address: string;
+  lat: number;
+  lng: number;
 }
 
 const socket = io.connect('http://localhost:5030/', {
@@ -128,9 +139,9 @@ const FeedMapPage = () => {
   const switchModalChildrenState = (modalChildrenState: string) => {
     switch (modalChildrenState) {
       case ModalState.CREATE:
-        return <Form isEdit={false} />;
+        return <Form submitForm={submitForm} isEdit={false} />;
       case ModalState.EDIT:
-        return <Form isEdit={true} />;
+        return <Form submitForm={editSubmitForm} isEdit={true} />;
       case ModalState.FEED:
         return (
           <FeedDetail
@@ -152,6 +163,106 @@ const FeedMapPage = () => {
     toggleModal();
   };
 
+  // Feed CREATE
+  const submitForm = async (data: FromInputs) => {
+    if (!confirm('피드를 생성하시겠습니까?')) return;
+
+    const { title, description, image, address, lat, lng } = data;
+
+    const userName = currentUser?.name || 'undefined';
+
+    const dummy = {
+      userName,
+      title,
+      description,
+      address: address,
+      location: {
+        lat: lat,
+        lng: lng,
+      },
+    };
+
+    const fd = new FormData();
+
+    fd.append('userName', dummy.userName);
+    fd.append('title', dummy.title);
+    fd.append('description', dummy.description);
+    fd.append('address', dummy.address);
+    fd.append('location', JSON.stringify(dummy.location));
+
+    for (let i = 0; i < image.length; i++) {
+      fd.append('imageUrl', image[i]);
+    }
+
+    try {
+      const result = await FeedApi.createOneFeed(fd);
+      setFeedList((prev: any) => (
+        [
+          result,
+          ...prev
+        ]
+      ));
+      alert('피드가 생성되었습니다.');
+      toggleModal();
+      changeCenterLatLng(result.location);
+    } catch (err) {
+      alert('Error 발생. console 확인');
+      console.log(err);
+    }
+  };
+
+  const editSubmitForm = async (data: FromInputs) => {
+    if (!confirm('피드를 수정하시겠습니까?')) return;
+
+    const { title, description, image, address, lat, lng } = data;
+
+    const userName = currentUser?.name || 'undefined';
+    const userId = currentUser?.id || 'null';
+
+    const dummy = {
+      userName,
+      userId,
+      title,
+      description,
+      address: address,
+      location: {
+        lat: lat,
+        lng: lng,
+      },
+    };
+
+    const fd = new FormData();
+
+    fd.append('userName', dummy.userName);
+    fd.append('title', dummy.title);
+    fd.append('userId', dummy.userId);
+    fd.append('description', dummy.description);
+    fd.append('address', dummy.address);
+    fd.append('location', JSON.stringify(dummy.location));
+
+    for (let i = 0; i < image.length; i++) {
+      fd.append('imageUrl', image[i]);
+    }
+
+    try {
+      const result = await FeedApi.updateOneFeed(currentFeedState._id, fd);
+      setFeedList((prev: any) => {
+        const newFeedList = [...prev];
+        const index = newFeedList.findIndex(item => currentFeedState._id === item._id);
+        newFeedList[index] = result;
+        return newFeedList;
+      });
+      alert('피드가 수정되었습니다.');
+      toggleModal();
+      changeCenterLatLng(result.location);
+    } catch (err) {
+      alert('Error 발생. console 확인');
+      console.log(err);
+    }
+
+    // revokePreviewUrl();
+  };
+
   const onClickDeleteFeed = async (feedId: string, feedUserId: string) => {
     if (!window.confirm('피드를 정말로 삭제하시겠습니까 ?')) return;
 
@@ -161,8 +272,13 @@ const FeedMapPage = () => {
           userId: feedUserId,
         },
       });
+      setFeedList((prev: any) => {
+        const newFeedList = [...prev];
+        const index = newFeedList.findIndex(item => feedId === item._id);
+        newFeedList.splice(index, 1);
+        return newFeedList;
+      });
       alert('피드가 삭제되었습니다.');
-      window.location.reload();
     } catch (err) {
       alert(err);
     }
