@@ -31,8 +31,9 @@ module.exports = {
       'process.env.SERVER_PORT': JSON.stringify(
         process.env.SERVER_PORT
       ),
+      'process.env.SERVER_URL': JSON.stringify(
+        process.env.SERVER_URL
+      ),
     }),
-
-    new webpack.EnvironmentPlugin(['SERVER_PORT']),
   ],
 };
