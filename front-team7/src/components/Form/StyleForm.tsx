@@ -6,6 +6,15 @@ const StyledModalForm = styled.div`
   overflow-y: scroll;
   border-radius: 10px;
   background-color: white;
+
+  @media only screen and (min-width: 768px) {
+    width: 500px;
+    height: 500px;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    width: 600px;
+  }
 `;
 
 const StyledFormContainer = styled.div`
@@ -38,6 +47,14 @@ const StyledTitle = styled.div`
 const StyledTitleSpan = styled.span`
   font-size: 1.8rem;
   font-weight: 500;
+
+  @media only screen and (min-width: 768px) {
+    font-size: 2.1rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 2.4rem;
+  }
 `;
 
 const StyledInputContainer = styled.div`
@@ -60,6 +77,13 @@ const StyledImgInputContainer = styled.div`
 const StyledField = styled.label`
   font-size: 1.2rem;
   font-weight: 600;
+  @media only screen and (min-width: 768px) {
+    font-size: 1.4rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 1.6rem;
+  }
 `;
 
 const StyledInputTitle = styled.input.attrs({
@@ -72,6 +96,14 @@ const StyledInputTitle = styled.input.attrs({
   &:focus {
     outline: none;
     background-color: transparent;
+  }
+
+  @media only screen and (min-width: 768px) {
+    font-size: 1.8rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 2rem;
   }
 `;
 
@@ -88,6 +120,14 @@ const StyledInputText = styled.textarea.attrs({
   &:focus {
     outline: none;
     background-color: transparent;
+  }
+
+  @media only screen and (min-width: 768px) {
+    font-size: 1.8rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 2rem;
   }
 `;
 
@@ -138,6 +178,7 @@ const StyledPreviewDeleteButton = styled.input`
   font-size: 1.5rem;
   background-color: transparent;
   border: none;
+  
 `;
 
 const StyledSearchAddress = styled.div`
@@ -158,6 +199,13 @@ const StyledInputSearchAddress = styled.input.attrs({
   &:focus {
     outline: none;
     background-color: transparent;
+  }
+  @media only screen and (min-width: 768px) {
+    font-size: 1.8rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 2rem;
   }
 `;
 
@@ -205,6 +253,13 @@ const StyledSearchInfoHeader = styled.div`
   flex-direction: row;
   align-items: center;
   font-size: 1.8rem;
+  @media only screen and (min-width: 768px) {
+    font-size: 1.9rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 2.1rem;
+  }
 `;
 
 const StyledSearchInfoTitle = styled.span`
@@ -226,11 +281,25 @@ const StyledFiExternalLink = styled.a.attrs({
   &:visited {
     color: #487eb0;
   }
+  @media only screen and (min-width: 768px) {
+    font-size: 1.9rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 2.1rem;
+  }
 `;
 
 const StyledAddressName = styled.span`
   font-size: 1rem;
   color: gray;
+  @media only screen and (min-width: 768px) {
+    font-size: 1.2rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 1.5rem;
+  }
 `;
 
 const StyledSearchInfoData = styled.div`
@@ -254,6 +323,13 @@ const StyledInputAddress = styled.input.attrs({
   &:disabled {
     background-color: transparent;
   }
+  @media only screen and (min-width: 768px) {
+    font-size: 1.8rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 2rem;
+  }
 `;
 
 const StyledSubmitButtonWrapper = styled.div`
@@ -275,12 +351,26 @@ const StyledSubmitButton = styled.button`
   &:hover {
     background-color: #00cec9;
   }
+  @media only screen and (min-width: 768px) {
+    font-size: 1.9rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 2.1rem;
+  }
 `;
 
 const StyledInputError = styled.p`
   font-size: 0.5rem;
   color: red;
   text-align: right;
+  @media only screen and (min-width: 768px) {
+    font-size: 0.8rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 1.2rem;
+  }
 `;
 
 // export * from '@/components/Form/StyleForm';

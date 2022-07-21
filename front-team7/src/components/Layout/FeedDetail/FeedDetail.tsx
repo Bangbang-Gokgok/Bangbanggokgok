@@ -54,7 +54,7 @@ const FeedDetail = ({
     <StyledFeedDetailContainer boxShadow={isModal}>
       <FeedHeader
         feedLocation={feedList.location}
-        feedUser={feedList.userId}
+        feedUserId={feedList.userId}
         isUser={false}
         isFolded={isModal}
         name={feedList.userName}
@@ -91,7 +91,6 @@ const FeedDetail = ({
 
           <div>
             {reviewList?.length}개의 댓글
-            {/* {!!reviewList?.length && <> */}
             {dropDownVisible ? (
               <MdArrowDropUp
                 className="dropBtn"
@@ -107,7 +106,6 @@ const FeedDetail = ({
                 }}
               ></MdArrowDropDown>
             )}
-            {/* </>} */}
           </div>
         </StyledFeedDetailInfo>
       </StyledFeedDetailBody>
@@ -132,7 +130,6 @@ const StyledFeedDetailContainer = styled.div<FeedDetailContainerProps>`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  // gap: 10px;
   box-shadow: ${(props) => (props.boxShadow ? '' : '5px 5px 10px 2px #c2c2c2')};
 
   @media only screen and (min-width: 768px) {
@@ -148,7 +145,6 @@ const StyledFeedDetailBody = styled.div`
   z-index: 2;
   background-color: #ffffff;
   margin-top: 10px;
-  // background-color : white;
   border-radius: 15px;
   gap: 10px;
 `;
@@ -158,7 +154,6 @@ const StyledFeedDetailImage = styled.div`
   width: 100%;
   height: 200px;
   padding: 10px;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -171,7 +166,6 @@ const StyledFeedDetailDescription = styled.div`
   font-size: 1.5rem;
   font-weight: 400;
   line-height: 40px;
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -223,18 +217,15 @@ const StyledLikeButton = styled.button`
 
 const dropAnimation = keyframes`
 0% {
-  // transform : translateY(-300px);
   height : 0;
   display : none;
 }
 100% {
   height : 250px;
   background-color: #a2c4f3;
-  // transform : translateY(0);
 }
 `;
 const StyledFeedDetailReview = styled.div`
-  // height: 250px;
   margin: 0 10px 10px 10px;
   padding: 10px;
   background-color: #a2c4f3;
