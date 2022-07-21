@@ -5,7 +5,7 @@ module.exports = {
   mode: 'development',
   devtool: 'eval-source-map',
   devServer: {
-    port: 3030, // 요청을 수신할 포트 번호를 지정하세요.
+    port: process.env.PORT, // 요청을 수신할 포트 번호를 지정하세요.
     proxy: {
       '/api': {
         target: process.env.SERVER_PORT,

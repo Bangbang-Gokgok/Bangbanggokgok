@@ -18,7 +18,11 @@ export const HeaderNavSlider = () => {
 
   return (
     <>
-      <Backdrop isOpen={isOpenSlider} close={() => setIsOpenSlider(false)} />
+      <Backdrop
+        isOpen={isOpenSlider}
+        close={() => setIsOpenSlider(false)}
+        transitionSeconds={0.8}
+      />
       <StyledHeaderNavSlider isOpen={isOpenSlider}>
         <button className="close-button" onClick={() => setIsOpenSlider(false)}>
           <FaTimes />

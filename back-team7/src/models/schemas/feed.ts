@@ -50,6 +50,7 @@ const FeedSchema = new Schema(
   {
     collection: 'feeds',
     timestamps: true,
+    minimize: false,
   }
 );
 export { FeedSchema };

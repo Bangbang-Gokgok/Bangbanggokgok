@@ -27,7 +27,7 @@ class ReviewService {
     // 우선 해당 상품이 db에 존재하는지 확인
     const review = await Review.findOne({ _id });
     if (!review) {
-      const error = new Error('해당 리뷰가 존재하지 않습니다. 다시 확인해 주세요.');
+      const error = new Error('요청한 id에 해당하는 리뷰가 존재하지 않습니다.');
       error.name = 'NotFound';
       throw error;
     }
@@ -38,7 +38,7 @@ class ReviewService {
     // 우선 해당 상품이 db에 존재하는지 확인
     const review = await Review.find({ feedId });
     if (!review) {
-      const error = new Error('해당 리뷰가 존재하지 않습니다. 다시 확인해 주세요.');
+      const error = new Error('요청한 feedId에 해당하는 피드가 존재하지 않습니다.');
       error.name = 'NotFound';
       throw error;
     }
@@ -48,7 +48,7 @@ class ReviewService {
     // 우선 해당 상품이 db에 존재하는지 확인
     const review = await Review.find({ userId });
     if (!review) {
-      const error = new Error('해당 리뷰가 존재하지 않습니다. 다시 확인해 주세요.');
+      const error = new Error('요청한 userId에 해당하는 리뷰가 존재하지 않습니다.');
       error.name = 'NotFound';
       throw error;
     }
@@ -60,12 +60,12 @@ class ReviewService {
     // 업데이트 진행
     if (user._id !== update.userId && user.authority !== 'admin') {
       const error = new Error('작성자만 수정할 수 있습니다.');
-      error.name = 'Access Denied';
+      error.name = 'Forbidden';
       throw error;
     }
     const updatedReview = await Review.findOneAndUpdate({ _id }, update, { returnOriginal: false });
     if (!updatedReview) {
-      const error = new Error('업데이트에 실패하였습니다.');
+      const error = new Error('업데이트에 실패하였습니다. id와 update 내용을 확인 바랍니다.');
       error.name = 'NotFound';
       throw error;
     }
@@ -80,13 +80,13 @@ class ReviewService {
   ): Promise<{ result: string }> {
     if (user._id !== userId && user.authority !== 'admin') {
       const error = new Error('작성자만 수정할 수 있습니다.');
-      error.name = 'Access Denied';
+      error.name = 'Forbidden';
       throw error;
     }
     const { deletedCount } = await Review.deleteOne({ _id });
     // 삭제에 실패한 경우, 에러 메시지 반환
     if (deletedCount === 0) {
-      const error = new Error(`${_id} 리뷰 삭제에 실패하였습니다`);
+      const error = new Error(`요청한 id에 해당하는 리뷰를 찾지 못해 삭제에 실패하였습니다.`);
       error.name = 'NotFound';
       throw error;
     }
@@ -104,7 +104,7 @@ class ReviewService {
     // 우선 해당 상품이 db에 존재하는지 확인
     const review = await Review.find({ feedId });
     if (!review) {
-      const error = new Error('해당 리뷰가 존재하지 않습니다. 다시 확인해 주세요.');
+      const error = new Error('요청한 feedId에 해당하는 리뷰가 존재하지 않습니다.');
       error.name = 'NotFound';
       throw error;
     }
@@ -117,7 +117,7 @@ class ReviewService {
     // 우선 해당 상품이 db에 존재하는지 확인
     const review = await Review.find({ userId });
     if (!review) {
-      const error = new Error('해당 리뷰가 존재하지 않습니다. 다시 확인해 주세요.');
+      const error = new Error('요청한 userId에 해당하는 피드가 존재하지 않습니다.');
       error.name = 'NotFound';
       throw error;
     }

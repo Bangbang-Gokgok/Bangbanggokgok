@@ -5,6 +5,10 @@ import { redisClient } from './server';
 
 const DOMAIN = process.env.DOMAIN;
 
+type RedisHashValue = {
+  [key: string]: boolean;
+};
+
 export function ws(server: http.Server) {
   const io = new Server(server, {
     cors: {
@@ -32,31 +36,36 @@ export function ws(server: http.Server) {
     //   await redisClient.hSet(key, userId, JSON.stringify(friendsArr));
     //   socket.emit('followResponse', friendsArr);
     // });
-    socket.on('likeListRequest', async (feedId) => {
+    // socket.on('likeListRequest', async (feedId) => {
+    //   const resource = 'likes';
+    //   const key = `feeds:${resource}`;
+    //   const users = await redisClient.hGet(key, feedId);
+    //   const usersObject = users ? JSON.parse(users) : {};
+    //   io.emit('likeListResponse', usersObject);
+    // });
+    socket.on('likeRequest', async (userId: string, feedId: string, index?: number) => {
       const resource = 'likes';
       const key = `feeds:${resource}`;
       const users = await redisClient.hGet(key, feedId);
-      const usersArr = users ? JSON.parse(users) : [];
-      io.emit('likeListResponse', usersArr);
-    });
-    socket.on('likeRequest', async (userId, feedId) => {
-      const resource = 'likes';
-      const key = `feeds:${resource}`;
-      const users = await redisClient.hGet(key, feedId);
-      let usersArr: string[];
+      let usersObject: RedisHashValue = {};
       if (users) {
-        usersArr = JSON.parse(users);
-        const likes = usersArr.length;
-        usersArr = usersArr.filter((e) => e !== userId);
-        if (likes === usersArr.length) {
-          usersArr.push(userId);
+        usersObject = JSON.parse(users);
+        if (usersObject[userId]) {
+          delete usersObject[userId];
+        } else {
+          usersObject[userId] = true;
         }
+        // const likes = usersObject.length;
+        // usersObject = usersObject.filter((e) => e !== userId);
+        // if (likes === usersObject.length) {
+        // usersObject.push(userId);
+        // }
       } else {
-        usersArr = [userId];
+        usersObject[userId] = true;
       }
-      await redisClient.hSet(key, feedId, JSON.stringify(usersArr));
+      await redisClient.hSet(key, feedId, JSON.stringify(usersObject));
 
-      io.emit('likeResponse', usersArr);
+      io.emit('likeResponse', usersObject, index);
     });
     socket.on('disconnect', () => {});
   });

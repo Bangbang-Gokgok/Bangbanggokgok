@@ -9,7 +9,7 @@ export interface UserInfo {
   profileImage?: string[] | undefined;
   contactNumber?: string | undefined;
   location?: object | undefined;
-  friends?: string[] | undefined;
+  friends?: object | undefined;
 }
 
 export interface UserData extends UserInfo {
@@ -17,33 +17,42 @@ export interface UserData extends UserInfo {
 }
 
 class UserService {
-  async addUser(userInfo: UserInfo): Promise<UserData> {
-    // 객체 destructuring
-    const { name } = userInfo;
+  // async addUser(userInfo: UserInfo): Promise<UserData> {
+  //   // 객체 destructuring
+  //   const { name } = userInfo;
 
-    // 이름 중복 확인
-    const user = await User.findOne({ name });
-    if (user) {
-      const error = new Error('이 이름은 현재 사용중입니다. 다른 이름을 입력해 주세요.');
-      error.name = 'Conflict';
-      throw error;
-    }
+  //   // 이름 중복 확인
+  //   const user = await User.findOne({ name });
+  //   if (user) {
+  //     const error = new Error('이 이름은 현재 사용중입니다.');
+  //     error.name = 'Conflict';
+  //     throw error;
+  //   }
 
-    // db에 저장
-    const createdNewUser = await User.create(userInfo);
+  //   // db에 저장
+  //   const createdNewUser = await User.create(userInfo);
 
-    return createdNewUser;
-  }
+  //   return createdNewUser;
+  // }
 
-  async getUsers(keyword: string): Promise<Partial<UserData>[]> {
+  async getUsers(keyword: string, authority?: string): Promise<Partial<UserData>[]> {
     const keywordExp = new RegExp(keyword);
     const users = keyword ? await User.find({ name: { $regex: keywordExp } }) : await User.find({});
-    const data = users.map(({ _id, name, profileImage, friends }) => ({
-      _id,
-      name,
-      profileImage,
-      friends,
-    }));
+    const data =
+      authority === 'admin'
+        ? users.map(({ _id, authority, name, profileImage, friends }) => ({
+            _id,
+            authority,
+            name,
+            profileImage,
+            friends,
+          }))
+        : users.map(({ _id, name, profileImage, friends }) => ({
+            _id,
+            name,
+            profileImage,
+            friends,
+          }));
     return data;
   }
 
@@ -51,7 +60,7 @@ class UserService {
     const user = await User.findOne({ _id });
     // db에서 찾지 못한 경우, 에러 메시지 반환
     if (!user) {
-      const error = new Error('해당 id의 사용자가 없습니다. 다시 한 번 확인해 주세요.');
+      const error = new Error('요청한 id에 해당하는 사용자가 존재하지 않습니다.');
       error.name = 'NotFound';
       throw error;
     }
@@ -71,7 +80,7 @@ class UserService {
 
     // db에서 찾지 못한 경우, 에러 메시지 반환
     if (!user) {
-      const error = new Error('해당 token 사용자가 없습니다. 다시 한 번 확인해 주세요.');
+      const error = new Error('요청한 refreshToken에 해당하는 사용자가 존재하지 않습니다.');
       error.name = 'NotFound';
       throw error;
     }
@@ -83,7 +92,7 @@ class UserService {
     // 업데이트 진행
     const updatedUser = await User.findOneAndUpdate({ _id }, update, { returnOriginal: false });
     if (!updatedUser) {
-      const error = new Error('업데이트에 실패하였습니다.');
+      const error = new Error('업데이트에 실패하였습니다. id와 update 내용을 확인 바랍니다.');
       error.name = 'NotFound';
       throw error;
     }
@@ -98,7 +107,7 @@ class UserService {
     const { deletedCount } = await User.deleteOne({ _id });
     // 삭제에 실패한 경우, 에러 메시지 반환
     if (deletedCount === 0) {
-      const error = new Error(`${_id} 사용자의 삭제에 실패하였습니다`);
+      const error = new Error(`요청한 id에 해당하는 사용자를 찾지 못해 삭제에 실패하였습니다.`);
       error.name = 'NotFound';
       throw error;
     }

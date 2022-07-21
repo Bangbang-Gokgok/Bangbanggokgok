@@ -1,26 +1,28 @@
-import { Suspense } from 'react';
+import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { useLogin } from '@/features/auth';
 
-import FeedMapPage from '@/pages/FeedMapPage';
-import SearchPage from '@/pages/SearchPage';
-import ProfilePage from '@/pages/ProfilePage';
-import ProfileEditPage from '@/pages/ProfileEditPage';
-import LoginPage from '@/pages/LoginPage';
-import NotFoundPage from '@/pages/NotFoundPage';
-import HomePage from '@/pages/HomePage';
 import AuthRouter from '@/components/AuthRouter';
-import AdminPage from './pages/AdminPage';
-import InfiniteScrollHomePage from './pages/InfiniteScrollHomePage';
+import NotFoundPage from '@/pages/NotFoundPage';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
+
+const HomePage = lazy(() => import('@/pages/HomePage'));
+const FeedMapPage = lazy(() => import('@/pages/FeedMapPage'));
+const SearchPage = lazy(() => import('@/pages/SearchPage'));
+const ProfilePage = lazy(() => import('@/pages/ProfilePage'));
+const ProfileEditPage = lazy(() => import('@/pages/ProfileEditPage'));
+const AdminPage = lazy(() => import('@/pages/AdminPage'));
+const LoginPage = lazy(() => import('@/pages/LoginPage'));
 
 const AppRouter = () => {
   const { loading } = useLogin();
 
-  if (loading) return <h2>loading...</h2>;
+  if (loading) return <div></div>;
 
   return (
-    <Suspense fallback={<div>loading...</div>}>
+    <Suspense fallback={<LoadingSpinner />}>
       <Router>
         <Routes>
           <Route

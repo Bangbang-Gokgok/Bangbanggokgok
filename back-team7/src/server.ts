@@ -10,7 +10,6 @@ import schedule from 'node-schedule';
 import 'dotenv/config';
 import { apiRouter, authRouter } from './routes';
 import { errorHandler, getUserFromJWT } from './middlewares';
-import { userService, feedService } from './services';
 import { usePassport } from './passport';
 
 import { likesScheduler, friendsScheduler } from './utils/scheduler';
@@ -30,7 +29,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 const PORT = Number(process.env.PORT);
-const DOMAIN = process.env.DOMAIN;
 
 app.use(passport.initialize());
 
@@ -43,7 +41,7 @@ app.use(errorHandler);
 
 const server = app.listen(PORT, () => {
   console.log(`server is running ${PORT}`);
-  schedule.scheduleJob('*/1 * * * *', likesScheduler);
+  schedule.scheduleJob('*/3 * * * * *', likesScheduler);
   schedule.scheduleJob('* * * * * *', friendsScheduler);
 });
 
