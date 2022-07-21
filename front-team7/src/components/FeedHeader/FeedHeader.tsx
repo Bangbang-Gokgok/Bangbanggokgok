@@ -17,23 +17,23 @@ export const FeedHeader = ({
   name,
   image,
   title,
-  feedUser,
+  feedUserId,
   feedLocation,
-}: UserInfoProps & { title: string } & { feedLocation?: LocationProps } & {
-  feedUser?: string;
-} & { isFolded: boolean } & { isUser: boolean } & { onClickFeedModal?: () => void } & {
+}: UserInfoProps & { title: string; } & { feedLocation?: LocationProps; } & {
+  feedUserId: string;
+} & { isFolded: boolean; } & { isUser: boolean; } & { onClickFeedModal?: () => void; } & {
   onClickEditFeedModal?: () => void;
-} & { onClickDeleteFeed?: () => void }) => {
+} & { onClickDeleteFeed?: () => void; }) => {
   return (
     <StyledFeedHeader isModal={isFolded}>
       <span className="user-info-container">
-        <UserInfo name={name} image={image} />
+        <UserInfo name={name} image={image} userId={feedUserId} />
       </span>
       <span className="title-container" onClick={onClickFeedModal}>
         {title}
       </span>
       {!isFolded ? (
-        <StyleNav to={`/feedmap/${feedUser}?lat=${feedLocation?.lat}&lng=${feedLocation?.lng}`}>
+        <StyleNav to={`/feedmap/${feedUserId}?lat=${feedLocation?.lat}&lng=${feedLocation?.lng}`}>
           <FaMapMarkedAlt />
         </StyleNav>
       ) : (

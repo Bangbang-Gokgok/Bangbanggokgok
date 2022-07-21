@@ -292,6 +292,7 @@ const FeedMapPage = () => {
               onClickDeleteFeed={() => onClickDeleteFeed(item._id, item.userId)}
               isFolded={true}
               isUser={currentUser?.id === userId}
+              feedUserId={item.userId}
               key={idx}
               name={item.userName}
               title={item.title}
