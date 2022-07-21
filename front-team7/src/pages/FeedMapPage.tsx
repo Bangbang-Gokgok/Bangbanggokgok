@@ -17,21 +17,12 @@ import styled from 'styled-components';
 import { axios } from '@/lib';
 import * as FeedApi from '@/api/feeds';
 import io from 'socket.io-client';
+import { FromInputs } from '@/types/form';
 
 enum ModalState {
   CREATE = 'CREATE',
   EDIT = 'EDIT',
   FEED = 'FEED',
-}
-
-interface FromInputs {
-  title: string;
-  description: string;
-  image: FileList;
-  searching: string;
-  address: string;
-  lat: number;
-  lng: number;
 }
 
 const socket = io.connect('http://localhost:5030/', {
@@ -301,6 +292,7 @@ const FeedMapPage = () => {
               onClickDeleteFeed={() => onClickDeleteFeed(item._id, item.userId)}
               isFolded={true}
               isUser={currentUser?.id === userId}
+              feedUserId={item.userId}
               key={idx}
               name={item.userName}
               title={item.title}
@@ -360,7 +352,6 @@ const StyledFeeds = styled.div`
   position: absolute;
   max-height: 160px;
   width: 90%;
-  z-index: 3;
   bottom: 0;
   display: flex;
   flex-direction: column;
@@ -374,10 +365,10 @@ const StyledFeeds = styled.div`
 
   @media only screen and (min-width: 768px) {
     width: 350px;
-    height: 100%;
+    height: auto;
     max-height: 68%;
-    right: 2%;
-    top: 2%;
+    right: 5%;
+    top: 5%;
   }
 
   @media only screen and (min-width: 1024px) {
