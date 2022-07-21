@@ -7,7 +7,7 @@ interface SocketProps {
   index?: number;
 }
 
-export let socket = io(`${process.env.SERVER_PORT}`, { transports: ["websocket"] });
+export let socket = io(`${process.env.SERVER_URL}`, { transports: ["websocket"] });
 
 export const initSocketConnection = () => {
   if (socket.connected) return;
