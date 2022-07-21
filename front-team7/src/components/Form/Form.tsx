@@ -47,7 +47,7 @@ const Form = ({ isEdit, submitForm }: { isEdit: boolean; } & { submitForm: (data
     const url = `https://dapi.kakao.com/v2/local/search/keyword.json?query=${searching}`;
     const res = await axios.get(url, {
       headers: {
-        Authorization: `KakaoAK ${process.env.KAKAO_SEARCH_REST_API_KEY}`,
+        Authorization: `KakaoAK 515db7fd242436c113cc739b997d8e46`,
       },
     });
 
