@@ -16,20 +16,14 @@ import { BsPlus } from 'react-icons/bs';
 import styled from 'styled-components';
 import { axios } from '@/lib';
 import * as FeedApi from '@/api/feeds';
-import io from 'socket.io-client';
 import { FromInputs } from '@/types/form';
+import { disconnectSocket, initSocketConnection, sendSocketMessage, socketInfoReceived } from '@/lib/socket';
 
 enum ModalState {
   CREATE = 'CREATE',
   EDIT = 'EDIT',
   FEED = 'FEED',
 }
-
-const socket = io.connect('http://localhost:5030/', {
-  autoConnect: true,
-  transports: ['websocket'],
-});
-
 
 const FeedMapPage = () => {
   const { userId } = useParams();
@@ -45,17 +39,18 @@ const FeedMapPage = () => {
   useEffect(() => {
 
     getFeedList();
-
-    socket.on('likeResponse', (users: Object) => {
+    initSocketConnection();
+    socketInfoReceived((users: Object) => {
       setCurrentFeedState((prev) => ({
         ...prev,
         likes: users,
       }));
     });
 
-    return (() => {
-      socket.close();
-    });
+    return () => {
+      disconnectSocket();
+    };
+
   }, []);
 
   async function getFeedList() {
@@ -124,7 +119,10 @@ const FeedMapPage = () => {
   };
 
   const handleFeedLike = (currentFeedList: FeedProps) => {
-    socket.emit('likeRequest', currentUser?.id, currentFeedList._id);
+    sendSocketMessage({
+      myUserId: currentUser?.id,
+      feedId: currentFeedList._id,
+    });
   };
 
   const switchModalChildrenState = (modalChildrenState: string) => {
