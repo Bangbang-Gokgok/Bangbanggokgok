@@ -113,7 +113,7 @@ const SearchPage = () => {
           handleInput={(e) => handleInput(e)}
           onClickSearch={() => onClickSearch()}
         />
-        {searchState ? <>
+        {(followerList.length > 0 && notAFollowerList.length > 0) ? <>
           {
             followerList.length > 0
             &&
