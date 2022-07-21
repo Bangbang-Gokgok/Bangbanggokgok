@@ -17,21 +17,12 @@ import styled from 'styled-components';
 import { axios } from '@/lib';
 import * as FeedApi from '@/api/feeds';
 import io from 'socket.io-client';
+import { FromInputs } from '@/types/form';
 
 enum ModalState {
   CREATE = 'CREATE',
   EDIT = 'EDIT',
   FEED = 'FEED',
-}
-
-interface FromInputs {
-  title: string;
-  description: string;
-  image: FileList;
-  searching: string;
-  address: string;
-  lat: number;
-  lng: number;
 }
 
 const socket = io.connect('http://localhost:5030/', {
@@ -366,6 +357,10 @@ const StyledFeeds = styled.div`
   flex-direction: column;
   overflow: scroll;
   gap: 5px;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
   &::-webkit-scrollbar {
