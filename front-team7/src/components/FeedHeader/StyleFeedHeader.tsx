@@ -23,7 +23,6 @@ const StyledFeedHeader = styled.div<{ isModal: boolean; }>`
   height: 60px;
   align-items: center;
   gap: 8px;
-  // min-height: 60px;
   z-index: 3;
   padding: 20px 10px;
   border: 1px solid rgba(0, 0, 0, 15%);
@@ -44,14 +43,6 @@ const StyledFeedHeader = styled.div<{ isModal: boolean; }>`
     word-break: break-all;
     ${(props) => props.isModal && 'cursor: pointer;'}
   }
-
-  /* @media only screen and (min-width: 768px) {
-  min-height: 70px;
-}
-
-@media only screen and (min-width: 1024px) {
-  min-height: 80px;
-} */
 `;
 
 export { StyleNav, StyleEditIcon, StyleDeleteIcon, StyledFeedHeader };
