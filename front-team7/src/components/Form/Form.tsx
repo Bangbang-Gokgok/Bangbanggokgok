@@ -11,36 +11,9 @@ import { MdShareLocation } from 'react-icons/md';
 import { FiExternalLink } from 'react-icons/fi';
 import { FcAddImage, FcSearch } from 'react-icons/fc';
 import * as SC from '@/components/Form/StyleForm';
-
-interface PlaceProps {
-  address_name: 'string';
-  category_group_code: 'string';
-  category_group_name: 'string';
-  category_name: 'string';
-  distance: 'string';
-  id: 'string';
-  phone: 'string';
-  place_name: 'string';
-  place_url: 'string';
-  road_address_name: 'string';
-  x: number;
-  y: number;
-}
-
-interface FromInputs {
-  title: string;
-  description: string;
-  image: FileList;
-  searching: string;
-  address: string;
-  lat: number;
-  lng: number;
-}
-
-type PlaceListProps = Array<PlaceProps>;
+import { FromInputs, PlaceListProps } from '@/types/form';
 
 const Form = ({ isEdit, submitForm }: { isEdit: boolean; } & { submitForm: (data: FromInputs) => void; }) => {
-  const currentUser = useRecoilValue(userState);
   const currentFeedState = useRecoilValue(currentFeedAtom);
   const [searchState, setSearchState] = useState(false);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
@@ -49,7 +22,6 @@ const Form = ({ isEdit, submitForm }: { isEdit: boolean; } & { submitForm: (data
     register,
     watch,
     handleSubmit,
-    reset,
     setValue,
     formState: { errors },
   } = useForm<FromInputs>({
@@ -85,12 +57,13 @@ const Form = ({ isEdit, submitForm }: { isEdit: boolean; } & { submitForm: (data
     setSearchState(true);
   };
 
-  const revokePreviewUrl = () => {
-    previewImages.forEach((url) => {
-      URL.revokeObjectURL(url);
-    });
-  };
+  // const revokePreviewUrl = () => {
+  //   console.log('revoke');
 
+  //   previewImages.forEach((url) => {
+  //     URL.revokeObjectURL(url);
+  //   });
+  // };
 
   const handleAddressState = (address: string, lat: number, lng: number) => {
     setValue('address', address);
