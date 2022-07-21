@@ -1,9 +1,10 @@
-FROM node:16.14
-WORKDIR /usr/src/app
+FROM node:16-alpine
+WORKDIR /app
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci
+RUN npm install -g ts-node typescript
 COPY . .
 
 EXPOSE 5000
-CMD ['ts-node','src/server.ts']
+CMD ["ts-node","src/server.ts"]
