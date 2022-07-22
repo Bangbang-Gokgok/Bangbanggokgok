@@ -15,8 +15,6 @@ export const useLogin = () => {
       await axios.get<never, void>('/api/loginCheck'); // access, refresh 갱신하는 api
       const user = await getCurrentUser(); // user 데이터 가져오는 api
 
-      console.log(user);
-
       const newUser: UserState & { _id?: string; updatedAt?: string; refreshToken?: string; } = {
         ...user,
         id: user._id,
@@ -25,8 +23,6 @@ export const useLogin = () => {
       delete newUser._id;
       delete newUser.updatedAt;
       delete newUser.refreshToken;
-
-      console.log(newUser);
 
       return newUser;
     }
