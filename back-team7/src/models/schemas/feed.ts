@@ -46,6 +46,10 @@ const FeedSchema = new Schema(
       type: [String],
       required: false,
     },
+    profileImageUrl: {
+      type: [String],
+      required: false,
+    },
   },
   {
     collection: 'feeds',
