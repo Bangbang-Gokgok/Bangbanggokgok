@@ -14,7 +14,7 @@ axios.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     config.headers!['Accept'] = 'application/json';
     config.headers!['Content-Type'] = 'application/json';
-    config.headers!['Content-Type'] = document.cookie;
+    config.headers!['Cookie'] = document.cookie;
     return config;
   },
   (error: AxiosError) => {
