@@ -162,9 +162,10 @@ const FeedMapPage = () => {
     const { title, description, image, address, lat, lng } = data;
 
     const userName = currentUser?.name || 'undefined';
-
+    const profileImage = currentUser?.profileImage || 'undefined';
     const dummy = {
       userName,
+      profileImage,
       title,
       description,
       address: address,
@@ -176,12 +177,12 @@ const FeedMapPage = () => {
 
     const fd = new FormData();
 
+    fd.append('profileImageUrl', dummy.profileImage);
     fd.append('userName', dummy.userName);
     fd.append('title', dummy.title);
     fd.append('description', dummy.description);
     fd.append('address', dummy.address);
     fd.append('location', JSON.stringify(dummy.location));
-
     for (let i = 0; i < image.length; i++) {
       fd.append('imageUrl', image[i]);
     }

@@ -16,7 +16,8 @@ feedRouter.post(
         const _id: Types.ObjectId | string = req.user._id;
 
         const feedInfo = req.body;
-        feedInfo.profileImageUrl = req.user.profileImage;
+
+        // feedInfo.profileImageUrl = req.user.profileImage;
         feedInfo.location = JSON.parse(feedInfo.location);
         if (req.files) {
           const postImages = getPostImageList(
