@@ -46,15 +46,22 @@ class FeedService {
     return feed;
   }
   //유저_id로 feed 조회
-  async getFeedByUserId(userId: string | Types.ObjectId): Promise<FeedData[]> {
+  async getFeedsByUserId(userId: string | Types.ObjectId): Promise<FeedData[]> {
     // 우선 해당 상품이 db에 존재하는지 확인
-    const feed = await Feed.find({ userId });
-    if (!feed) {
+    const feeds = await Feed.find({ userId });
+    if (!feeds) {
       const error = new Error('요청한 userId에 해당하는 피드가 존재하지 않습니다.');
       error.name = 'NotFound';
       throw error;
     }
-    return feed.reverse();
+    return feeds.reverse();
+  }
+  async setFeedsNewName(userId: string, userName: string) {
+    const feeds = await Feed.updateMany({ userId }, { $set: { userName } });
+  }
+
+  async setFeedsNewProfileImage(userId: string, profileImageUrl: string[]) {
+    const feeds = await Feed.updateMany({ userId }, { $set: { profileImageUrl } });
   }
 
   // 피드 정보 수정
@@ -108,7 +115,7 @@ class FeedService {
     return [feedList, totalPage];
   }
   //유저_id로 feed 조회 pagenation
-  async getFeedByUserIdPage(userId: string | Types.ObjectId, page: any, perPage: any) {
+  async getFeedsByUserIdPage(userId: string | Types.ObjectId, page: any, perPage: any) {
     // 우선 해당 상품이 db에 존재하는지 확인
     const feed = await Feed.find({ userId });
     if (!feed) {

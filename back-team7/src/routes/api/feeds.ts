@@ -101,7 +101,7 @@ feedRouter.get('/list/:userId', async (req: Request, res: Response, next: NextFu
     const userId = req.params.userId;
 
     // userId 값으로 검색
-    const feedData = await feedService.getFeedByUserId(userId);
+    const feedData = await feedService.getFeedsByUserId(userId);
 
     res.status(200).json(feedData);
   } catch (error) {
@@ -169,7 +169,7 @@ feedRouter.get('/page/list/:userId', async (req: Request, res: Response, next: N
     const userId = req.params.userId;
     const { page, perPage } = req.query;
     // userId 값으로 검색
-    const [feedList, totalPage] = await feedService.getFeedByUserIdPage(userId, page, perPage);
+    const [feedList, totalPage] = await feedService.getFeedsByUserIdPage(userId, page, perPage);
 
     res.status(200).json({ feedList, totalPage });
   } catch (error) {
