@@ -12,6 +12,7 @@ export const loginCheckAndRefreshToken = async (
   next: NextFunction
 ) => {
   try {
+    console.log(req.cookies);
     if (req.cookies.refreshToken) {
       if (!req.cookies.accessToken) {
         const { _id, authority, email, name } = await userService.getUserDataByRefreshToken(
