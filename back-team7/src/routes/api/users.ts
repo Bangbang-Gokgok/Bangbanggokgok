@@ -165,6 +165,7 @@ userRouter.put(
             }
           );
           await feedService.setFeedsNewProfileImage(_id, profileImageUrls);
+          update.profileImage = profileImageUrls;
         }
         // 사용자 정보를 업데이트함.
         const updatedUser = await userService.setUser(_id, update);
