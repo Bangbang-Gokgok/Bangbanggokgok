@@ -113,7 +113,11 @@ const SearchPage = () => {
           handleInput={(e) => handleInput(e)}
           onClickSearch={() => onClickSearch()}
         />
+<<<<<<< HEAD
         {(followerList.length > 0 && notAFollowerList.length > 0) ? <>
+=======
+        {(followerList.length > 0 || notAFollowerList.length > 0) ? <>
+>>>>>>> 3ea6173b9a3f1c9362cb8e4950f4b643bd4ae2e0
           {
             followerList.length > 0
             &&
@@ -124,7 +128,7 @@ const SearchPage = () => {
               <StyledFollowerList>
                 {followerList.map((user, idx) => (
                   <StyledUserInfoWrapper key={idx}>
-                    <UserInfo name={user.name} image={user.profileImage[0] || unknownUser as string}></UserInfo>
+                    <UserInfo name={user.name} userId={user._id} image={user.profileImage[0] || unknownUser as string}></UserInfo>
                     <StyledFollowButton name='unFollow' onClick={(e) => onClickFollow(e, user)} isfollowed={true} />
                   </StyledUserInfoWrapper>
                 ))}
@@ -140,7 +144,7 @@ const SearchPage = () => {
               <StyledNotFollowerList>
                 {notAFollowerList.map((user, idx) => (
                   <StyledUserInfoWrapper key={idx}>
-                    <UserInfo name={user.name} image={user.profileImage[0] || unknownUser as string}></UserInfo>
+                    <UserInfo name={user.name} userId={user._id} image={user.profileImage[0] || unknownUser as string}></UserInfo>
                     <StyledFollowButton name='follow' onClick={(e) => onClickFollow(e, user)} isfollowed={false} />
                   </StyledUserInfoWrapper>
                 ))}

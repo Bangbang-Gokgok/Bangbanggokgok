@@ -3,7 +3,11 @@ import Axios, { type AxiosRequestConfig, type AxiosResponse, AxiosError } from '
 let API_URL = '';
 
 if (process.env.NODE_ENV !== 'development') {
+<<<<<<< HEAD
   API_URL = process.env.SERVER_URL;
+=======
+  API_URL = 'http://kdt-sw2-seoul-team07.elicecoding.com';
+>>>>>>> 3ea6173b9a3f1c9362cb8e4950f4b643bd4ae2e0
 }
 
 export const axios = Axios.create({

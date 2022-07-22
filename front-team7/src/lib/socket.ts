@@ -7,7 +7,19 @@ interface SocketProps {
   index?: number;
 }
 
+<<<<<<< HEAD
 export let socket = io(`${process.env.SERVER_PORT}`, { transports: ["websocket"] });
+=======
+let URL = '';
+
+if (process.env.NODE_ENV !== 'development') {
+  URL = 'http://kdt-sw2-seoul-team07.elicecoding.com:5000';
+} else {
+  URL = 'http://localhost:5030';
+}
+
+export let socket = io(URL, { transports: ["websocket"] });
+>>>>>>> 3ea6173b9a3f1c9362cb8e4950f4b643bd4ae2e0
 
 export const initSocketConnection = () => {
   if (socket.connected) return;

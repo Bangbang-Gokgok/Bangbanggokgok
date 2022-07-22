@@ -17,6 +17,7 @@ import styled from 'styled-components';
 import { axios } from '@/lib';
 import * as FeedApi from '@/api/feeds';
 import { FromInputs } from '@/types/form';
+<<<<<<< HEAD
 import { FeedModal } from '@/features/feed/components';
 import {
   disconnectSocket,
@@ -24,6 +25,9 @@ import {
   sendSocketMessage,
   socketInfoReceived,
 } from '@/lib/socket';
+=======
+import { disconnectSocket, initSocketConnection, sendSocketMessage, socketInfoReceived } from '@/lib/socket';
+>>>>>>> 3ea6173b9a3f1c9362cb8e4950f4b643bd4ae2e0
 
 enum ModalState {
   CREATE = 'CREATE',
@@ -55,6 +59,10 @@ const FeedMapPage = () => {
     return () => {
       disconnectSocket();
     };
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3ea6173b9a3f1c9362cb8e4950f4b643bd4ae2e0
   }, []);
 
   async function getFeedList() {
@@ -189,7 +197,16 @@ const FeedMapPage = () => {
 
     try {
       const result = await FeedApi.createOneFeed(fd);
+<<<<<<< HEAD
       setFeedList((prev: any) => [result, ...prev]);
+=======
+      setFeedList((prev: any) => (
+        [
+          result,
+          ...prev
+        ]
+      ));
+>>>>>>> 3ea6173b9a3f1c9362cb8e4950f4b643bd4ae2e0
       alert('피드가 생성되었습니다.');
       toggleModal();
       changeCenterLatLng(result.location);
@@ -236,7 +253,11 @@ const FeedMapPage = () => {
       const result = await FeedApi.updateOneFeed(currentFeedState._id, fd);
       setFeedList((prev: any) => {
         const newFeedList = [...prev];
+<<<<<<< HEAD
         const index = newFeedList.findIndex((item) => currentFeedState._id === item._id);
+=======
+        const index = newFeedList.findIndex(item => currentFeedState._id === item._id);
+>>>>>>> 3ea6173b9a3f1c9362cb8e4950f4b643bd4ae2e0
         newFeedList[index] = result;
         return newFeedList;
       });
@@ -262,7 +283,11 @@ const FeedMapPage = () => {
       });
       setFeedList((prev: any) => {
         const newFeedList = [...prev];
+<<<<<<< HEAD
         const index = newFeedList.findIndex((item) => feedId === item._id);
+=======
+        const index = newFeedList.findIndex(item => feedId === item._id);
+>>>>>>> 3ea6173b9a3f1c9362cb8e4950f4b643bd4ae2e0
         newFeedList.splice(index, 1);
         return newFeedList;
       });
