@@ -5,7 +5,7 @@ module.exports = {
   mode: 'development',
   devtool: 'eval-source-map',
   devServer: {
-    port: 3030, // 요청을 수신할 포트 번호를 지정하세요.
+    port: process.env.CLIENT_PORT, // 요청을 수신할 포트 번호를 지정하세요.
     proxy: {
       '/api': {
         target: process.env.SERVER_PORT,
@@ -28,8 +28,12 @@ module.exports = {
       'process.env.KAKAO_SEARCH_REST_API_KEY': JSON.stringify(
         process.env.KAKAO_SEARCH_REST_API_KEY
       ),
+      'process.env.SERVER_PORT': JSON.stringify(
+        process.env.SERVER_PORT
+      ),
+      'process.env.SERVER_URL': JSON.stringify(
+        process.env.SERVER_URL
+      ),
     }),
-
-    new webpack.EnvironmentPlugin(['KAKAO_SEARCH_REST_API_KEY']),
   ],
 };

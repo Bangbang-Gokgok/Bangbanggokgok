@@ -9,7 +9,6 @@ import Carousel from 'react-material-ui-carousel';
 import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
 import { RiHeart3Fill, RiHeart3Line } from 'react-icons/ri';
 
-
 interface FeedDetailContainerProps {
   boxShadow: boolean;
   // dropDownVisible: boolean;
@@ -21,16 +20,16 @@ const FeedDetail = ({
   image,
   feedList,
   handleFeedLike,
-}: { image?: string; } & { currentUserId: string; } & { isModal: boolean; } & { feedList: FeedProps; } & { handleFeedLike: () => void; }) => {
+}: { image?: string } & { currentUserId: string } & { isModal: boolean } & {
+  feedList: FeedProps;
+} & { handleFeedLike: () => void }) => {
   const [reviewList, setReviewList] = useState<ReviewListProps>();
   const [dropDownVisible, setDropDownVisible] = useState<boolean>(false);
 
   async function get() {
     // 해당 Feed 에 있는 Review들만 가져오기
     try {
-      const getReviewByFeedID: ReviewListProps = await ReviewApi.getReviewsByFeedID(
-        feedList._id
-      );
+      const getReviewByFeedID: ReviewListProps = await ReviewApi.getReviewsByFeedID(feedList._id);
 
       setReviewList(getReviewByFeedID);
     } catch (err) {
@@ -43,18 +42,15 @@ const FeedDetail = ({
     get();
   }, []);
 
-
   const toggleDropDownVisible = () => {
     setDropDownVisible((prev) => !prev);
   };
-
-
 
   return (
     <StyledFeedDetailContainer boxShadow={isModal}>
       <FeedHeader
         feedLocation={feedList.location}
-        feedUser={feedList.userId}
+        feedUserId={feedList.userId}
         isUser={false}
         isFolded={isModal}
         name={feedList.userName}
@@ -82,16 +78,13 @@ const FeedDetail = ({
         <StyledFeedDetailInfo>
           <StyledLikeWrapper>
             <StyledLikeButton onClick={handleFeedLike}>
-              {
-                feedList.likes.hasOwnProperty(currentUserId) ? <RiHeart3Fill /> : <RiHeart3Line />
-              }
+              {feedList.likes.hasOwnProperty(currentUserId) ? <RiHeart3Fill /> : <RiHeart3Line />}
             </StyledLikeButton>
             <span>{Object.keys(feedList.likes).length} like</span>
           </StyledLikeWrapper>
 
           <div>
             {reviewList?.length}개의 댓글
-            {/* {!!reviewList?.length && <> */}
             {dropDownVisible ? (
               <MdArrowDropUp
                 className="dropBtn"
@@ -107,7 +100,6 @@ const FeedDetail = ({
                 }}
               ></MdArrowDropDown>
             )}
-            {/* </>} */}
           </div>
         </StyledFeedDetailInfo>
       </StyledFeedDetailBody>
@@ -132,7 +124,6 @@ const StyledFeedDetailContainer = styled.div<FeedDetailContainerProps>`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  // gap: 10px;
   box-shadow: ${(props) => (props.boxShadow ? '' : '5px 5px 10px 2px #c2c2c2')};
 
   @media only screen and (min-width: 768px) {
@@ -148,7 +139,6 @@ const StyledFeedDetailBody = styled.div`
   z-index: 2;
   background-color: #ffffff;
   margin-top: 10px;
-  // background-color : white;
   border-radius: 15px;
   gap: 10px;
 `;
@@ -158,7 +148,6 @@ const StyledFeedDetailImage = styled.div`
   width: 100%;
   height: 200px;
   padding: 10px;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -171,7 +160,6 @@ const StyledFeedDetailDescription = styled.div`
   font-size: 1.5rem;
   font-weight: 400;
   line-height: 40px;
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -192,7 +180,7 @@ const StyledFeedDetailSlide = styled.div`
   }
 `;
 
-const StyledSlide = styled.img<{ src: string; }>`
+const StyledSlide = styled.img<{ src: string }>`
   width: 100%;
   height: 100%;
   position: absolute;
@@ -223,18 +211,15 @@ const StyledLikeButton = styled.button`
 
 const dropAnimation = keyframes`
 0% {
-  // transform : translateY(-300px);
   height : 0;
   display : none;
 }
 100% {
   height : 250px;
   background-color: #a2c4f3;
-  // transform : translateY(0);
 }
 `;
 const StyledFeedDetailReview = styled.div`
-  // height: 250px;
   margin: 0 10px 10px 10px;
   padding: 10px;
   background-color: #a2c4f3;

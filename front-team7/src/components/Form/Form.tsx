@@ -10,38 +10,10 @@ import { TbRoad } from 'react-icons/tb';
 import { MdShareLocation } from 'react-icons/md';
 import { FiExternalLink } from 'react-icons/fi';
 import { FcAddImage, FcSearch } from 'react-icons/fc';
-import * as FeedApi from '@/api/feeds';
 import * as SC from '@/components/Form/StyleForm';
+import { FromInputs, PlaceListProps } from '@/types/form';
 
-interface PlaceProps {
-  address_name: 'string';
-  category_group_code: 'string';
-  category_group_name: 'string';
-  category_name: 'string';
-  distance: 'string';
-  id: 'string';
-  phone: 'string';
-  place_name: 'string';
-  place_url: 'string';
-  road_address_name: 'string';
-  x: number;
-  y: number;
-}
-
-interface FromInputs {
-  title: string;
-  description: string;
-  image: FileList;
-  searching: string;
-  address: string;
-  lat: number;
-  lng: number;
-}
-
-type PlaceListProps = Array<PlaceProps>;
-
-const Form = ({ isEdit }: { isEdit: boolean }) => {
-  const currentUser = useRecoilValue(userState);
+const Form = ({ isEdit, submitForm }: { isEdit: boolean; } & { submitForm: (data: FromInputs) => void; }) => {
   const currentFeedState = useRecoilValue(currentFeedAtom);
   const [searchState, setSearchState] = useState(false);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
@@ -50,7 +22,6 @@ const Form = ({ isEdit }: { isEdit: boolean }) => {
     register,
     watch,
     handleSubmit,
-    reset,
     setValue,
     formState: { errors },
   } = useForm<FromInputs>({
@@ -86,100 +57,13 @@ const Form = ({ isEdit }: { isEdit: boolean }) => {
     setSearchState(true);
   };
 
-  const revokePreviewUrl = () => {
-    previewImages.forEach((url) => {
-      URL.revokeObjectURL(url);
-    });
-  };
+  // const revokePreviewUrl = () => {
+  //   console.log('revoke');
 
-  // Feed CREATE
-  const submitForm = async (data: FromInputs) => {
-    if (!confirm('피드를 생성하시겠습니까?')) return;
-
-    const { title, description, image, address, lat, lng } = data;
-
-    const userName = currentUser?.name || 'undefined';
-
-    const dummy = {
-      userName,
-      title,
-      description,
-      address: address,
-      location: {
-        lat: lat,
-        lng: lng,
-      },
-    };
-
-    const fd = new FormData();
-
-    fd.append('userName', dummy.userName);
-    fd.append('title', dummy.title);
-    fd.append('description', dummy.description);
-    fd.append('address', dummy.address);
-    fd.append('location', JSON.stringify(dummy.location));
-
-    for (let i = 0; i < image.length; i++) {
-      fd.append('imageUrl', image[i]);
-    }
-
-    try {
-      await FeedApi.createOneFeed(fd);
-      alert('성공적으로 추가되었습니다.');
-      window.location.reload();
-    } catch (err) {
-      alert('Error 발생. console 확인');
-      console.log(err);
-    }
-    reset();
-    revokePreviewUrl();
-  };
-
-  const editSubmitForm = async (data: FromInputs) => {
-    if (!confirm('피드를 수정하시겠습니까?')) return;
-
-    const { title, description, image, address, lat, lng } = data;
-
-    const userName = currentUser?.name || 'undefined';
-    const userId = currentUser?.id || 'null';
-
-    const dummy = {
-      userName,
-      userId,
-      title,
-      description,
-      address: address,
-      location: {
-        lat: lat,
-        lng: lng,
-      },
-    };
-
-    const fd = new FormData();
-
-    fd.append('userName', dummy.userName);
-    fd.append('title', dummy.title);
-    fd.append('userId', dummy.userId);
-    fd.append('description', dummy.description);
-    fd.append('address', dummy.address);
-    fd.append('location', JSON.stringify(dummy.location));
-
-    for (let i = 0; i < image.length; i++) {
-      fd.append('imageUrl', image[i]);
-    }
-
-    try {
-      await FeedApi.updateOneFeed(currentFeedState._id, fd);
-      alert('피드가 수정되었습니다.');
-      window.location.reload();
-    } catch (err) {
-      alert('Error 발생. console 확인');
-      console.log(err);
-    }
-
-    reset();
-    revokePreviewUrl();
-  };
+  //   previewImages.forEach((url) => {
+  //     URL.revokeObjectURL(url);
+  //   });
+  // };
 
   const handleAddressState = (address: string, lat: number, lng: number) => {
     setValue('address', address);
@@ -224,7 +108,7 @@ const Form = ({ isEdit }: { isEdit: boolean }) => {
 
   return (
     <SC.StyledModalForm>
-      <form onSubmit={isEdit ? handleSubmit(editSubmitForm) : handleSubmit(submitForm)}>
+      <form onSubmit={handleSubmit(submitForm)}>
         <SC.StyledFormContainer>
           <SC.StyledTitle>
             <SC.StyledTitleSpan>

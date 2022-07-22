@@ -1,6 +1,10 @@
 import Axios, { type AxiosRequestConfig, type AxiosResponse, AxiosError } from 'axios';
 
-const API_URL = '';
+let API_URL = '';
+
+if (process.env.NODE_ENV !== 'development') {
+  API_URL = process.env.SERVER_URL;
+}
 
 export const axios = Axios.create({
   baseURL: API_URL,

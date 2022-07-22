@@ -1,58 +1,56 @@
 import { Main } from '@/components/Layout';
 import styled from 'styled-components';
-import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
+// import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
+import { FeedGrid } from '@/features/feed/components';
+import { feedKindState, FEED_KIND_HOME, type FeedsResponse } from '@/store';
 import unknownUser from '@/assets/images/unknown-user.png';
 import * as UserApi from '@/api/users';
-import { axios } from '@/lib';
-// import { UserInfoProps } from '@/components/UserInfo';
 import { useEffect, useState, CSSProperties } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Loading from '@/components/Loading/Loading';
 import { FeedListProps, FeedProps } from '@/types/feed';
 import * as FeedApi from '@/api/feeds';
-import io from 'socket.io-client';
+import { useSetRecoilState } from 'recoil';
 
-const socket = io.connect('http://localhost:5030/', {
-  autoConnect: true,
-  transports: ['websocket'],
-});
-
-const StyledFeedListContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 50px 0;
-`;
+import {
+  disconnectSocket,
+  initSocketConnection,
+  sendSocketMessage,
+  socketInfoReceived,
+} from '@/lib/socket';
 
 const HomePage = () => {
-  const [feedList, setFeedList] = useState<FeedListProps>([]);
+  const [feedList, setFeedList] = useState<FeedsResponse[]>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [myUserId, setMyUserId] = useState<string>('');
   const [page, setPage] = useState<number>(1);
-  const [perPage, setPerPage] = useState<number>(3);
+  const [perPage, setPerPage] = useState<number>(6);
   const [totalPage, setTotalPage] = useState<number>(0);
+  const setFeedKindState = useSetRecoilState(feedKindState);
 
   useEffect(() => {
     get();
     getMyUserId();
-
-    socket.on('likeResponse', (users: Object, index: number) => {
+    setFeedKindState(FEED_KIND_HOME);
+    initSocketConnection();
+    socketInfoReceived((users: Object, index: number) => {
       setFeedList((prev) => {
         const newFeed = [...prev];
         newFeed[index].likes = users;
         return newFeed;
       });
     });
-
-    return (() => {
-      socket.close();
-    });
+    return () => {
+      disconnectSocket();
+    };
   }, []);
 
   const handleFeedLike = (currentFeedList: FeedProps, index: number) => {
-    socket.emit('likeRequest', myUserId, currentFeedList._id, index);
+    sendSocketMessage({
+      myUserId,
+      feedId: currentFeedList._id,
+      index,
+    });
   };
 
   async function get() {
@@ -99,6 +97,7 @@ const HomePage = () => {
       alignItems={'center'}
       padding={'70px 0'}
       id="main-styled"
+      bg="#222"
     >
       <StyledFeedListContainer>
         <InfiniteScroll
@@ -110,22 +109,17 @@ const HomePage = () => {
           loader={<Loading text={'Loading...'}></Loading>}
           scrollableTarget="main-styled"
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
-            {feedList?.map((feed, index) => (
-              <FeedDetail
-                isModal={false}
-                key={`${feed.title}-${index}`}
-                currentUserId={myUserId}
-                image={unknownUser as string}
-                feedList={feed}
-                handleFeedLike={() => handleFeedLike(feed, index)}
-              ></FeedDetail>
-            ))}
+          <div style={{ minWidth: '850px' }}>
+            <FeedGrid feeds={feedList} />
           </div>
         </InfiniteScroll>
       </StyledFeedListContainer>
     </Main>
   );
 };
+
+const StyledFeedListContainer = styled.div`
+  max-width: 850px;
+`;
 
 export default HomePage;
