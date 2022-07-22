@@ -21,6 +21,7 @@ export interface FeedProps {
   imageUrl: Array<string>;
   likes: Object;
   review: Array<ReviewProps>;
+  profileImageUrl: Array<string>;
   address: string;
   location: LocationProps;
   createdAt: string;

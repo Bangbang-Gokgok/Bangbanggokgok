@@ -8,8 +8,12 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Loading from '@/components/Loading/Loading';
 import { FeedListProps, FeedProps } from '@/types/feed';
 import * as FeedApi from '@/api/feeds';
-import { disconnectSocket, initSocketConnection, sendSocketMessage, socketInfoReceived } from '@/lib/socket';
-
+import {
+  disconnectSocket,
+  initSocketConnection,
+  sendSocketMessage,
+  socketInfoReceived,
+} from '@/lib/socket';
 
 const StyledFeedListContainer = styled.div`
   width: 100%;
@@ -48,7 +52,7 @@ const HomePage = () => {
     sendSocketMessage({
       myUserId,
       feedId: currentFeedList._id,
-      index
+      index,
     });
   };
 
@@ -113,7 +117,6 @@ const HomePage = () => {
                 isModal={false}
                 key={`${feed.title}-${index}`}
                 currentUserId={myUserId}
-                image={unknownUser as string}
                 feedList={feed}
                 handleFeedLike={() => handleFeedLike(feed, index)}
               ></FeedDetail>

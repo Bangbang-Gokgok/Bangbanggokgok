@@ -9,7 +9,6 @@ import Carousel from 'react-material-ui-carousel';
 import { MdArrowDropDown, MdArrowDropUp } from 'react-icons/md';
 import { RiHeart3Fill, RiHeart3Line } from 'react-icons/ri';
 
-
 interface FeedDetailContainerProps {
   boxShadow: boolean;
   // dropDownVisible: boolean;
@@ -18,19 +17,18 @@ interface FeedDetailContainerProps {
 const FeedDetail = ({
   isModal,
   currentUserId,
-  image,
   feedList,
   handleFeedLike,
-}: { image?: string; } & { currentUserId: string; } & { isModal: boolean; } & { feedList: FeedProps; } & { handleFeedLike: () => void; }) => {
+}: { image?: string } & { currentUserId: string } & { isModal: boolean } & {
+  feedList: FeedProps;
+} & { handleFeedLike: () => void }) => {
   const [reviewList, setReviewList] = useState<ReviewListProps>();
   const [dropDownVisible, setDropDownVisible] = useState<boolean>(false);
 
   async function get() {
     // 해당 Feed 에 있는 Review들만 가져오기
     try {
-      const getReviewByFeedID: ReviewListProps = await ReviewApi.getReviewsByFeedID(
-        feedList._id
-      );
+      const getReviewByFeedID: ReviewListProps = await ReviewApi.getReviewsByFeedID(feedList._id);
 
       setReviewList(getReviewByFeedID);
     } catch (err) {
@@ -43,12 +41,9 @@ const FeedDetail = ({
     get();
   }, []);
 
-
   const toggleDropDownVisible = () => {
     setDropDownVisible((prev) => !prev);
   };
-
-
 
   return (
     <StyledFeedDetailContainer boxShadow={isModal}>
@@ -58,7 +53,7 @@ const FeedDetail = ({
         isUser={false}
         isFolded={isModal}
         name={feedList.userName}
-        image={image}
+        image={feedList.profileImageUrl[0]}
         title={feedList.title}
       ></FeedHeader>
       <StyledFeedDetailBody>
@@ -82,9 +77,7 @@ const FeedDetail = ({
         <StyledFeedDetailInfo>
           <StyledLikeWrapper>
             <StyledLikeButton onClick={handleFeedLike}>
-              {
-                feedList.likes.hasOwnProperty(currentUserId) ? <RiHeart3Fill /> : <RiHeart3Line />
-              }
+              {feedList.likes.hasOwnProperty(currentUserId) ? <RiHeart3Fill /> : <RiHeart3Line />}
             </StyledLikeButton>
             <span>{Object.keys(feedList.likes).length} like</span>
           </StyledLikeWrapper>
@@ -186,7 +179,7 @@ const StyledFeedDetailSlide = styled.div`
   }
 `;
 
-const StyledSlide = styled.img<{ src: string; }>`
+const StyledSlide = styled.img<{ src: string }>`
   width: 100%;
   height: 100%;
   position: absolute;

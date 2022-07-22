@@ -17,7 +17,12 @@ import styled from 'styled-components';
 import { axios } from '@/lib';
 import * as FeedApi from '@/api/feeds';
 import { FromInputs } from '@/types/form';
-import { disconnectSocket, initSocketConnection, sendSocketMessage, socketInfoReceived } from '@/lib/socket';
+import {
+  disconnectSocket,
+  initSocketConnection,
+  sendSocketMessage,
+  socketInfoReceived,
+} from '@/lib/socket';
 
 enum ModalState {
   CREATE = 'CREATE',
@@ -37,7 +42,6 @@ const FeedMapPage = () => {
   const feedIdQueryString = queryString.parse(window.location.search);
 
   useEffect(() => {
-
     getFeedList();
     initSocketConnection();
     socketInfoReceived((users: Object) => {
@@ -50,7 +54,6 @@ const FeedMapPage = () => {
     return () => {
       disconnectSocket();
     };
-
   }, []);
 
   async function getFeedList() {
@@ -83,7 +86,7 @@ const FeedMapPage = () => {
       ...currMapValue,
       centerLatLng: {
         lat,
-        lng
+        lng,
       },
     }));
   };
@@ -185,12 +188,7 @@ const FeedMapPage = () => {
 
     try {
       const result = await FeedApi.createOneFeed(fd);
-      setFeedList((prev: any) => (
-        [
-          result,
-          ...prev
-        ]
-      ));
+      setFeedList((prev: any) => [result, ...prev]);
       alert('피드가 생성되었습니다.');
       toggleModal();
       changeCenterLatLng(result.location);
@@ -237,7 +235,7 @@ const FeedMapPage = () => {
       const result = await FeedApi.updateOneFeed(currentFeedState._id, fd);
       setFeedList((prev: any) => {
         const newFeedList = [...prev];
-        const index = newFeedList.findIndex(item => currentFeedState._id === item._id);
+        const index = newFeedList.findIndex((item) => currentFeedState._id === item._id);
         newFeedList[index] = result;
         return newFeedList;
       });
@@ -263,7 +261,7 @@ const FeedMapPage = () => {
       });
       setFeedList((prev: any) => {
         const newFeedList = [...prev];
-        const index = newFeedList.findIndex(item => feedId === item._id);
+        const index = newFeedList.findIndex((item) => feedId === item._id);
         newFeedList.splice(index, 1);
         return newFeedList;
       });
@@ -294,6 +292,7 @@ const FeedMapPage = () => {
               key={idx}
               name={item.userName}
               title={item.title}
+              image={item.profileImageUrl[0]}
             />
           ))}
         </StyledFeeds>
@@ -314,10 +313,10 @@ const StyledWrapper = styled.div`
   align-items: center;
 `;
 
-const Button = styled.button<{ feedLength: number; }>`
+const Button = styled.button<{ feedLength: number }>`
   position: absolute;
   z-index: 4;
-  bottom: ${(props) => props.feedLength >= 3 ? '170px' : `${props.feedLength * 60 + 20}px`};
+  bottom: ${(props) => (props.feedLength >= 3 ? '170px' : `${props.feedLength * 60 + 20}px`)};
   right: 5%;
   font-size: 4.5rem;
   width: 56px;

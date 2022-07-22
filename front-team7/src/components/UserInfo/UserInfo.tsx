@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Link, NavLink } from 'react-router-dom'; // 해당 피드를 작성한 유저로 이동시키기 위한 Link
-
+import unknownUser from '@/assets/images/unknown-user.png';
 import { Avartar } from '@/components/Avatar';
 
 export interface UserInfoProps {
@@ -8,12 +8,12 @@ export interface UserInfoProps {
   image?: string;
 }
 
-export const UserInfo = ({ name, image, userId }: UserInfoProps & { userId: string; }) => {
+export const UserInfo = ({ name, image, userId }: UserInfoProps & { userId: string }) => {
   return (
-    <StyledUserInfo to={`/profile/${userId}`} >
-      <Avartar kind="circle" size="md" src={image} alt="img1" />
+    <StyledUserInfo to={`/profile/${userId}`}>
+      <Avartar kind="circle" size="md" src={image || (unknownUser as string)} alt="img1" />
       <span className="userinfo-username">{name}</span>
-    </StyledUserInfo >
+    </StyledUserInfo>
   );
 };
 
@@ -32,6 +32,6 @@ const StyledUserInfo = styled(NavLink)`
     color: black;
   }
   &:visited {
-    color: black
+    color: black;
   }
 `;
