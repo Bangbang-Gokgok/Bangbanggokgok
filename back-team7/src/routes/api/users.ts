@@ -155,17 +155,16 @@ userRouter.put(
 
         const update = req.body; // any 처리 필요
         update.location = JSON.parse(update.location);
+        if (update.name) {
+          await feedService.setFeedsNewName(_id, update.name);
+        }
         if (req.files!.length) {
-          const postImages = getPostImageList(
+          const profileImageUrls = getPostImageList(
             req.files as {
               [fieldname: string]: Express.Multer.File[];
             }
           );
-          update.profileImage = postImages;
-          const feeds = await feedService.getFeedByUserId(_id);
-          for (const feed of feeds) {
-            feed.profileImageUrl = postImages;
-          }
+          await feedService.setFeedsNewProfileImage(_id, profileImageUrls);
         }
         // 사용자 정보를 업데이트함.
         const updatedUser = await userService.setUser(_id, update);
