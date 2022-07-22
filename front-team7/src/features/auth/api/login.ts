@@ -12,7 +12,7 @@ export const useLogin = () => {
   useEffect(() => {
     async function getAccessToken(): Promise<UserState> {
 
-      // await axios.get<never, void>('/api/loginCheck'); // access, refresh 갱신하는 api
+      await axios.get<never, void>('/api/loginCheck'); // access, refresh 갱신하는 api
       const user = await getCurrentUser(); // user 데이터 가져오는 api
 
       console.log(user);
