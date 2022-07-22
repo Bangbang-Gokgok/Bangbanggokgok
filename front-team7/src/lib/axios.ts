@@ -8,6 +8,7 @@ if (process.env.NODE_ENV !== 'development') {
 
 export const axios = Axios.create({
   baseURL: API_URL,
+  withCredentials: true,
 });
 
 axios.interceptors.request.use(
