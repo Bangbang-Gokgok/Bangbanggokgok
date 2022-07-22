@@ -102,15 +102,19 @@ class ReviewService {
 
   async getReviewByFeedIdPage(feedId: string, page: any, perPage: any) {
     // 우선 해당 상품이 db에 존재하는지 확인
-    const review = await Review.find({ feedId });
-    if (!review) {
+    const reviews = await Review.find({ feedId })
+      .sort({ createdAt: -1 })
+      .skip(perPage * (page - 1))
+      .limit(perPage);
+    if (!reviews) {
       const error = new Error('요청한 feedId에 해당하는 리뷰가 존재하지 않습니다.');
       error.name = 'NotFound';
       throw error;
     }
-    let query = { review };
-    const [reviewList, totalPage] = await pageService.getPaginatedReviews(query, page, perPage);
-    return [reviewList, totalPage];
+    return [reviews, reviews.length / perPage];
+    // let query = { review };
+    // const [reviewList, totalPage] = await pageService.getPaginatedReviews(query, page, perPage);
+    // return [reviewList, totalPage];
   }
 
   async getReviewByUserIdPage(userId: string, page: any, perPage: any) {

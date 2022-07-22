@@ -101,7 +101,7 @@ reviewRouter.get('page/list', async (req: Request, res: Response, next: NextFunc
   }
 });
 reviewRouter.get(
-  'page/list/feed/:feedId',
+  '/page/list/feed/:feedId',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const feedId = req.params.feedId;
@@ -119,7 +119,7 @@ reviewRouter.get(
   }
 );
 reviewRouter.get(
-  'page/list/user/:userId',
+  '/page/list/user/:userId',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.params.userId;
