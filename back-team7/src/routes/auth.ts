@@ -20,11 +20,11 @@ authRouter.get(
       const accessToken = setAccessToken(req.user);
       const refreshToken = setRefreshToken();
       await userService.setUser(req.user._id, { refreshToken });
-      res.cookie('accessToken', accessToken, { maxAge: accessExp * 60 * 1000, httpOnly: false });
+      res.cookie('accessToken', accessToken, { maxAge: accessExp * 60 * 1000, httpOnly: true });
       res
         .cookie('refreshToken', refreshToken, {
           maxAge: refreshExp * 60 * 60 * 1000,
-          httpOnly: false,
+          httpOnly: true,
         })
         .redirect(DOMAIN);
     } else {
