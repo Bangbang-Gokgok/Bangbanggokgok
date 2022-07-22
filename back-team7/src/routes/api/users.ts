@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { userService, UserInfo } from '../../services';
+import { userService, UserInfo, feedService } from '../../services';
 import { upload } from '../../middlewares/';
 import { getPostImageList } from '../../utils/img';
 import { Types } from 'mongoose';
@@ -162,6 +162,10 @@ userRouter.put(
             }
           );
           update.profileImage = postImages;
+          const feeds = await feedService.getFeedByUserId(_id);
+          for (const feed of feeds) {
+            feed.profileImageUrl = postImages;
+          }
         }
         // 사용자 정보를 업데이트함.
         const updatedUser = await userService.setUser(_id, update);
