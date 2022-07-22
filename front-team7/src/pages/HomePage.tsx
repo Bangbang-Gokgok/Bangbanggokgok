@@ -29,7 +29,7 @@ const HomePage = () => {
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [myUserId, setMyUserId] = useState<string>('');
   const [page, setPage] = useState<number>(1);
-  const [perPage, setPerPage] = useState<number>(3);
+  const [perPage, setPerPage] = useState<number>(5);
   const [totalPage, setTotalPage] = useState<number>(0);
 
   useEffect(() => {
