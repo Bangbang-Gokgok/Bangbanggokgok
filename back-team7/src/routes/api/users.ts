@@ -42,9 +42,9 @@ declare global {
 //회원 프로필 API
 userRouter.get('/user', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    if (req.cookies.refreshToken) {
-      const user = await userService.getUserDataByRefreshToken(req.cookies.refreshToken);
-      res.json(user);
+    if (req.user) {
+      // const user = await userService.getUserDataByRefreshToken(req.cookies.refreshToken);
+      res.json(req.user);
     } else {
       const error = new Error('refreshToken이 없습니다.');
       error.name = 'Unauthorized';
