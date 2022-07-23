@@ -10,8 +10,8 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Loading from '@/components/Loading/Loading';
 import { FeedListProps, FeedProps } from '@/types/feed';
 import * as FeedApi from '@/api/feeds';
-<<<<<<< HEAD
 import { useSetRecoilState } from 'recoil';
+import { Introduction } from '@/components/introduction';
 
 import {
   disconnectSocket,
@@ -19,19 +19,6 @@ import {
   sendSocketMessage,
   socketInfoReceived,
 } from '@/lib/socket';
-=======
-import { disconnectSocket, initSocketConnection, sendSocketMessage, socketInfoReceived } from '@/lib/socket';
-
-
-const StyledFeedListContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 50px 0;
-`;
->>>>>>> 3ea6173b9a3f1c9362cb8e4950f4b643bd4ae2e0
 
 const HomePage = () => {
   const [feedList, setFeedList] = useState<FeedsResponse[]>([]);
@@ -45,10 +32,7 @@ const HomePage = () => {
   useEffect(() => {
     get();
     getMyUserId();
-<<<<<<< HEAD
     setFeedKindState(FEED_KIND_HOME);
-=======
->>>>>>> 3ea6173b9a3f1c9362cb8e4950f4b643bd4ae2e0
     initSocketConnection();
     socketInfoReceived((users: Object, index: number) => {
       setFeedList((prev) => {
@@ -66,11 +50,7 @@ const HomePage = () => {
     sendSocketMessage({
       myUserId,
       feedId: currentFeedList._id,
-<<<<<<< HEAD
       index,
-=======
-      index
->>>>>>> 3ea6173b9a3f1c9362cb8e4950f4b643bd4ae2e0
     });
   };
 
@@ -126,11 +106,12 @@ const HomePage = () => {
           dataLength={feedList.length}
           next={fetchMoreData}
           hasMore={hasMore}
-          endMessage={<Loading text={'모든 데이터 로드 완료!'}></Loading>}
-          loader={<Loading text={'Loading...'}></Loading>}
+          endMessage={<Loading type="end" />}
+          loader={feedList.length > 0 && <Loading />}
           scrollableTarget="main-styled"
         >
-          <div style={{ minWidth: '850px' }}>
+          {feedList.length > 0 && <Introduction />}
+          <div>
             <FeedGrid feeds={feedList} />
           </div>
         </InfiniteScroll>
