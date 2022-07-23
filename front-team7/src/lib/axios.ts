@@ -28,7 +28,7 @@ axios.interceptors.response.use(
   async (error: AxiosError) => {
     const { config } = error;
     const status = error.response?.status;
-    const reason = error.response?.data.reason;
+    const reason = error.response?.data ? error.response?.data.reason : undefined;
 
     console.log(error);
 

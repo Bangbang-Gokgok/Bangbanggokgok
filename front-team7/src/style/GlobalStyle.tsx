@@ -37,6 +37,14 @@ export const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif;
   }
 
+  input {
+    font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif;
+  }
+
+  textarea {
+    font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif;
+  }
+
   input::-webkit-input-placeholder { font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif; }
   input::-moz-placeholder { font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif; }
   input:-ms-input-placeholder { font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif; }

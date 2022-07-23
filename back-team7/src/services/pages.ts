@@ -22,7 +22,7 @@ class PageService {
   async getPaginatedReviews(query: any, page: any, perPage: any) {
     const [total, reviewList] = await Promise.all([
       Review.countDocuments(query),
-      Review.find(query)
+      Review.find({ query })
         .sort()
         .skip(perPage * (page - 1))
         .limit(perPage),

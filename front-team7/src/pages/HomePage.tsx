@@ -1,6 +1,8 @@
 import { Main } from '@/components/Layout';
 import styled from 'styled-components';
-import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
+// import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
+import { FeedGrid } from '@/features/feed/components';
+import { feedKindState, FEED_KIND_HOME, type FeedsResponse } from '@/store';
 import unknownUser from '@/assets/images/unknown-user.png';
 import * as UserApi from '@/api/users';
 import { useEffect, useState, CSSProperties } from 'react';
@@ -8,6 +10,9 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Loading from '@/components/Loading/Loading';
 import { FeedListProps, FeedProps } from '@/types/feed';
 import * as FeedApi from '@/api/feeds';
+import { useSetRecoilState } from 'recoil';
+import { Introduction } from '@/components/introduction';
+
 import {
   disconnectSocket,
   initSocketConnection,
@@ -15,26 +20,19 @@ import {
   socketInfoReceived,
 } from '@/lib/socket';
 
-const StyledFeedListContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 50px 0;
-`;
-
 const HomePage = () => {
-  const [feedList, setFeedList] = useState<FeedListProps>([]);
+  const [feedList, setFeedList] = useState<FeedsResponse[]>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [myUserId, setMyUserId] = useState<string>('');
   const [page, setPage] = useState<number>(1);
-  const [perPage, setPerPage] = useState<number>(5);
+  const [perPage, setPerPage] = useState<number>(6);
   const [totalPage, setTotalPage] = useState<number>(0);
+  const setFeedKindState = useSetRecoilState(feedKindState);
 
   useEffect(() => {
     get();
     getMyUserId();
+    setFeedKindState(FEED_KIND_HOME);
     initSocketConnection();
     socketInfoReceived((users: Object, index: number) => {
       setFeedList((prev) => {
@@ -100,6 +98,7 @@ const HomePage = () => {
       alignItems={'center'}
       padding={'70px 0'}
       id="main-styled"
+      bg="#222"
     >
       <StyledFeedListContainer>
         <InfiniteScroll
@@ -107,25 +106,22 @@ const HomePage = () => {
           dataLength={feedList.length}
           next={fetchMoreData}
           hasMore={hasMore}
-          endMessage={<Loading text={'모든 데이터 로드 완료!'}></Loading>}
-          loader={<Loading text={'Loading...'}></Loading>}
+          endMessage={<Loading type="end" />}
+          loader={feedList.length > 0 && <Loading />}
           scrollableTarget="main-styled"
         >
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
-            {feedList?.map((feed, index) => (
-              <FeedDetail
-                isModal={false}
-                key={`${feed.title}-${index}`}
-                currentUserId={myUserId}
-                feedList={feed}
-                handleFeedLike={() => handleFeedLike(feed, index)}
-              ></FeedDetail>
-            ))}
+          {feedList.length > 0 && <Introduction />}
+          <div>
+            <FeedGrid feeds={feedList} />
           </div>
         </InfiniteScroll>
       </StyledFeedListContainer>
     </Main>
   );
 };
+
+const StyledFeedListContainer = styled.div`
+  max-width: 850px;
+`;
 
 export default HomePage;
