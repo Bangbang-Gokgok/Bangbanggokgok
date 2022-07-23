@@ -53,6 +53,7 @@ export interface FeedsResponse {
   imageUrl: string[];
   createdAt: string;
   updatedAt: string;
+  profileImageUrl: string[];
 }
 
 export const userState = atom<UserState | null>({

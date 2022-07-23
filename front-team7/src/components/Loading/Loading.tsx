@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { ThreeDots } from 'react-loader-spinner';
 
 const StyledLoadingContainer = styled.div`
   width: 100%;
@@ -8,18 +9,17 @@ const StyledLoadingContainer = styled.div`
   align-items: center;
   background-color: #000000;
   border-radius: 15px;
+
+  h2 {
+    color: whitesmoke;
+  }
 `;
 
-const StyledLoadingText = styled.span`
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: #ffffff;
-  padding: 15px;
-`;
-const Loading = ({ text }) => {
+const Loading = ({ type }: { type?: string }) => {
   return (
     <StyledLoadingContainer>
-      <StyledLoadingText>{text}</StyledLoadingText>
+      {type !== 'end' && <ThreeDots color="gold" />}
+      {type === 'end' && <h2>방방곡곡과 함께 떠나요 😋</h2>}
     </StyledLoadingContainer>
   );
 };
