@@ -17,7 +17,6 @@ interface FeedDetailContainerProps {
 const FeedDetail = ({
   isModal,
   currentUserId,
-  image,
   feedList,
   handleFeedLike,
 }: { image?: string } & { currentUserId: string } & { isModal: boolean } & {
@@ -54,7 +53,7 @@ const FeedDetail = ({
         isUser={false}
         isFolded={isModal}
         name={feedList.userName}
-        image={image}
+        image={feedList.profileImageUrl[0]}
         title={feedList.title}
       ></FeedHeader>
       <StyledFeedDetailBody>

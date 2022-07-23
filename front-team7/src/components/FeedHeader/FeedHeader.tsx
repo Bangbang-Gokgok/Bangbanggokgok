@@ -19,11 +19,11 @@ export const FeedHeader = ({
   title,
   feedUserId,
   feedLocation,
-}: UserInfoProps & { title: string; } & { feedLocation?: LocationProps; } & {
+}: UserInfoProps & { title: string } & { feedLocation?: LocationProps } & {
   feedUserId: string;
-} & { isFolded: boolean; } & { isUser: boolean; } & { onClickFeedModal?: () => void; } & {
+} & { isFolded: boolean } & { isUser: boolean } & { onClickFeedModal?: () => void } & {
   onClickEditFeedModal?: () => void;
-} & { onClickDeleteFeed?: () => void; }) => {
+} & { onClickDeleteFeed?: () => void }) => {
   return (
     <StyledFeedHeader isModal={isFolded}>
       <span className="user-info-container">
