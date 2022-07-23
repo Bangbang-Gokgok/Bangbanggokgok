@@ -8,7 +8,7 @@ export const LoginButtons = () => {
   function loginHandler(e: MouseEvent<HTMLButtonElement>, to: string) {
     e.preventDefault();
     if (process.env.NODE_ENV !== 'development') {
-      window.location.href = process.env.SERVER_URL + to;
+      window.location.href = 'http://kdt-sw2-seoul-team07.elicecoding.com' + to;
     } else {
       window.location.href = to;
     }

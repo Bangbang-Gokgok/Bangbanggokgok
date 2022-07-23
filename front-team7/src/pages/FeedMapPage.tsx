@@ -191,11 +191,9 @@ const FeedMapPage = () => {
     try {
       const result = await FeedApi.createOneFeed(fd);
       setFeedList((prev: any) => [result, ...prev]);
-      alert('피드가 생성되었습니다.');
       toggleModal();
       changeCenterLatLng(result.location);
     } catch (err) {
-      alert('Error 발생. console 확인');
       console.log(err);
     }
   };
@@ -241,11 +239,9 @@ const FeedMapPage = () => {
         newFeedList[index] = result;
         return newFeedList;
       });
-      alert('피드가 수정되었습니다.');
       toggleModal();
       changeCenterLatLng(result.location);
     } catch (err) {
-      alert('Error 발생. console 확인');
       console.log(err);
     }
 
@@ -269,7 +265,7 @@ const FeedMapPage = () => {
       });
       alert('피드가 삭제되었습니다.');
     } catch (err) {
-      alert(err);
+      console.log(err);
     }
   };
 
