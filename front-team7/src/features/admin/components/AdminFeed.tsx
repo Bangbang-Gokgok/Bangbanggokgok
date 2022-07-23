@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { TbReportSearch, TbTrash } from 'react-icons/tb';
-import { BiCommentDots } from 'react-icons/bi';
 
 import { useGetAllFeeds } from '@/features/admin/api';
 import { deleteOneFeedByAdmin } from '@/api/feeds';
@@ -32,9 +31,6 @@ export const AdminFeed = () => {
                   <Link to={`/feedmap/${feed.userId}`} className="icon">
                     <TbReportSearch />
                   </Link>
-                  <button className="icon">
-                    <BiCommentDots />
-                  </button>
                   <button
                     onClick={async () => {
                       if (confirm('해당 게시글을 정말 삭제하시겠습니까?'))
