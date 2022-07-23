@@ -47,7 +47,7 @@ const StyledFeedCard = styled.article<{ image: string }>`
   box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
   background: #f3f6fb;
   letter-spacing: 0.5px;
-  width: 250px;
+  width: 300px;
   margin: 0 auto;
 
   .post-link {
@@ -95,7 +95,7 @@ const StyledFeedCard = styled.article<{ image: string }>`
       padding: 3px 6px;
       border-radius: 5px;
       text-align: center;
-      width: 150px;
+      width: 200px;
       word-break: break-all;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -105,7 +105,7 @@ const StyledFeedCard = styled.article<{ image: string }>`
 
     .description {
       display: block;
-      width: 150px;
+      width: 220px;
       font-size: 1.4rem;
       line-height: 1.5;
       margin: 0;

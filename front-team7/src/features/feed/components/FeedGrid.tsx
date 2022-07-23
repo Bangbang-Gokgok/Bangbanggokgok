@@ -9,6 +9,7 @@ interface FeedGridProps {
 }
 
 export const FeedGrid = ({ feeds }: FeedGridProps) => {
+  console.log(feeds);
   return (
     <StyledFeedGrid>
       {feeds?.map((feed) => {
@@ -21,6 +22,7 @@ export const FeedGrid = ({ feeds }: FeedGridProps) => {
           description,
           address,
           location,
+          profileImageUrl,
           imageUrl,
           createdAt,
         } = feed;
@@ -36,6 +38,7 @@ export const FeedGrid = ({ feeds }: FeedGridProps) => {
           userName,
           title,
           description,
+          profileImageUrl,
           address,
           likes,
           location,
@@ -51,21 +54,32 @@ export const FeedGrid = ({ feeds }: FeedGridProps) => {
 const StyledFeedGrid = styled.div`
   display: grid;
   gap: 30px;
+  margin: 0 auto;
   grid-template-columns: repeat(1, 1fr);
+  max-width: 350px;
 
-  @media screen and (min-width: 520px) {
+  @media screen and (min-width: 550px) {
+    grid-template-columns: repeat(1, 1fr);
+    max-width: 400px;
+  }
+
+  @media screen and (min-width: 580px) {
     grid-template-columns: repeat(2, 1fr);
+    max-width: 520px;
   }
 
   @media screen and (min-width: 700px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media screen and (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
+    max-width: 600px;
   }
 
-  @media screen and (min-width: 860px) {
+  @media screen and (min-width: 780px) {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 700px;
+  }
+
+  @media screen and (min-width: 870px) {
     grid-template-columns: repeat(3, 1fr);
+    max-width: 850px;
   }
 `;
