@@ -38,7 +38,7 @@ const StyledClose = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 7rem;
-  color: white;
+  color: gold;
   cursor: pointer;
 `;
 

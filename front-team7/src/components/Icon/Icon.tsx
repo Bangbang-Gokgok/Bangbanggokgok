@@ -44,7 +44,7 @@ const StyledIcon = styled.div<IconProps & IconVariants>`
   color: whitesmoke;
   background-color: #8d3030;
   padding: 6px;
-  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 
   ${({ kindVariant }) => variant(kindVariant)}
   ${({ sizeVariant }) => variant(sizeVariant)}

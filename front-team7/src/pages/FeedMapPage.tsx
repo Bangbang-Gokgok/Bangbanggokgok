@@ -17,6 +17,7 @@ import styled from 'styled-components';
 import { axios } from '@/lib';
 import * as FeedApi from '@/api/feeds';
 import { FromInputs } from '@/types/form';
+import { FeedModal } from '@/features/feed/components';
 import {
   disconnectSocket,
   initSocketConnection,
@@ -135,16 +136,16 @@ const FeedMapPage = () => {
       case ModalState.EDIT:
         return <Form submitForm={editSubmitForm} isEdit={true} />;
       case ModalState.FEED:
-        return (
-          <FeedDetail
-            currentUserId={currentUser?.id as string}
-            isModal={true}
-            feedList={currentFeedState}
-            handleFeedLike={() => handleFeedLike(currentFeedState)}
-          />
-        );
+        return <FeedModal feed={currentFeedState} />;
     }
   };
+
+  // <FeedDetail
+  //         currentUserId={currentUser?.id as string}
+  //         isModal={true}
+  //         feedList={currentFeedState}
+  //         handleFeedLike={() => handleFeedLike(currentFeedState)}
+  //       />
 
   const onClickEditFeedModal = (item: FeedProps) => {
     setCurrentFeedState((prev) => ({
@@ -190,11 +191,9 @@ const FeedMapPage = () => {
     try {
       const result = await FeedApi.createOneFeed(fd);
       setFeedList((prev: any) => [result, ...prev]);
-      alert('피드가 생성되었습니다.');
       toggleModal();
       changeCenterLatLng(result.location);
     } catch (err) {
-      alert('Error 발생. console 확인');
       console.log(err);
     }
   };
@@ -240,11 +239,9 @@ const FeedMapPage = () => {
         newFeedList[index] = result;
         return newFeedList;
       });
-      alert('피드가 수정되었습니다.');
       toggleModal();
       changeCenterLatLng(result.location);
     } catch (err) {
-      alert('Error 발생. console 확인');
       console.log(err);
     }
 
@@ -268,7 +265,7 @@ const FeedMapPage = () => {
       });
       alert('피드가 삭제되었습니다.');
     } catch (err) {
-      alert(err);
+      console.log(err);
     }
   };
 

@@ -107,12 +107,12 @@ reviewRouter.get(
       const feedId = req.params.feedId;
       // _id 값으로 검색
       const { page, perPage } = req.query;
-      const [reviewList, totalPage] = await reviewService.getReviewByFeedIdPage(
+      const [reviewList, total, totalPage] = await reviewService.getReviewByFeedIdPage(
         feedId,
         page,
         perPage
       );
-      res.status(200).json({ reviewList, totalPage });
+      res.status(200).json({ reviewList, total, totalPage });
     } catch (error) {
       next(error);
     }
