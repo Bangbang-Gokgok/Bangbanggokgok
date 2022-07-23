@@ -102,8 +102,9 @@ class ReviewService {
 
   async getReviewByFeedIdPage(feedId: string, page: any, perPage: any) {
     // 우선 해당 상품이 db에 존재하는지 확인
+    const total = await Review.countDocuments({ feedId });
     const reviews = await Review.find({ feedId })
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 })
       .skip(perPage * (page - 1))
       .limit(perPage);
     if (!reviews) {
@@ -111,7 +112,7 @@ class ReviewService {
       error.name = 'NotFound';
       throw error;
     }
-    return [reviews, reviews.length / perPage];
+    return [reviews, total, Math.ceil(total / perPage)];
     // let query = { review };
     // const [reviewList, totalPage] = await pageService.getPaginatedReviews(query, page, perPage);
     // return [reviewList, totalPage];
