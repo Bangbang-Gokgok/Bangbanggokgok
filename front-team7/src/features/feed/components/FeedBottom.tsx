@@ -2,9 +2,8 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { AiFillHeart, AiOutlineComment } from 'react-icons/ai';
-import { FaCommentDots } from 'react-icons/fa';
 import { getReviewsByFeedID } from '@/api/review';
-import { FeedProps, type ReviewListProps } from '@/types/feed';
+import { type ReviewListProps } from '@/types/feed';
 
 import { feedKindState, FEED_KIND_HOME, FEED_KIND_PROFILE, type FeedsResponse } from '@/store';
 
@@ -12,6 +11,8 @@ import { UserInfo } from '@/components/UserInfo';
 
 const FeedHome = ({ feed }: { feed: Partial<FeedsResponse> }) => {
   const [reviewList, setReviewList] = useState<ReviewListProps>([]);
+
+  const profileImage = feed?.profileImageUrl ? feed?.profileImageUrl[0] : undefined;
 
   useEffect(() => {
     async function get() {
@@ -31,7 +32,7 @@ const FeedHome = ({ feed }: { feed: Partial<FeedsResponse> }) => {
           <UserInfo
             userId={feed.userId as string}
             name={feed.userName as string}
-            image={undefined}
+            image={profileImage}
           />
         </div>
         <div className="sub-info">
