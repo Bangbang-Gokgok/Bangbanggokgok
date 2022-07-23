@@ -1,15 +1,11 @@
-
-import { io } from "socket.io-client";
+import { io } from 'socket.io-client';
 
 interface SocketProps {
   myUserId: string;
-  feedId: string,
+  feedId: string;
   index?: number;
 }
 
-<<<<<<< HEAD
-export let socket = io(`${process.env.SERVER_PORT}`, { transports: ["websocket"] });
-=======
 let URL = '';
 
 if (process.env.NODE_ENV !== 'development') {
@@ -18,8 +14,7 @@ if (process.env.NODE_ENV !== 'development') {
   URL = 'http://localhost:5030';
 }
 
-export let socket = io(URL, { transports: ["websocket"] });
->>>>>>> 3ea6173b9a3f1c9362cb8e4950f4b643bd4ae2e0
+export let socket = io(URL, { transports: ['websocket'] });
 
 export const initSocketConnection = () => {
   if (socket.connected) return;
@@ -32,14 +27,14 @@ export const sendSocketMessage = (body: SocketProps) => {
     initSocketConnection();
   }
   const { myUserId, feedId, index } = body;
-  socket.emit("likeRequest", myUserId, feedId, index);
+  socket.emit('likeRequest', myUserId, feedId, index);
 };
 
 export const socketInfoReceived = (cb) => {
-  if (socket.hasListeners("likeResponse")) {
-    socket.off("likeResponse");
+  if (socket.hasListeners('likeResponse')) {
+    socket.off('likeResponse');
   }
-  socket.on("likeResponse", cb);
+  socket.on('likeResponse', cb);
 };
 
 // 소켓 연결을 끊음
