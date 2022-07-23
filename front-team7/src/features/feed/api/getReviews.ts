@@ -22,5 +22,5 @@ export const useGetReviews = (feedId: string) => {
       .catch((e) => console.log(e));
   }, [page]);
 
-  return [reviews, setPage];
+  return [reviews, page, setPage, perPage];
 };
