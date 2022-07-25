@@ -28,10 +28,11 @@ export const kakao = new KakaoStrategy(
     const email = profile._json.kakao_account.email;
     const name = profile._json.properties.nickname;
     try {
-      const { _id, authority } = await findOrCreateUser(email!, name!);
+      const { _id, authority, friends } = await findOrCreateUser(email!, name!);
       done(null, {
         _id,
         authority,
+        friends,
         email,
         name,
       });

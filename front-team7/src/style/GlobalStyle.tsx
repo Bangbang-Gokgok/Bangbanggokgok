@@ -32,4 +32,28 @@ export const GlobalStyle = createGlobalStyle`
   a {
     text-decoration: none;
   }
+
+  button {
+    font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif;
+  }
+
+  input {
+    font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif;
+  }
+
+  textarea {
+    font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif;
+  }
+
+  input::-webkit-input-placeholder { font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif; }
+  input::-moz-placeholder { font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif; }
+  input:-ms-input-placeholder { font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif; }
+  input:-moz-placeholder { font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif; }
+  input::placeholder { font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif; }
+
+  textarea::-webkit-input-placeholder { font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif; }
+  textarea::-moz-placeholder { font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif; }
+  textarea:-ms-input-placeholder { font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif; }
+  textarea:-moz-placeholder { font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif; }
+  textarea::placeholder { font-family: 'Roboto', 'Noto Sans KR', arial, sans-serif; }
 `;

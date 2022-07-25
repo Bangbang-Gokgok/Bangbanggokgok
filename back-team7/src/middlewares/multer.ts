@@ -13,7 +13,7 @@ const upload = multer({
   storage: multerS3({
     s3: s3,
     bucket: 'gabang-bucket',
-    acl: 'public-read',
+    acl: process.env.S3_ACL_NAME,
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: function (req: Request, file: any /*Express.Multer.File*/, cb: any /*FileNameCallback*/) {
       cb(null, `${Date.now()}_${file.originalname}`);

@@ -1,1 +1,1 @@
-export * from './profile-edit-schema';
+export * from './profileEditSchema';

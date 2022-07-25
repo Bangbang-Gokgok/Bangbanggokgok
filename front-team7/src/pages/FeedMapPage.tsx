@@ -1,126 +1,113 @@
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import queryString from 'query-string';
 import { FeedHeader } from '@/components/FeedHeader';
 import { Main } from '@/components/Layout';
 import Map from '@/components/Map/Map';
-import { useEffect, useState } from 'react';
-import { BsPlus } from 'react-icons/bs';
-import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { mapAtom } from '@/store/map';
 import ModalFrame from '@/components/Layout/ModalFrame/ModalFrame';
 import FeedDetail from '@/components/Layout/FeedDetail/FeedDetail';
-import { feedModalAtom } from '@/store/feedModal';
-import * as Api from '@/api/feeds';
 import Form from '@/components/Form/Form';
-import { userIdState } from '@/store';
-import queryString from 'query-string';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { userState } from '@/store';
+import { mapAtom } from '@/store/map';
+import { currentFeedAtom } from '@/store/currentFeed';
+import { FeedListProps, FeedProps, LocationProps } from '@/types/feed';
+import { BsPlus } from 'react-icons/bs';
+import styled from 'styled-components';
+import { axios } from '@/lib';
+import * as FeedApi from '@/api/feeds';
+import { FromInputs } from '@/types/form';
+import { FeedModal } from '@/features/feed/components';
+import {
+  disconnectSocket,
+  initSocketConnection,
+  sendSocketMessage,
+  socketInfoReceived,
+} from '@/lib/socket';
 
-interface CenterLatLng {
-  lat: number;
-  lng: number;
+enum ModalState {
+  CREATE = 'CREATE',
+  EDIT = 'EDIT',
+  FEED = 'FEED',
 }
-
-interface Review {
-  userName: string;
-  contents: string;
-  timestamp: Date;
-}
-
-interface FeedProps {
-  _id: string;
-  userName: string;
-  title: string;
-  description: string;
-  imageUrl: Array<string>;
-  review: Array<Review>;
-  address: string;
-  location: CenterLatLng;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface FeedDetail {
-  userName: string;
-  title: string;
-  description: string;
-  review: Array<Review>;
-  address: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface FeedListProps extends Array<FeedProps> { }
 
 const FeedMapPage = () => {
   const { userId } = useParams();
   const [feedList, setFeedList] = useState<FeedListProps>([]);
-  const [_mapValue, setMapValue] = useRecoilState(mapAtom);
   const [stateModal, setStateModal] = useState(false);
-  const [modalChildrenState, setModalChildrenState] = useState(false);
-  const userIdAtom = useRecoilValue(userIdState);
-  const [feedModalState, setFeedModalState] = useRecoilState(feedModalAtom);
+  const [modalChildrenState, setModalChildrenState] = useState('');
+  const currentUser = useRecoilValue(userState);
+  const [currentFeedState, setCurrentFeedState] = useRecoilState(currentFeedAtom);
+  const [_mapValue, setMapValue] = useRecoilState(mapAtom);
+
   const feedIdQueryString = queryString.parse(window.location.search);
 
   useEffect(() => {
-    // userId를 사용한 API Call -> feedList를 useState로 관리
-    async function getFeedList() {
-      const result = await Api.getUserFeedList(userId);
-      console.log(result);
-
-      setFeedList(result);
-
-      if (Object.keys(feedIdQueryString).length > 0) {
-        setMapValue((currMapValue) => ({
-          ...currMapValue,
-          centerLatLng: {
-            lat: Number(feedIdQueryString.lat),
-            lng: Number(feedIdQueryString.lng),
-          },
-        }));
-      } else if (result.length > 0) {
-        setMapValue((currMapValue) => ({
-          ...currMapValue,
-          centerLatLng: {
-            lat: result[0].location.lat,
-            lng: result[0].location.lng,
-          },
-        }));
-      }
-    }
-
-    // async function deleteFeed(feedId) {
-    //   const result = await Api.deleteOneFeed(feedId);
-    //   console.log(result);
-
-    // }
-
-    // deleteFeed("hvT7xS5ut");
-
     getFeedList();
+    initSocketConnection();
+    socketInfoReceived((users: Object) => {
+      setCurrentFeedState((prev) => ({
+        ...prev,
+        likes: users,
+      }));
+    });
+
+    return () => {
+      disconnectSocket();
+    };
   }, []);
 
-  const onClickModal = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setModalChildrenState(false);
+  async function getFeedList() {
+    try {
+      const result = await axios.get<never, FeedListProps>(`/api/feeds/list/${userId}`);
+      setFeedList(result);
+
+      if (result.length > 0) {
+        initializeMapCenterLatLng(result[0]);
+      }
+    } catch (err) {
+      window.location.reload();
+      console.log(err);
+    }
+  }
+
+  const initializeMapCenterLatLng = (result: FeedProps) => {
+    let lat = 0;
+    let lng = 0;
+
+    if (Object.keys(feedIdQueryString).length > 0) {
+      lat = Number(feedIdQueryString.lat);
+      lng = Number(feedIdQueryString.lng);
+    } else {
+      lat = result.location.lat;
+      lng = result.location.lng;
+    }
+
+    setMapValue((currMapValue) => ({
+      ...currMapValue,
+      centerLatLng: {
+        lat,
+        lng,
+      },
+    }));
+  };
+
+  const onClickModal = () => {
+    setModalChildrenState(ModalState.CREATE);
     toggleModal();
   };
 
   const onClickMapFeed = (item: FeedProps) => {
-    const { userName, title, description, address, location, review, createdAt } = item;
-    changeCenterLatLng(location);
-    setFeedModalState((prev) => ({
+    changeCenterLatLng(item.location);
+    setCurrentFeedState((prev) => ({
       ...prev,
-      userName,
-      title,
-      description,
-      address,
-      review,
-      createdAt,
+      ...item,
     }));
-    setModalChildrenState(true);
+    setModalChildrenState(ModalState.FEED);
     toggleModal();
   };
 
-  const changeCenterLatLng = (newCenterLatLng: CenterLatLng) => {
+  const changeCenterLatLng = (newCenterLatLng: LocationProps) => {
     setMapValue((currMapValue) => ({
       ...currMapValue,
       centerLatLng: {
@@ -130,42 +117,186 @@ const FeedMapPage = () => {
       mapLevel: 1,
     }));
   };
+
   const toggleModal = () => {
     setStateModal((prev) => !prev);
+  };
+
+  const handleFeedLike = (currentFeedList: FeedProps) => {
+    sendSocketMessage({
+      myUserId: currentUser?.id,
+      feedId: currentFeedList._id,
+    });
+  };
+
+  const switchModalChildrenState = (modalChildrenState: string) => {
+    switch (modalChildrenState) {
+      case ModalState.CREATE:
+        return <Form submitForm={submitForm} isEdit={false} />;
+      case ModalState.EDIT:
+        return <Form submitForm={editSubmitForm} isEdit={true} />;
+      case ModalState.FEED:
+        return <FeedModal feed={currentFeedState} />;
+    }
+  };
+
+  // <FeedDetail
+  //         currentUserId={currentUser?.id as string}
+  //         isModal={true}
+  //         feedList={currentFeedState}
+  //         handleFeedLike={() => handleFeedLike(currentFeedState)}
+  //       />
+
+  const onClickEditFeedModal = (item: FeedProps) => {
+    setCurrentFeedState((prev) => ({
+      ...prev,
+      ...item,
+    }));
+    setModalChildrenState(ModalState.EDIT);
+    toggleModal();
+  };
+
+  // Feed CREATE
+  const submitForm = async (data: FromInputs) => {
+    if (!confirm('피드를 생성하시겠습니까?')) return;
+
+    const { title, description, image, address, lat, lng } = data;
+
+    const userName = currentUser?.name || 'undefined';
+    const profileImage = currentUser?.profileImage || 'undefined';
+    const dummy = {
+      userName,
+      profileImage,
+      title,
+      description,
+      address: address,
+      location: {
+        lat: lat,
+        lng: lng,
+      },
+    };
+
+    const fd = new FormData();
+
+    fd.append('profileImageUrl', dummy.profileImage);
+    fd.append('userName', dummy.userName);
+    fd.append('title', dummy.title);
+    fd.append('description', dummy.description);
+    fd.append('address', dummy.address);
+    fd.append('location', JSON.stringify(dummy.location));
+    for (let i = 0; i < image.length; i++) {
+      fd.append('imageUrl', image[i]);
+    }
+
+    try {
+      const result = await FeedApi.createOneFeed(fd);
+      setFeedList((prev: any) => [result, ...prev]);
+      toggleModal();
+      changeCenterLatLng(result.location);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const editSubmitForm = async (data: FromInputs) => {
+    if (!confirm('피드를 수정하시겠습니까?')) return;
+
+    const { title, description, image, address, lat, lng } = data;
+
+    const userName = currentUser?.name || 'undefined';
+    const userId = currentUser?.id || 'null';
+
+    const dummy = {
+      userName,
+      userId,
+      title,
+      description,
+      address: address,
+      location: {
+        lat: lat,
+        lng: lng,
+      },
+    };
+
+    const fd = new FormData();
+
+    fd.append('userName', dummy.userName);
+    fd.append('title', dummy.title);
+    fd.append('userId', dummy.userId);
+    fd.append('description', dummy.description);
+    fd.append('address', dummy.address);
+    fd.append('location', JSON.stringify(dummy.location));
+
+    for (let i = 0; i < image.length; i++) {
+      fd.append('imageUrl', image[i]);
+    }
+
+    try {
+      const result = await FeedApi.updateOneFeed(currentFeedState._id, fd);
+      setFeedList((prev: any) => {
+        const newFeedList = [...prev];
+        const index = newFeedList.findIndex((item) => currentFeedState._id === item._id);
+        newFeedList[index] = result;
+        return newFeedList;
+      });
+      toggleModal();
+      changeCenterLatLng(result.location);
+    } catch (err) {
+      console.log(err);
+    }
+
+    // revokePreviewUrl();
+  };
+
+  const onClickDeleteFeed = async (feedId: string, feedUserId: string) => {
+    if (!window.confirm('피드를 정말로 삭제하시겠습니까 ?')) return;
+
+    try {
+      await axios.delete(`/api/feeds/${feedId}`, {
+        data: {
+          userId: feedUserId,
+        },
+      });
+      setFeedList((prev: any) => {
+        const newFeedList = [...prev];
+        const index = newFeedList.findIndex((item) => feedId === item._id);
+        newFeedList.splice(index, 1);
+        return newFeedList;
+      });
+      alert('피드가 삭제되었습니다.');
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
     <Main>
       <StyledWrapper>
         <Map feedList={feedList} toggleModal={onClickMapFeed}></Map>
-        <Button onClick={onClickModal}>
-          <BsPlus />
-        </Button>
+        {currentUser?.id === userId && (
+          <Button onClick={onClickModal} feedLength={feedList.length}>
+            <BsPlus />
+          </Button>
+        )}
         <StyledFeeds>
           {feedList?.map((item, idx) => (
             <FeedHeader
-              onClickHandler={() => onClickMapFeed(item)}
+              onClickFeedModal={() => onClickMapFeed(item)}
+              onClickEditFeedModal={() => onClickEditFeedModal(item)}
+              onClickDeleteFeed={() => onClickDeleteFeed(item._id, item.userId)}
               isFolded={true}
-              isUser={userIdAtom === userId}
+              isUser={currentUser?.id === userId}
+              feedUserId={item.userId}
               key={idx}
-              feedId={item._id}
               name={item.userName}
               title={item.title}
+              image={item.profileImageUrl[0]}
             />
           ))}
         </StyledFeeds>
       </StyledWrapper>
       <ModalFrame handleModal={toggleModal} state={stateModal}>
-        {modalChildrenState ? (
-          <FeedDetail
-            isModal={true}
-            name={feedModalState.userName}
-            title={feedModalState.title}
-            desc={feedModalState.description}
-          />
-        ) : (
-          <Form />
-        )}
+        {switchModalChildrenState(modalChildrenState)}
       </ModalFrame>
     </Main>
   );
@@ -180,12 +311,11 @@ const StyledWrapper = styled.div`
   align-items: center;
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ feedLength: number }>`
   position: absolute;
   z-index: 4;
-  bottom: 160px;
+  bottom: ${(props) => (props.feedLength >= 3 ? '170px' : `${props.feedLength * 60 + 20}px`)};
   right: 5%;
-  margin-bottom: 5px;
   font-size: 4.5rem;
   width: 56px;
   height: 56px;
@@ -217,7 +347,6 @@ const StyledFeeds = styled.div`
   position: absolute;
   max-height: 160px;
   width: 90%;
-  z-index: 3;
   bottom: 0;
   display: flex;
   flex-direction: column;
@@ -231,10 +360,10 @@ const StyledFeeds = styled.div`
 
   @media only screen and (min-width: 768px) {
     width: 350px;
-    height: 100%;
+    height: auto;
     max-height: 68%;
-    right: 2%;
-    top: 2%;
+    right: 5%;
+    top: 5%;
   }
 
   @media only screen and (min-width: 1024px) {

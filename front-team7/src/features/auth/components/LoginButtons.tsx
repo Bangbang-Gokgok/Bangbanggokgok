@@ -7,7 +7,11 @@ import { RiKakaoTalkFill } from 'react-icons/ri';
 export const LoginButtons = () => {
   function loginHandler(e: MouseEvent<HTMLButtonElement>, to: string) {
     e.preventDefault();
-    window.location.href = to;
+    if (process.env.NODE_ENV !== 'development') {
+      window.location.href = 'http://kdt-sw2-seoul-team07.elicecoding.com' + to;
+    } else {
+      window.location.href = to;
+    }
   }
 
   return (

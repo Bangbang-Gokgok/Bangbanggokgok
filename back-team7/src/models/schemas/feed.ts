@@ -33,13 +33,11 @@ const FeedSchema = new Schema(
       required: true,
     },
     likes: {
-      type: Array,
-      required: false,
+      type: Object,
+      required: true,
+      default: {},
     },
-    review: {
-      type: Array,
-      required: false,
-    },
+
     report: {
       type: Object,
       required: false,
@@ -48,10 +46,15 @@ const FeedSchema = new Schema(
       type: [String],
       required: false,
     },
+    profileImageUrl: {
+      type: [String],
+      required: false,
+    },
   },
   {
     collection: 'feeds',
     timestamps: true,
+    minimize: false,
   }
 );
 export { FeedSchema };

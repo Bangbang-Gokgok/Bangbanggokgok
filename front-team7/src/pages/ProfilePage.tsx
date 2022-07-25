@@ -1,60 +1,54 @@
+import { useEffect } from 'react';
+import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+
 import { Main } from '@/components/Layout';
 import { ProfileTop, ProfileMid, ProfileBot } from '@/features/user/components';
-
-// import * as reviewApi from '@/api/review';
-// import { useEffect } from 'react';
+import { userParamsState } from '@/store';
 
 const ProfilePage = () => {
-  // async function createReview() {
-  //   const sendData = {
-  //     userName: '김지환12',
-  //     contents: '신기한 Review - POST의 세계12',
-  //   };
-  //   const createdReview = await reviewApi.createOneReview(sendData);
-  //   console.log('createdReview : ', createdReview);
-  // }
+  const [userParams, setuserParams] = useRecoilState(userParamsState);
+  const { userId } = useParams();
 
-  // async function getAll() {
-  //   const allReviews = await reviewApi.getAllReviews();
-  //   console.log('get All Reviews : ', allReviews);
-  // }
+  useEffect(() => {
+    setuserParams(userId);
+  }, [userId]);
 
-  // async function getReview() {
-  //   const reviewID = '62cd11c3dc1ed31bb0dbac96';
-  //   const oneReview = await reviewApi.getOneReview(reviewID);
-  //   console.log('get One Reviews : ', oneReview);
-  // }
-
-  // async function updateReview() {
-  //   const reviewID = '62cd11c3dc1ed31bb0dbac96';
-  //   const sendData = {
-  //     userName: 'new 김지환12',
-  //     contents: 'new 신기한 Review - POST의 세계12',
-  //   };
-  //   const oneReview = await reviewApi.updateOneReview(reviewID, sendData);
-  //   console.log('update One Reviews : ', oneReview);
-  // }
-
-  // async function deleteReview() {
-  //   const reviewID = '62cd11a3dc1ed31bb0dbac94';
-  //   const oneReview = await reviewApi.deleteOneReview(reviewID);
-  //   console.log('delete One Reviews : ', oneReview);
-  // }
-
-  // useEffect(() => {
-  //   // createReview();
-  //   // getAll();
-  //   // getReview();
-  //   // updateReview();
-  //   // deleteReview();
-  // }, []);
   return (
-    <Main bg="#282b37">
-      <ProfileTop />
-      <ProfileMid />
-      <ProfileBot />
+    <Main bg="#222">
+      {userParams && (
+        <StyledProfilePage>
+          <ProfileTop />
+          <ProfileMid />
+          <ProfileBot />
+        </StyledProfilePage>
+      )}
     </Main>
   );
 };
+
+const StyledProfilePage = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  margin: 0 auto;
+  min-height: 100%;
+  max-width: 850px;
+  background-color: #2e2930;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+  @media screen and (min-width: 768px) {
+    width: 80%;
+    max-width: 700px;
+    margin: 40px auto;
+    min-height: auto;
+  }
+
+  @media screen and (min-width: 1024px) {
+    width: 70%;
+    max-width: 850px;
+  }
+`;
 
 export default ProfilePage;

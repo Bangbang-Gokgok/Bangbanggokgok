@@ -7,11 +7,14 @@ function errorHandler(error: Error, req: Request, res: Response, next: NextFunct
   console.log('\x1b[33m%s\x1b[0m', error.stack);
   // 에러 이름으로 status code를 설정
   switch (error.name) {
+    case 'Unauthorized':
+      res.status(401);
+      break;
+    case 'Forbidden':
+      res.status(403);
+      break;
     case 'NotFound':
       res.status(404);
-      break;
-    case 'NotAcceptable':
-      res.status(406);
       break;
     case 'Conflict':
       res.status(409);

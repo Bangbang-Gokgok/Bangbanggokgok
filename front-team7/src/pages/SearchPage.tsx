@@ -3,98 +3,109 @@ import { Main } from '@/components/Layout';
 import { UserInfo } from '@/components/UserInfo';
 import Input from '@/components/Input/Input';
 import unknownUser from '@/assets/images/unknown-user.png';
-// import * as UserApiByUser from '@/api/users';
-// import * as UserApiByAdmin from '@/api/usersByAdmin';
-// import { useEffect, useState } from 'react';
-// import { Types } from 'mongoose';
+import React, { useEffect, useState } from 'react';
+import { axios } from '@/lib';
+import { userFieldQuery } from '@/store';
+import { useRecoilValue } from 'recoil';
 
-const StyledSearchContainer = styled.div`
-  width: 330px;
-  // background: lightgray;
-  display: flex;
-  flex-direction: column;
-  justify-contents: center;
-  align-itmes: center;
-  padding: 40px 10px;
-  gap: 35px;
-`;
-
-// 아래는 User Schema의 CRUD 가 정상적으로 작동하는지 확인하는 임시 코드
-
-// interface User {
-//   _id: Types.ObjectId | string;
-//   authority: string;
-//   email: string;
-//   name: string;
-//   // profileImage?: string | undefined;
-//   // contactNumber?: number | undefined;
-//   // location?: object | undefined;
-//   // friends?: Array<string> | undefined;
-//   iat: Number;
-//   exp: Number;
-// }
-
-// 유저 기능
-
-/*
-async function getMyInfo() {
-  const usersData: User = await UserApiByUser.getMyUserInfo();
-  console.log('내 userData 가져오기 : ', usersData);
+interface userData {
+  _id: string;
+  name: string;
+  profileImage: Array<string>;
+  friends: friendList;
 }
 
-async function getAll() {
-  const usersData: User = await UserApiByUser.getAllUsers();
-  console.log('모든 usersData 가져오기 : ', usersData);
-}
+type friendList = Array<string>;
 
-async function updateMyInfo() {
-  const updateData = {
-    name: '수정된 김지환',
-    email: 'updateKJH@naver.com',
-  };
-  const myupdatedData: User = await UserApiByUser.updateUser(updateData);
-  console.log('update 된 내 userData 가져오기 : ', myupdatedData);
-}
-
-async function deleteMyInfo() {
-  const mydeletedData: User = await UserApiByUser.deleteUser();
-  console.log('delete 결과 message : ', mydeletedData);
-}
-*/
-
-// 관리자 기능
-
-/*
-async function updateByAdmin() {
-  const updateData = {
-    name: '알!루',
-    email: 'allu!@naver.com',
-  };
-  const id = '62c414db2fbbf977d491ab5d';
-  const usersData: User = await UserApiByAdmin.updateOneUserByAdmin(id, updateData);
-  console.log('유저 업데이트 : ', usersData);
-}
-
-
-async function deleteByAdmin() {
-  if (confirm('정말 삭제?')) {
-    const id = '62cce79f7819b1c5142e074c';
-    const result: User = await UserApiByAdmin.deleteOneUserByAdmin(id);
-    console.log('유저 삭제 : ', result);
-  }
-}
-*/
+type userDataList = Array<userData>;
 
 const SearchPage = () => {
-  // useEffect(() => {
-  //   // updateByAdmin();
-  //   // deleteByAdmin();
-  //   // updateMyInfo();
-  //   // deleteMyInfo();
-  //   // getMyInfo();
-  //   // getAll();
-  // }, []);
-  let name = '김지환';
+  const [currentUsersFriends, setCurrentUsersFriends] = useState<friendList>([]);
+  const [followerList, setFollowerList] = useState<userDataList>([]);
+  const [notAFollowerList, setNotAFollowerList] = useState<userDataList>([]);
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchState, setSearchState] = useState(false);
+  const userIdAtom = useRecoilValue(userFieldQuery('id'));
+
+  useEffect(() => {
+    getCurrentUsersFriends();
+  }, [followerList, notAFollowerList]);
+
+  const getCurrentUsersFriends = async () => {
+    try {
+      const result = await axios.get<never, friendList>('api/users/friends');
+      setCurrentUsersFriends(result);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchKeyword(e.target.value);
+  };
+
+  const onKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'Enter') {
+      onClickSearch();
+    }
+  };
+
+  const onClickSearch = () => {
+    searchUser(searchKeyword);
+  };
+
+  const onClickFollow = async (e: React.MouseEvent<HTMLButtonElement>, selectedUser: userData) => {
+    const target = e.target as HTMLButtonElement;
+
+    try {
+      await axios.put(`api/users/friends/${selectedUser._id}`);
+      renderNewResult(target.name, selectedUser);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const renderNewResult = (target: string, user: userData) => {
+    if (target === 'follow') {
+      setNotAFollowerList((prev) => {
+        return prev.filter((item) => item._id !== user._id);
+      });
+      setFollowerList((prev) => {
+        return [...prev, user];
+      });
+    } else if (target === 'unFollow') {
+      setNotAFollowerList((prev) => {
+        return [...prev, user];
+      });
+      setFollowerList((prev) => {
+        return prev.filter((item) => item._id !== user._id);
+      });
+    }
+  };
+
+  const searchUser = async (keyword: string) => {
+    const validatedKeyword = keyword.trim();
+    try {
+      const result = await axios.get<never, userDataList>(
+        `/api/users/list?keyword=${validatedKeyword}`
+      );
+
+      const validatedResult = result.filter((value) => value._id !== userIdAtom);
+      const myFollowerList = validatedResult.filter((friend) =>
+        currentUsersFriends.hasOwnProperty(friend._id)
+      );
+      const notMyFollowerList = validatedResult.filter(
+        (friend) => !currentUsersFriends.hasOwnProperty(friend._id)
+      );
+
+      setFollowerList(myFollowerList);
+      setNotAFollowerList(notMyFollowerList);
+      setSearchState(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Main
       display={'flex'}
@@ -103,30 +114,161 @@ const SearchPage = () => {
       alignItems={'center'}
     >
       <StyledSearchContainer>
-        {/* <button
-          onClick={() => {
-            if (confirm('자신의 정보를 삭제하시겠습니까??')) {
-              deleteMyInfo();
-            }
-          }}
-        >삭제</button> */}
-        <Input></Input>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
-        <UserInfo name={name} image={unknownUser as string}></UserInfo>
+        <Input
+          onKeyPressSearch={onKeyPress}
+          handleInput={(e) => handleInput(e)}
+          onClickSearch={() => onClickSearch()}
+        />
+        {followerList.length > 0 || notAFollowerList.length > 0 ? (
+          <>
+            {followerList.length > 0 && (
+              <StyledFollowerListContainer>
+                <StyledListHeader>
+                  <span>내 팔로잉</span>
+                </StyledListHeader>
+                <StyledFollowerList>
+                  {followerList.map((user, idx) => (
+                    <StyledUserInfoWrapper key={idx}>
+                      <UserInfo
+                        name={user.name}
+                        userId={user._id}
+                        image={user.profileImage[0] || (unknownUser as string)}
+                      ></UserInfo>
+                      <StyledFollowButton
+                        name="unFollow"
+                        onClick={(e) => onClickFollow(e, user)}
+                        isfollowed={true}
+                      />
+                    </StyledUserInfoWrapper>
+                  ))}
+                </StyledFollowerList>
+              </StyledFollowerListContainer>
+            )}
+            {notAFollowerList.length > 0 && (
+              <StyledNotFollowerListContainer>
+                <StyledListHeader>
+                  <span>검색 결과</span>
+                </StyledListHeader>
+                <StyledNotFollowerList>
+                  {notAFollowerList.map((user, idx) => (
+                    <StyledUserInfoWrapper key={idx}>
+                      <UserInfo
+                        name={user.name}
+                        userId={user._id}
+                        image={user.profileImage[0] || (unknownUser as string)}
+                      ></UserInfo>
+                      <StyledFollowButton
+                        name="follow"
+                        onClick={(e) => onClickFollow(e, user)}
+                        isfollowed={false}
+                      />
+                    </StyledUserInfoWrapper>
+                  ))}
+                </StyledNotFollowerList>
+              </StyledNotFollowerListContainer>
+            )}
+          </>
+        ) : (
+          <StyledNoSearchResult />
+        )}
       </StyledSearchContainer>
     </Main>
   );
 };
+
+const StyledFollowButton = styled.button<{ isfollowed: boolean }>`
+  border: none;
+  background-color: transparent;
+  color: #487eb0;
+  cursor: pointer;
+  &::after {
+    content: ${(props) => (props.isfollowed ? '"팔로잉 취소"' : '"팔로우"')};
+  }
+  &:hover {
+    color: #67a2d9;
+  }
+  &:visited {
+    color: #487eb0;
+  }
+`;
+
+const StyledUserInfoWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+`;
+
+const StyledSearchContainer = styled.div`
+  width: 330px;
+  height: 100%;
+  padding: 25px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+
+  @media only screen and (min-width: 768px) {
+    width: 450px;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    width: 500px;
+  }
+`;
+
+const StyledNoSearchResult = styled.div`
+  font-size: 2rem;
+  &::after {
+    content: '검색 결과가 없습니다.';
+  }
+
+  @media only screen and (min-width: 768px) {
+    font-size: 2.2rem;
+  }
+
+  @media only screen and (min-width: 1024px) {
+    font-size: 2.5rem;
+  }
+`;
+
+const StyledFollowerListContainer = styled.div`
+  width: 100%;
+  max-height: 25%;
+  overflow-y: auto;
+  border-bottom: 1px solid rgb(219, 219, 219);
+`;
+
+const StyledNotFollowerListContainer = styled(StyledFollowerListContainer)`
+  width: 100%;
+  max-height: 75%;
+  height: 75%;
+  border: none;
+`;
+
+const StyledFollowerList = styled.div`
+  padding: 5px 5px 20px 5px;
+  gap: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const StyledNotFollowerList = styled(StyledFollowerList)`
+  padding: 5px;
+`;
+
+const StyledListHeader = styled.div`
+  display: flex;
+  position: sticky;
+  top: 0;
+  left: 0;
+  transform: translateY(-10%);
+  width: 100%;
+  align-items: center;
+  justify-content: left;
+  background-color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+`;
 
 export default SearchPage;

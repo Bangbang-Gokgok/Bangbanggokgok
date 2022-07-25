@@ -5,7 +5,7 @@ export const LoginTitle = () => {
     <StyledLoginTitleWrapper>
       <h2>여러 발자취들의 만남,</h2>
       <h2>
-        <span>맵자취(가명)</span> 와 함께하세요 🎉
+        <span>방방곡곡</span> 과 함께하세요. 🎉
       </h2>
     </StyledLoginTitleWrapper>
   );

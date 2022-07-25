@@ -6,7 +6,7 @@ export const getKindVariant = () => {
         borderRadius: '50%',
       },
       square: {
-        borderRadius: '5px',
+        borderRadius: '3px',
       },
     },
   };

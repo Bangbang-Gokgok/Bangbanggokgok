@@ -8,11 +8,11 @@ module.exports = {
     port: 3030, // 요청을 수신할 포트 번호를 지정하세요.
     proxy: {
       '/api': {
-        target: process.env.SERVER_PORT,
+        target: 'http://localhost:5030',
         changeOrigin: true,
       },
       '/auth': {
-        target: process.env.SERVER_PORT,
+        target: 'http://localhost:5030',
         changeOrigin: true,
       },
     },
@@ -25,11 +25,9 @@ module.exports = {
     new ReactRefreshWebpackPlugin(),
     new webpack.DefinePlugin({
       // 'process.env.name': JSON.stringify('변수'), //env 변수 만들기
-      'process.env.KAKAO_SEARCH_REST_API_KEY': JSON.stringify(
-        process.env.KAKAO_SEARCH_REST_API_KEY
-      ),
+      'process.env.KAKAO_SEARCH_REST_API_KEY': JSON.stringify('515db7fd242436c113cc739b997d8e46'),
+      'process.env.SERVER_PORT': JSON.stringify('http://localhost:5030'),
+      'process.env.SERVER_URL': JSON.stringify('http://kdt-sw2-seoul-team07.elicecoding.com'),
     }),
-
-    new webpack.EnvironmentPlugin(['KAKAO_SEARCH_REST_API_KEY']),
   ],
 };

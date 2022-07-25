@@ -4,13 +4,16 @@ import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import { createClient } from 'redis';
+import schedule from 'node-schedule';
 // import path from 'path';
 
 import 'dotenv/config';
 import { apiRouter, authRouter } from './routes';
 import { errorHandler, getUserFromJWT } from './middlewares';
 import { usePassport } from './passport';
-import { scheduler } from './node-schedule';
+
+import { likesScheduler, friendsScheduler } from './utils/scheduler';
+import { ws } from './socket';
 
 usePassport();
 
@@ -25,7 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(cookieParser());
 
-const PORT = process.env.PORT;
+const PORT = Number(process.env.PORT);
 
 app.use(passport.initialize());
 
@@ -36,11 +39,10 @@ app.use('/auth', authRouter);
 
 app.use(errorHandler);
 
-export const changed = new Set();
-
 const server = app.listen(PORT, () => {
   console.log(`server is running ${PORT}`);
-  scheduler;
+  schedule.scheduleJob('*/3 * * * * *', likesScheduler);
+  schedule.scheduleJob('* * * * * *', friendsScheduler);
 });
 
 // app.use(express.static(path.join(__dirname, '/../frontend/build'))); // 리액트 정적 파일 제공
@@ -61,6 +63,7 @@ db.on('error', (error: Error) =>
 );
 
 export const redisClient = createClient({ url: process.env.REDIS_URL });
+// export const redisClient = createClient();
 
 redisClient.on('ready', (err) => console.log('정상적으로 Redis 서버에 연결되었습니다.'));
 redisClient.on('error', (error: Error) =>
@@ -68,3 +71,5 @@ redisClient.on('error', (error: Error) =>
 );
 
 redisClient.connect();
+
+ws(server);

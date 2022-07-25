@@ -1,15 +1,15 @@
-import { useState, useEffect, type MouseEvent } from 'react';
+import { useState, useEffect } from 'react';
 
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { MdOutlineModeEditOutline } from 'react-icons/md';
 import { useWatch, type Control, type UseFormRegister } from 'react-hook-form';
 
-import { userProfileImageQuery } from '@/store';
+import { userFieldQuery } from '@/store';
 
 import { Avartar } from '@/components/Avatar';
 import { Icon } from '@/components/Icon';
-import { AvartarEditDropdown, RegisterProps } from '@/features/user/components';
+import { RegisterProps } from '@/features/user/components';
 
 interface AvartarEditProps {
   control: Control<RegisterProps>;
@@ -17,35 +17,33 @@ interface AvartarEditProps {
 }
 
 export const AvartarEdit = ({ control, register }: AvartarEditProps) => {
-  const [showDropdownMenu, setShowDropdownMenu] = useState<boolean>(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const userProfileImage = useRecoilValue(userProfileImageQuery);
+  const userProfileImage = useRecoilValue(userFieldQuery('profileImage'));
   const profileImage = useWatch({ control, name: 'profileImage' });
 
   useEffect(() => {
-    if (!profileImage) return;
+    if (!profileImage || profileImage?.length === 0) return;
 
-    const imageUrl = URL.createObjectURL(profileImage[0]);
+    const imageUrl = URL.createObjectURL(profileImage[0] as Blob);
 
     setImagePreview(imageUrl);
 
     return () => URL.revokeObjectURL(imageUrl);
   }, [profileImage]);
 
-  function toggleDropdownMenu(e: MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    setShowDropdownMenu(!showDropdownMenu);
-  }
-
   return (
     <StyledAvartarEdit>
-      <button onClick={(e) => toggleDropdownMenu(e)}>
-        <Avartar kind="circle" size="xl" src={imagePreview || userProfileImage} />
+      <label className="img-upload-label" htmlFor="profile-image">
+        <Avartar
+          kind="circle"
+          size="xl"
+          src={imagePreview || (userProfileImage ? (userProfileImage[0] as string) : undefined)}
+        />
         <span className="icon-container">
           <Icon kind="circle" size="sm" element={<MdOutlineModeEditOutline />} />
         </span>
-      </button>
-      {showDropdownMenu && <AvartarEditDropdown register={register} />}
+      </label>
+      <input className="img-upload-input" type="file" id="profile-image" {...register} />
     </StyledAvartarEdit>
   );
 };
@@ -64,5 +62,13 @@ const StyledAvartarEdit = styled.div`
     position: absolute;
     bottom: 0;
     right: 0;
+  }
+
+  .img-upload-label {
+    cursor: pointer;
+  }
+
+  .img-upload-input {
+    display: none;
   }
 `;

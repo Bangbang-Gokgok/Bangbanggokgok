@@ -40,7 +40,7 @@ reviewRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction
   }
 });
 
-reviewRouter.get('/list/:feedId', async (req: Request, res: Response, next: NextFunction) => {
+reviewRouter.get('/list/feed/:feedId', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const feedId = req.params.feedId;
     // _id 값으로 검색
@@ -51,14 +51,25 @@ reviewRouter.get('/list/:feedId', async (req: Request, res: Response, next: Next
     next(error);
   }
 });
+reviewRouter.get('/list/user/:userId', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.params.userId;
+    // userId 값으로 검색
+    const reviewData = await reviewService.getReviewByUserId(userId);
+    res.status(200).json(reviewData);
+  } catch (error) {
+    next(error);
+  }
+});
 
 reviewRouter.put('/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const user = req.user;
     const _id = req.params._id;
-    const update = req.body;
+    const update = req.body.data;
 
     // 리뷰를 업데이트함.
-    const updatedReview = await reviewService.setReview(_id, update);
+    const updatedReview = await reviewService.setReview(_id, update, user);
 
     res.status(200).json(updatedReview);
   } catch (error) {
@@ -68,13 +79,61 @@ reviewRouter.put('/:_id', async (req: Request, res: Response, next: NextFunction
 
 reviewRouter.delete('/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const user = req.user;
+    const userId = req.body.userId;
     const _id = req.params._id;
     //리뷰 삭제
-    const deleteResult = await reviewService.deleteReviewData(_id);
+    const deleteResult = await reviewService.deleteReviewData(_id, user, userId);
     res.status(200).json(deleteResult);
   } catch (error) {
     next(error);
   }
 });
+reviewRouter.get('page/list', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // 전체 리뷰 목록을 얻음
+    const { page, perPage } = req.query;
+    const [reviewList, totalPage] = await reviewService.getReviewPage(page, perPage);
+    res.status(200).json({ reviewList, totalPage });
+  } catch (error) {
+    next(error);
+  }
+});
+reviewRouter.get(
+  '/page/list/feed/:feedId',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const feedId = req.params.feedId;
+      // _id 값으로 검색
+      const { page, perPage } = req.query;
+      const [reviewList, total, totalPage] = await reviewService.getReviewByFeedIdPage(
+        feedId,
+        page,
+        perPage
+      );
+      res.status(200).json({ reviewList, total, totalPage });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+reviewRouter.get(
+  '/page/list/user/:userId',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.params.userId;
+      // userId 값으로 검색
+      const { page, perPage } = req.query;
+      const [reviewList, totalPage] = await reviewService.getReviewByUserIdPage(
+        userId,
+        page,
+        perPage
+      );
+      res.status(200).json({ reviewList, totalPage });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 export { reviewRouter };
