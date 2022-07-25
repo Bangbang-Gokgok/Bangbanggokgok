@@ -56,7 +56,6 @@ reviewRouter.get('/list/user/:userId', async (req: Request, res: Response, next:
     const userId = req.params.userId;
     // userId 값으로 검색
     const reviewData = await reviewService.getReviewByUserId(userId);
-    console.log('reviewData : ', reviewData);
     res.status(200).json(reviewData);
   } catch (error) {
     next(error);

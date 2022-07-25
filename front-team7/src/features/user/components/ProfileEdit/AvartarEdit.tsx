@@ -20,7 +20,6 @@ export const AvartarEdit = ({ control, register }: AvartarEditProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const userProfileImage = useRecoilValue(userFieldQuery('profileImage'));
   const profileImage = useWatch({ control, name: 'profileImage' });
-  console.log(profileImage);
 
   useEffect(() => {
     if (!profileImage || profileImage?.length === 0) return;

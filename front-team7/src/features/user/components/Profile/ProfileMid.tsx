@@ -7,8 +7,7 @@ import { userParamsState, userByIdFieldQuery } from '@/store';
 export const ProfileMid = () => {
   const userId = useRecoilValue(userParamsState);
   const username = useRecoilValue(userByIdFieldQuery('name'));
-  const description = useRecoilValue(userByIdFieldQuery('description'));
-  console.log(description);
+  const description = useRecoilValue(userByIdFieldQuery('description'));;
 
   const newDescription = description || `${username}님의 지도입니다.`;
 

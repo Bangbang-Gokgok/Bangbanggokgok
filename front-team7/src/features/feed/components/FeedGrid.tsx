@@ -9,7 +9,6 @@ interface FeedGridProps {
 }
 
 export const FeedGrid = ({ feeds }: FeedGridProps) => {
-  console.log(feeds);
   return (
     <StyledFeedGrid>
       {feeds?.map((feed) => {
@@ -28,9 +27,8 @@ export const FeedGrid = ({ feeds }: FeedGridProps) => {
         } = feed;
         const date = new Date(createdAt);
 
-        const convertedDate = `${date.getFullYear()}년 ${
-          date.getMonth() + 1
-        }월 ${date.getDate()}일`;
+        const convertedDate = `${date.getFullYear()}년 ${date.getMonth() + 1
+          }월 ${date.getDate()}일`;
 
         const newFeeds = {
           _id,

@@ -23,13 +23,11 @@ const CommentComponent = ({ reviewList, currentFeedList, get, currentUserId }) =
 
   const onChange = (e) => {
     const textarea = e.target.value;
-    // console.log(e.target.value);
     setTextarea(textarea);
   };
 
   const onChangeReview = (e) => {
     const changedReview = e.target.value;
-    // console.log('changedReview : ', changedReview);
     setUpdatedReview(changedReview);
   };
 
@@ -43,12 +41,10 @@ const CommentComponent = ({ reviewList, currentFeedList, get, currentUserId }) =
       contents: textAreaContent.current?.ref.current.value,
       feedId: currentFeedList._id,
     };
-    console.log('review 등록! ', review);
 
     try {
       const createdReview = await ReviewApi.createOneReview(review);
       alert('성공적으로 댓글이 등록되었습니다!');
-      // console.log('createdReview : ', createdReview);
     } catch (err) {
       alert('Error 발생 ');
       console.log(err);
@@ -63,7 +59,6 @@ const CommentComponent = ({ reviewList, currentFeedList, get, currentUserId }) =
     try {
       const updatedReview = await ReviewApi.updateOneReview(review_id, updatedContent, user_id);
       alert('댓글이 수정되었습니다!');
-      // console.log('updatedReview : ', res);
     } catch (err) {
       alert('Error 발생 ');
       console.log(err);
@@ -101,7 +96,6 @@ const CommentComponent = ({ reviewList, currentFeedList, get, currentUserId }) =
               gap: '10px',
               margin: '15px',
               border: '0',
-              // border: '1px solid white',
               backgroundColor: 'white',
               borderRadius: '10px',
               overflow: 'hidden',
@@ -150,7 +144,6 @@ const CommentComponent = ({ reviewList, currentFeedList, get, currentUserId }) =
                   <input
                     style={{
                       width: '100%',
-                      // backgroundColor: 'red',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
@@ -162,7 +155,6 @@ const CommentComponent = ({ reviewList, currentFeedList, get, currentUserId }) =
                 ) : (
                   <Comment.Text
                     style={{
-                      // backgroundColor: 'red',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
@@ -178,7 +170,6 @@ const CommentComponent = ({ reviewList, currentFeedList, get, currentUserId }) =
                 {isEdit && review._id === clickedReview ? (
                   <Button
                     content="반영"
-                    // labelPosition="right"
                     primary
                     onClick={() => {
                       updateReview(review._id, updatedReview, currentUserId);
@@ -187,7 +178,6 @@ const CommentComponent = ({ reviewList, currentFeedList, get, currentUserId }) =
                 ) : (
                   <Button
                     content="수정"
-                    // labelPosition="right"
                     primary
                     onClick={() => {
                       setIsEdit((prev) => !prev);
@@ -198,7 +188,6 @@ const CommentComponent = ({ reviewList, currentFeedList, get, currentUserId }) =
                 {isEdit && review._id === clickedReview ? (
                   <Button
                     content="취소"
-                    // labelPosition="right"
                     primary
                     onClick={() => {
                       setIsEdit((prev) => !prev);
@@ -207,7 +196,6 @@ const CommentComponent = ({ reviewList, currentFeedList, get, currentUserId }) =
                 ) : (
                   <Button
                     content="삭제"
-                    // labelPosition="right"
                     primary
                     onClick={() => {
                       deleteReview(review._id, currentUserId);
