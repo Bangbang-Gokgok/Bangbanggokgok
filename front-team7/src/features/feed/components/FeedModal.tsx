@@ -33,8 +33,6 @@ export const FeedModal = ({ feed }: FeedModalProps) => {
   const currentUserName = useRecoilValue(userFieldQuery('name'));
   const currentUserId = useRecoilValue(userFieldQuery('id'));
 
-  console.log(reviews);
-
   useEffect(() => {
     async function getReviews() {
       const reviewData = await axios.get(`/api/reviews/page/list/feed/${feed._id}`, {

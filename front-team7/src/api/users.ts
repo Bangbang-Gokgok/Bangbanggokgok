@@ -23,13 +23,6 @@ export const getMyUserInfo = async () => {
 };
 
 export const getAllUsers = async () => {
-  // try {
-  //   let res = await axios.get('/api/users/list');
-  //   // console.log('res : ', res);
-  //   return res;
-  // } catch (err) {
-  //   return err;
-  // }
   return await axios.get<never, AllUsers[]>('/api/users/list');
 };
 
@@ -46,56 +39,3 @@ export const updateUser = async (updateData) => {
 export const deleteUser = async () => {
   return await axios.delete(`/api/users/user`);
 };
-
-// export const getMyUserInfo = async () => {
-//   try {
-//     let res = await axios.get('/api/users/user');
-//     // console.log('res : ', res);
-//     return res;
-//   } catch (err) {
-//     return err;
-//   }
-// };
-
-// export const getAllUsers = async () => {
-//   try {
-//     let res = await axios.get('/api/users/list');
-//     // console.log('res : ', res);
-//     return res;
-//   } catch (err) {
-//     return err;
-//   }
-// };
-
-// export const getOneUser = async (userId?: string | null) => {
-//   try {
-//     let res = await axios.get(`/api/users/${id}`);
-//     // console.log('res : ', res);
-//     return res;
-//   } catch (err) {
-//     return err;
-//   }
-// };
-
-// export const updateUser = async (updateData) => {
-//   try {
-//     let res = await axios.put(`/api/users/user`, JSON.stringify(updateData), {
-//       headers: { 'Content-Type': `application/json` },
-//     });
-//     // console.log('updated res : ', res);
-//     return res;
-//   } catch (err) {
-//     return err;
-//   }
-
-// };
-
-// export const deleteUser = async () => {
-//   try {
-//     let res = await axios.delete(`/api/users/user`);
-//     // console.log('deleted res : ', res);
-//     return res;
-//   } catch (err) {
-//     return err;
-//   }
-// };

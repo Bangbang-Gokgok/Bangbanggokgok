@@ -12,7 +12,7 @@ import { profileEditSchema } from '@/features/user/schemas';
 import { AvartarEdit, Field, type kindType, type RegisterProps } from '@/features/user/components';
 import * as UserApi from '@/api/users';
 
-const FIELD_DATA: { kind: kindType; labelName: string; inputType: string }[] = [
+const FIELD_DATA: { kind: kindType; labelName: string; inputType: string; }[] = [
   { kind: 'email', labelName: '💌 이메일', inputType: 'text' },
   { kind: 'name', labelName: '🙋‍♀️ 이름', inputType: 'text' },
   { kind: 'description', labelName: '🌎 지도 소개말', inputType: 'text' },
@@ -75,8 +75,7 @@ export const ProfileEditForm = () => {
     // const user = await axios.put<never, UserResponse>('/api/users/user', formData);
     try {
       const user = await UserApi.updateUser(formData);
-      console.log('user : ', user);
-      const newUser: UserState & { _id?: string; updatedAt?: string; refreshToken?: string } = {
+      const newUser: UserState & { _id?: string; updatedAt?: string; refreshToken?: string; } = {
         ...user,
         id: user._id,
       };
@@ -85,7 +84,6 @@ export const ProfileEditForm = () => {
       delete newUser.updatedAt;
       delete newUser.refreshToken;
 
-      console.log('newUser : ', newUser);
       setCurrentUser(newUser);
       refreshUserById();
 
