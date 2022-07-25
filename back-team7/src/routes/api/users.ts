@@ -135,10 +135,16 @@ userRouter.get('/list', async (req: Request, res: Response, next: NextFunction) 
 //특정 회원 조회 API
 userRouter.get('/:_id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const _id = req.params._id;
-    const userData = await userService.getUserDataById(_id);
+    if (req.user) {
+      const _id = req.params._id;
+      const userData = await userService.getUserDataById(_id);
 
-    res.status(200).json(userData);
+      res.status(200).json(userData);
+    } else {
+      const error = new Error('login된 user 정보가 없습니다.');
+      error.name = 'Unauthorized';
+      throw error;
+    }
   } catch (error) {
     next(error);
   }
