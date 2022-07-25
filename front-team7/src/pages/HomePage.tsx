@@ -8,17 +8,9 @@ import * as UserApi from '@/api/users';
 import { useEffect, useState, CSSProperties } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Loading from '@/components/Loading/Loading';
-import { FeedListProps, FeedProps } from '@/types/feed';
 import * as FeedApi from '@/api/feeds';
 import { useSetRecoilState } from 'recoil';
 import { Introduction } from '@/components/introduction';
-
-import {
-  disconnectSocket,
-  initSocketConnection,
-  sendSocketMessage,
-  socketInfoReceived,
-} from '@/lib/socket';
 
 const HomePage = () => {
   const [feedList, setFeedList] = useState<FeedsResponse[]>([]);
@@ -33,26 +25,7 @@ const HomePage = () => {
     get();
     getMyUserId();
     setFeedKindState(FEED_KIND_HOME);
-    initSocketConnection();
-    socketInfoReceived((users: Object, index: number) => {
-      setFeedList((prev) => {
-        const newFeed = [...prev];
-        newFeed[index].likes = users;
-        return newFeed;
-      });
-    });
-    return () => {
-      disconnectSocket();
-    };
   }, []);
-
-  const handleFeedLike = (currentFeedList: FeedProps, index: number) => {
-    sendSocketMessage({
-      myUserId,
-      feedId: currentFeedList._id,
-      index,
-    });
-  };
 
   async function get() {
     try {
